@@ -34,6 +34,7 @@ section {
   color: #fff;
   border-radius: 5px;
   text-decoration: none;
+  margin-bottom: 20px;
 }
 
 .btn:hover {
@@ -43,7 +44,8 @@ section {
 .featured {
   background-color: #f7f7f7;
   text-align: center;
-  padding: 100px 0;
+  padding-left: 200px;
+  padding-right: 200px;
 }
 
 .product-list {
@@ -54,15 +56,18 @@ section {
 }
 
 .product-item {
+  /* width: 360px;
+  height: 480px; */
   flex-basis: 30%;
   margin-bottom: 50px;
+  box-shadow: 0px 2px 18px 0 rgb(129 162 182 / 20%);
 }
 
 .product-item img {
-  width: 100%;
-  height: 200px;
+  /* width: 100%; */
+  /* height: 300px; */
   object-fit: cover;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .product-item h3 {
@@ -71,9 +76,15 @@ section {
   margin-bottom: 10px;
 }
 
-.product-item p {
-  font-size: 16px;
+.product-item .description {
+  font-size: 18px;
   margin-bottom: 30px;
+}
+
+.product-price {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .about {
@@ -89,4 +100,45 @@ section {
 .about p {
   font-size: 18px;
   margin-bottom: 50px;
+}
+
+/* For screens smaller than 768px (e.g. mobile devices) */
+@media (max-width: 767px) {
+  .featured {
+    padding: 0;
+  }
+
+  .product-list {
+    justify-content: center;
+  }
+
+  .product-item {
+    flex-basis: 90%;
+    margin-bottom: 30px;
+  }
+}
+
+/* For screens larger than 768px (e.g. tablets and desktops) */
+@media (min-width: 768px) {
+  .featured {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .product-list {
+    justify-content: space-between;
+  }
+
+  .product-item {
+    flex-basis: 31%;
+    margin-bottom: 50px;
+  }
+}
+
+/* For screens larger than 1024px (e.g. large desktops) */
+@media (min-width: 1024px) {
+  .featured {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
 }
