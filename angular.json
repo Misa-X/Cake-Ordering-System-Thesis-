@@ -98,6 +98,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "frontend:build:production",
+            "firebaseProject": "cake-ordering-system-fd6aa",
+            "firebaseHostingSite": "cake-ordering-system-fd6aa"
+          }
         }
       }
     }

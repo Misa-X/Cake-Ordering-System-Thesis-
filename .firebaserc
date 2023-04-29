@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "cake-ordering-system-fd6aa": {
+      "hosting": {
+        "frontend": [
+          "cake-ordering-system-fd6aa"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "cake-ordering-system-fd6aa"
+  }
+}
