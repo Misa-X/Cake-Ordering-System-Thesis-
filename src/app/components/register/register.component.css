@@ -23,6 +23,7 @@ body {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 20px;
   padding: 50px;
+  width: 30%;
 }
 
 .login-form h1 {
@@ -104,6 +105,15 @@ hr {
   margin: 20px 0;
   border: none;
   border-top: 1.5px dashed white;
+}
+
+.create {
+  text-align: center;
+}
+
+.create a {
+  text-decoration: none;
+  color: black;
 }
 
 .social-signin {
