@@ -18,7 +18,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { FormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProductComponent } from './components/admin/product/product.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     RegisterComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    DashboardComponent,
+    ProductComponent,
   ],
   imports: [
     BrowserModule,

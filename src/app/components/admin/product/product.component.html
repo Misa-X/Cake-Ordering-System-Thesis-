@@ -1,0 +1,102 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 mt-5">
+      <div class="card border-0 shadow p-3">
+        <div class="form-floating mb-3 tetx-center">
+          <h5 class="text-center text-warning">Add Product</h5>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="product_name"
+            name="product_name"
+            [(ngModel)]="product_name"
+          />
+          <label for="product_name">Name</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="product_category"
+            name="product_category"
+            [(ngModel)]="product_category"
+          />
+          <label for="product_category">Category</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="product_description"
+            name="product_description"
+            [(ngModel)]="product_description"
+          />
+          <label for="product_description">Description</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="product_price"
+            name="product_price"
+            [(ngModel)]="product_price"
+          />
+          <label for="product_price">Price</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="product_image"
+            name="product_image"
+            [(ngModel)]="product_image"
+          />
+          <label for="product_image">Image</label>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          (click)="addProduct()"
+        >
+          Add Product
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8 mt-2">
+      <h5 class="text-danger">Product List</h5>
+      <div class="card p-3 shadow">
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of productList">
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_description }}</td>
+                <td>{{ product.product_category }}</td>
+                <td>{{ product.product_price }} <span> MT</span></td>
+                <td>
+                  <button
+                    class="btn btn-outline-danger"
+                    (click)="deleteProduct(product)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
