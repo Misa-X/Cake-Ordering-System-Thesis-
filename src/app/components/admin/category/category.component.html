@@ -1,0 +1,58 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 mt-5">
+      <div class="card border-0 shadow p-3">
+        <div class="form-floating mb-3 tetx-center">
+          <h5 class="text-center text-warning">Add Category</h5>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="category_name"
+            name="category_name"
+            [(ngModel)]="category_name"
+          />
+          <label for="category_name">Name</label>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          (click)="addCategory()"
+        >
+          Add Category
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8 mt-2">
+      <h5 class="text-danger">Product List</h5>
+      <div class="card p-3 shadow">
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let category of categoryList">
+                <td>{{ category.category_name }}</td>
+
+                <td>
+                  <button
+                    class="btn btn-outline-danger"
+                    (click)="deleteCategory(category)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

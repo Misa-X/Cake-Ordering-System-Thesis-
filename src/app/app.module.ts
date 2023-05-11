@@ -13,12 +13,14 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { provideMessaging, getMessaging } from '@angular/fire/messaging';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFireModule } from '@angular/fire/compat';
 import { RegisterComponent } from './components/register/register.component';
 import { FormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { ProductComponent } from './components/admin/product/product.component';
+import { CategoryComponent } from './components/admin/category/category.component';
 
 @NgModule({
   declarations: [
@@ -31,12 +33,14 @@ import { ProductComponent } from './components/admin/product/product.component';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     ProductComponent,
+    CategoryComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireStorageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

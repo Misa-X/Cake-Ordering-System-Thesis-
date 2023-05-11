@@ -16,13 +16,21 @@
           <label for="product_name">Name</label>
         </div>
         <div class="form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
+          <select
+            class="form-select"
             id="product_category"
             name="product_category"
             [(ngModel)]="product_category"
-          />
+          >
+            <option value="">Select a category</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.category_name }}
+            </option>
+            <!-- <option value="category1">Category 1</option>
+            <option value="category2">Category 2</option>
+            <option value="category3">Category 3</option> -->
+          </select>
+
           <label for="product_category">Category</label>
         </div>
         <div class="form-floating mb-3">
@@ -47,11 +55,11 @@
         </div>
         <div class="form-floating mb-3">
           <input
-            type="text"
+            type="file"
             class="form-control"
             id="product_image"
             name="product_image"
-            [(ngModel)]="product_image"
+            (change)="onFileSelected($event)"
           />
           <label for="product_image">Image</label>
         </div>
@@ -82,7 +90,8 @@
               <tr *ngFor="let product of productList">
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.product_description }}</td>
-                <td>{{ product.product_category }}</td>
+                <td>{{ product.product_category?.category_name }}</td>
+                <!-- <td>{{ product.product_category }}</td> -->
                 <td>{{ product.product_price }} <span> MT</span></td>
                 <td>
                   <button
