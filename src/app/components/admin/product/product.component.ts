@@ -33,6 +33,7 @@ export class ProductComponent implements OnInit {
   selectedFile: File | null = null;
   uploadProgress: number | null = null;
   downloadURL: string | null = null;
+  selectedProduct: Products | null = null;
 
   constructor(private data: DataService, private storage: AngularFireStorage) {}
 
@@ -89,7 +90,6 @@ export class ProductComponent implements OnInit {
     }
 
     this.productObj.product_name = this.product_name;
-    // this.productObj.product_image = this.product_image;
     this.productObj.product_description = this.product_description;
     const selectedCategory = this.categories.find(
       (category) => category.id === this.product_category
@@ -106,40 +106,76 @@ export class ProductComponent implements OnInit {
 
     this.productObj.product_price = this.product_price;
 
-    if (this.selectedFile) {
-      const filePath = `product_images/${Date.now()}_${this.selectedFile.name}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, this.selectedFile);
+    if (this.selectedProduct) {
+      // Update existing product
+      this.productObj.id = this.selectedProduct.id;
+      if (this.selectedFile) {
+        const filePath = `product_images/${Date.now()}_${
+          this.selectedFile.name
+        }`;
+        const fileRef = this.storage.ref(filePath);
+        const task = this.storage.upload(filePath, this.selectedFile);
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(() => {
-            fileRef.getDownloadURL().subscribe((imageUrl) => {
-              this.productObj.product_image = imageUrl;
-              this.data.addProduct(this.productObj);
-              this.resetForm();
-            });
-          })
-        )
-        .subscribe();
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((imageUrl) => {
+                this.productObj.product_image = imageUrl;
+                this.data.updateProduct(this.productObj);
+                this.resetForm();
+              });
+            })
+          )
+          .subscribe();
+      } else {
+        this.productObj.product_image = this.selectedProduct.product_image;
+        this.data.updateProduct(this.productObj);
+        this.resetForm();
+      }
     } else {
-      this.data.addProduct(this.productObj);
-      this.resetForm();
-    }
+      // Add new product
+      if (this.selectedFile) {
+        const filePath = `product_images/${Date.now()}_${
+          this.selectedFile.name
+        }`;
+        const fileRef = this.storage.ref(filePath);
+        const task = this.storage.upload(filePath, this.selectedFile);
 
-    // this.data.addProduct(this.productObj);
-    // this.resetForm();
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((imageUrl) => {
+                this.productObj.product_image = imageUrl;
+                this.data.addProduct(this.productObj);
+                this.resetForm();
+              });
+            })
+          )
+          .subscribe();
+      } else {
+        this.data.addProduct(this.productObj);
+        this.resetForm();
+      }
+    }
   }
 
   // update product
-  updateProduct() {}
+  updateProduct(product: Products) {
+    this.selectedProduct = { ...product };
+    this.id = this.selectedProduct.id;
+    this.product_name = this.selectedProduct.product_name;
+    this.product_category = this.selectedProduct.product_category.id;
+    this.product_description = this.selectedProduct.product_description;
+    this.product_price = this.selectedProduct.product_price;
+  }
 
   // delete product
   deleteProduct(product: Products) {
     if (
       window.confirm(
-        'Are you sure you want to delete' + product.product_name + ' ?'
+        'Are you sure you want to delete ' + product.product_name + ' ?'
       )
     ) {
       this.data.deleteProduct(product);

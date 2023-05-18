@@ -6,6 +6,7 @@ import { ProductComponent } from './components/admin/product/product.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { RegisterComponent } from './components/register/register.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'products', component: ProductComponent },
   { path: 'categories', component: CategoryComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'product-detail', component: ProductDetailComponent },
 ];
 
 @NgModule({

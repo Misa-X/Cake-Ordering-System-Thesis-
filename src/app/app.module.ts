@@ -21,6 +21,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { ProductComponent } from './components/admin/product/product.component';
 import { CategoryComponent } from './components/admin/category/category.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { CategoryComponent } from './components/admin/category/category.componen
     VerifyEmailComponent,
     ProductComponent,
     CategoryComponent,
+    ProductDetailComponent,
   ],
   imports: [
     BrowserModule,

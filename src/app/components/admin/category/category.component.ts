@@ -14,6 +14,9 @@ export class CategoryComponent implements OnInit {
     id: '',
     category_name: '',
   };
+
+  selectedCategory: Category | null = null;
+
   id: string = '';
   category_name: string = '';
 
@@ -40,6 +43,7 @@ export class CategoryComponent implements OnInit {
   }
 
   resetForm() {
+    this.selectedCategory = null;
     this.id = '';
     this.category_name = '';
   }
@@ -53,12 +57,23 @@ export class CategoryComponent implements OnInit {
 
     this.categoryObj.category_name = this.category_name;
 
-    this.data.addCategory(this.categoryObj);
+    if (this.selectedCategory) {
+      // Update existing category
+      this.categoryObj.id = this.selectedCategory.id;
+      this.data.updateCategory(this.categoryObj);
+    } else {
+      // Add new category
+      this.data.addCategory(this.categoryObj);
+    }
     this.resetForm();
   }
 
   // update category
-  updateCategory() {}
+  updateCategory(category: Category) {
+    this.selectedCategory = { ...category }; // Make a copy of the selected category
+    this.id = this.selectedCategory.id;
+    this.category_name = this.selectedCategory.category_name;
+  }
 
   // delete category
   deleteCategory(category: Category) {
