@@ -62,3 +62,54 @@
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-md-4 mt-5">
+    <div class="card border-0 shadow p-3">
+      <div class="form-floating mb-3 tetx-center">
+        <h5 class="text-center text-warning">Add Custom</h5>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="custom_name"
+          name="custom_name"
+          [(ngModel)]="name"
+        />
+        <label for="category_name">Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <label for="size">Type:</label>
+        <select
+          class="form-select"
+          id="custom-type"
+          name="custom-type"
+          [(ngModel)]="type"
+        >
+          <option value="filling">Filling</option>
+          <option value="flavor">Flavor</option>
+          <option value="size">Size</option>
+        </select>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          name="price"
+          [(ngModel)]="price"
+        />
+        <label for="price">Price</label>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        (click)="addCustom()"
+      >
+        Add Customization
+      </button>
+    </div>
+  </div>
+</div>

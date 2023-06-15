@@ -4,6 +4,11 @@ footer {
   align-items: center;
   padding: 20px;
   background-color: #fbc5c5;
+  /* position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0; */
+  margin-top: 50px;
 }
 
 .footer-up {

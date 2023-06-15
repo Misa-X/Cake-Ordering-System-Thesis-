@@ -17,11 +17,19 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFireModule } from '@angular/fire/compat';
 import { RegisterComponent } from './components/register/register.component';
 import { FormsModule } from '@angular/forms';
+import {
+  NgbAlertModule,
+  NgbDatepickerModule,
+  NgbDateStruct,
+} from '@ng-bootstrap/ng-bootstrap';
+// import { JsonPipe } from '@angular/common';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { ProductComponent } from './components/admin/product/product.component';
 import { CategoryComponent } from './components/admin/category/category.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { CartComponent } from './components/cart/cart.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +44,8 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
     ProductComponent,
     CategoryComponent,
     ProductDetailComponent,
+    CartComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +53,8 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
+    NgbDatepickerModule,
+    NgbAlertModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

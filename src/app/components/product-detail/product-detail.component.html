@@ -1,52 +1,120 @@
-<section class="section" id="starters" style="scroll-margin-top: 0rem">
-  <div class="items-div">
-    <div class="d-flex align-items-center pb-3 mb-5 border-bottom">
-      <span class="fs-2">Starters</span>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <img
+        [src]="product.product_image"
+        alt="Product Image"
+        class="img-fluid"
+      />
     </div>
-
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col">
-        <div class="card">
-          <img
-            class="img-loading card-img-top"
-            src="src\assets\images\cake2.jpg"
-            role="img"
-            aria-label="item-image"
-            preserveAspectRatio="xMidYMid slice"
-            focusable="false"
-          />
-
-          <div class="card-body">
-            <p class="card-text"><strong>name</strong></p>
-
-            <div class="d-flex justify-content-between align-items-center">
-              <small class="text-dark item-price">₹400</small>
-
-              <div class="btn-group">
-                <span class="btn btn-sm">
-                  <!-- <app-cart-icon></app-cart-icon> -->
-                </span>
-
-                <div class="btn-toolbar" role="toolbar">
-                  0>
-                  <div class="btn-group" role="group" aria-label="-">
-                    <span type="button" class="btn btn-outline-danger btn-sm"
-                      >-</span
-                    >
-                    <span class="text-center" style="width: 30px">5</span>
-                    <span type="button" class="btn btn-outline-success btn-sm"
-                      >+</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span class="not-available-text">Not Available.</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="col-md-6">
+      <p class="category">{{ product.product_category?.category_name }}</p>
+      <h2>{{ product.product_name }}</h2>
+      <p>{{ product.product_description }}</p>
+      <h4>Customize Your Order</h4>
+      <div class="mb-3">
+        <label for="color">Color:</label>
+        <select class="form-select" id="color" name="color">
+          <option value="">Select a color</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+          <option value="green">Green</option>
+          <option value="yellow">Yellow</option>
+          <option value="orange">Orange</option>
+          <option value="purple">Purple</option>
+          <option value="pink">Pink</option>
+        </select>
       </div>
+      <div class="mb-3">
+        <label for="size">Size:</label>
+        <select class="form-select" id="size" name="size">
+          <option value="">Select size</option>
+          <option value="20">20</option>
+          <option value="24">24</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+      <!-- <div class="mb-3">
+        <label for="size">Filling:</label>
+        <select
+          class="form-select"
+          id="filling"
+          name="filling"
+          [(ngModel)]="custom.filling"
+        >
+          <option value="">Select filling</option>
+          <option *ngFor="let cust of customList" [value]="cust.name">
+            {{ cust.name }}
+          </option>
+        </select>
+      </div> -->
+      <div class="mb-3">
+        <label for="filling">Filling:</label>
+        <select
+          class="form-select"
+          id="filling"
+          name="filling"
+          [(ngModel)]="customization"
+        >
+          <option value="">Select filling</option>
+          <ng-container *ngFor="let custom of customizations">
+            <ng-container *ngIf="custom.type === 'filling'">
+              <option [value]="custom.id">{{ custom.name }}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="flavor">Flavor:</label>
+        <select
+          class="form-select"
+          id="flavor"
+          name="flavor"
+          [(ngModel)]="customization"
+        >
+          <option value="">Select flavor</option>
+          <ng-container *ngFor="let custom of customizations">
+            <ng-container *ngIf="custom.type === 'flavor'">
+              <option [value]="custom.id">{{ custom.name }}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="quantity">Quantity:</label>
+        <input
+          type="number"
+          class="form-control"
+          id="quantity"
+          name="quantity"
+          min="1"
+          [(ngModel)]="quantity"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="notes">Notes:</label>
+        <textarea
+          class="form-control"
+          id="notes"
+          name="notes"
+          rows="3"
+          [(ngModel)]="note"
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="picture-upload">Upload Picture:</label>
+        <input
+          type="file"
+          class="form-control"
+          id="picture-upload"
+          name="picture-upload"
+          [(ngModel)]="picture"
+        />
+      </div>
+      <button type="button" class="btn btn-primary" (click)="addOrderItem()">
+        Add to Cart
+      </button>
+      <button type="button" class="btn btn-success">Checkout</button>
     </div>
   </div>
-</section>
+</div>

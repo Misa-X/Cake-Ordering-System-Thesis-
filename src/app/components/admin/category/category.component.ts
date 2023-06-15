@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
+import { Custom } from 'src/app/models/custom';
 import { DataService } from 'src/app/shared/data.service';
 
 @Component({
@@ -9,16 +10,30 @@ import { DataService } from 'src/app/shared/data.service';
 })
 export class CategoryComponent implements OnInit {
   categoryList: Category[] = [];
+  customList: Custom[] = [];
 
   categoryObj: Category = {
     id: '',
     category_name: '',
   };
 
+  customObj: Custom = {
+    id: '',
+    name: '',
+    type: '',
+    price: 0,
+  };
+
   selectedCategory: Category | null = null;
+  selectedCustom: Custom | null = null;
 
   id: string = '';
   category_name: string = '';
+
+  custom_id: string = '';
+  name: string = '';
+  type: string = '';
+  price: number = 0;
 
   constructor(private data: DataService) {}
 
@@ -46,6 +61,14 @@ export class CategoryComponent implements OnInit {
     this.selectedCategory = null;
     this.id = '';
     this.category_name = '';
+  }
+
+  resetCustomForm() {
+    this.selectedCustom = null;
+    this.custom_id = '';
+    this.name = '';
+    this.type = '';
+    this.price = 0;
   }
 
   // add category
@@ -84,5 +107,36 @@ export class CategoryComponent implements OnInit {
     ) {
       this.data.deleteCategory(category);
     }
+  }
+
+  // add custom
+  addCustom() {
+    if (this.name == '') {
+      alert('Fill all input fields');
+      return;
+    }
+
+    this.customObj.name = this.name;
+    this.customObj.type = this.type;
+    this.customObj.price = this.price;
+
+    if (this.selectedCustom) {
+      // Update existing customization
+      this.customObj.id = this.selectedCustom.id;
+      this.data.updateCustom(this.customObj);
+    } else {
+      // Add new customization
+      this.data.addCustom(this.customObj);
+    }
+    this.resetCustomForm();
+  }
+
+  // update category
+  updateCustom(custom: Custom) {
+    this.selectedCustom = { ...custom }; // Make a copy of the selected customization
+    this.custom_id = this.selectedCustom.id;
+    this.name = this.selectedCustom.name;
+    this.type = this.selectedCustom.type;
+    this.price = this.selectedCustom.price;
   }
 }
