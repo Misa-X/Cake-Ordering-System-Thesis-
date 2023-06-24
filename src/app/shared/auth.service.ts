@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { GoogleAuthProvider } from '@angular/fire/auth';
+// import { auth } from 'firebase/compat/app'
+import { Auth } from '@angular/fire/auth';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -93,4 +96,6 @@ export class AuthService {
       }
     );
   }
+
+  //set custom claims
 }

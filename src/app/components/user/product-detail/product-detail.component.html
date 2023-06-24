@@ -14,7 +14,7 @@
       <h4>Customize Your Order</h4>
       <div class="mb-3">
         <label for="color">Color:</label>
-        <select class="form-select" id="color" name="color">
+        <select class="form-select" id="color" name="color" [(ngModel)]="color">
           <option value="">Select a color</option>
           <option value="red">Red</option>
           <option value="blue">Blue</option>
@@ -25,7 +25,7 @@
           <option value="pink">Pink</option>
         </select>
       </div>
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label for="size">Size:</label>
         <select class="form-select" id="size" name="size">
           <option value="">Select size</option>
@@ -33,53 +33,56 @@
           <option value="24">24</option>
           <option value="30">30</option>
         </select>
-      </div>
-      <!-- <div class="mb-3">
-        <label for="size">Filling:</label>
+      </div> -->
+
+      <div class="mb-3">
+        <label for="filling">Size:</label>
         <select
           class="form-select"
-          id="filling"
-          name="filling"
-          [(ngModel)]="custom.filling"
+          id="size"
+          name="size"
+          [(ngModel)]="selectedSize"
+          (ngModelChange)="updateCustomization(selectedSize)"
         >
-          <option value="">Select filling</option>
-          <option *ngFor="let cust of customList" [value]="cust.name">
+          <option value="">Select size</option>
+          <option *ngFor="let cust of sizeArray" [value]="cust.id">
             {{ cust.name }}
           </option>
         </select>
-      </div> -->
+      </div>
+
       <div class="mb-3">
         <label for="filling">Filling:</label>
         <select
           class="form-select"
           id="filling"
           name="filling"
-          [(ngModel)]="customization"
+          [(ngModel)]="selectedFilling"
+          (ngModelChange)="updateCustomization(selectedFilling)"
         >
           <option value="">Select filling</option>
-          <ng-container *ngFor="let custom of customizations">
-            <ng-container *ngIf="custom.type === 'filling'">
-              <option [value]="custom.id">{{ custom.name }}</option>
-            </ng-container>
-          </ng-container>
+          <option *ngFor="let cust of fillingArray" [value]="cust.id">
+            {{ cust.name }}
+          </option>
         </select>
       </div>
+
       <div class="mb-3">
         <label for="flavor">Flavor:</label>
         <select
           class="form-select"
           id="flavor"
           name="flavor"
-          [(ngModel)]="customization"
+          [(ngModel)]="selectedFlavor"
+          (ngModelChange)="updateCustomization(selectedFlavor)"
         >
           <option value="">Select flavor</option>
-          <ng-container *ngFor="let custom of customizations">
-            <ng-container *ngIf="custom.type === 'flavor'">
-              <option [value]="custom.id">{{ custom.name }}</option>
-            </ng-container>
-          </ng-container>
+          <option *ngFor="let cust of flavorArray" [value]="cust.id">
+            {{ cust.name }}
+          </option>
         </select>
       </div>
+
       <div class="mb-3">
         <label for="quantity">Quantity:</label>
         <input
@@ -114,7 +117,10 @@
       <button type="button" class="btn btn-primary" (click)="addOrderItem()">
         Add to Cart
       </button>
-      <button type="button" class="btn btn-success">Checkout</button>
+
+      <button type="button" class="btn btn-success" (click)="checkout()">
+        Checkout
+      </button>
     </div>
   </div>
 </div>

@@ -9,12 +9,14 @@
       <ul class="list-group mb-3">
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0">Product name</h6>
-            <small class="text-muted">Brief description</small>
+            <h6 class="my-0">{{ item.product?.product_name }}</h6>
+            <small class="text-muted">{{
+              item.product?.product_description
+            }}</small>
           </div>
-          <span class="text-muted">0 Mt</span>
+          <span class="text-muted">{{ item.subtotal }} Mt</span>
         </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <!-- <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
             <h6 class="my-0">Second product</h6>
             <small class="text-muted">Brief description</small>
@@ -26,8 +28,8 @@
             <h6 class="my-0">Third item</h6>
             <small class="text-muted">Brief description</small>
           </div>
-          <span class="text-muted">0 Mt</span>
-        </li>
+          <span class="text-muted">0 Mt</span> -->
+        <!-- </li> -->
         <!-- <li class="list-group-item d-flex justify-content-between"> -->
         <!-- <div class="text-success">
             <h6 class="my-0">Promo code</h6>

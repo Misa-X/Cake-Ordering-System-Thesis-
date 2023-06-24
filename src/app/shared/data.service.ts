@@ -153,6 +153,7 @@ export class DataService {
 
   // add customization
   addCustom(custom: Custom) {
+    custom.id = this.afs.createId();
     return this.afs.collection('/Customization').add(custom);
   }
 
@@ -168,6 +169,7 @@ export class DataService {
       .valueChanges()
       .pipe(map((custom) => custom[0]));
   }
+  
 
   // delete customization
   deleteCustom(custom: Custom) {

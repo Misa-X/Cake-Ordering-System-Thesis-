@@ -20,3 +20,8 @@
 .icon-hover-danger:hover i {
   color: #dc4c64 !important;
 }
+
+.row1 {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}

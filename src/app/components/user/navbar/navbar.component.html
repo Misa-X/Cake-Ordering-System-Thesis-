@@ -1,10 +1,11 @@
-<header>
-  <a routerLink="/home" class="logo">Sweet and Salty</a>
+<header *ngIf="!isLoginPage">
+  <a routerLink="/user/home" class="logo">Sweet and Salty</a>
   <div class="bx bx-menu" id="menu-icon"></div>
 
   <ul class="navbar">
-    <li><a routerLink="/home">Home</a></li>
-    <li><a href="#categories">Categories</a></li>
+    <li><a routerLink="/user/home">Home</a></li>
+    <li><a href="category">Category</a></li>
+
     <li><a href="#about">About Us</a></li>
     <li><a href="#contact">Contact Us</a></li>
   </ul>

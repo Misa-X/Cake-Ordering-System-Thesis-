@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth.service';
 
@@ -8,12 +8,16 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  hideNavbar: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   email: string = '';
   password: string = '';
 
   constructor(private auth: AuthService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.hideNavbar.emit(true);
+  }
 
   login() {
     if (this.email == '') {

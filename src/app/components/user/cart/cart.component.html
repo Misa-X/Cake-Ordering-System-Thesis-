@@ -1,31 +1,37 @@
 <section class="bg-light my-5">
-  <div class="container" *ngIf="cartProducts.length > 0">
+  <div class="container" *ngIf="cartItems.length > 0">
     <div class="row">
       <!-- cart -->
-      <div class="col-lg-9" *ngFor="let product of cartProducts">
-        <div class="card border shadow-0">
+      <div class="col-lg-9 row1">
+        <h4 class="card-title mb-4">Your shopping cart</h4>
+        <div class="card border shadow-0" *ngFor="let product of cartItems">
           <div class="m-4">
-            <h4 class="card-title mb-4">Your shopping cart</h4>
             <div class="row gy-3 mb-4">
               <div class="col-lg-5">
                 <div class="me-lg-5">
                   <div class="d-flex">
                     <img
-                      [src]="product.prod.product_image"
+                      [src]="product.product.product_image"
                       class="border rounded me-3"
                       style="width: 96px; height: 96px"
                     />
                     <div class="">
                       <a href="#" class="nav-link">{{
-                        product.prod.product_name
+                        product.product.product_name
                       }}</a>
                       <p class="text-muted">
-                        {{ product.prod.product_description }}
+                        {{ product.product.product_description }}
                       </p>
-                      <h6>Customizations</h6>
-                      <p class="text-muted">Color :{{ product.color }}</p>
-                      <p class="text-muted">Filling :{{ product.filling }}</p>
-                      <p class="text-muted">Filling :{{ product.flavor }}</p>
+                      <h6 class="text-muted">Customizations</h6>
+                      <p class="text-muted">
+                        Color :{{ product.color }}
+                        <span
+                          >Filling :{{ product.customization[0].name }}</span
+                        >
+                        <span>Flavour :{{ product.note }}</span>
+                      </p>
+                      <p class="text-muted">Filling :{{ product.note }}</p>
+                      <p class="text-muted">Filling :{{ product.quantity }}</p>
                     </div>
                   </div>
                 </div>
@@ -33,7 +39,7 @@
               <div
                 class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap"
               >
-                <div class="">
+                <!-- <div class="">
                   <select style="width: 100px" class="form-select me-4">
                     <option>1</option>
                     <option>2</option>
@@ -42,11 +48,41 @@
                   </select>
                 </div>
                 <div class="">
-                  <span class="h6">{{ product.prod.product_price }} Mt</span>
+                  <span class="h6">{{ product.product.product_price }} Mt</span>
                   <br />
                   <small class="text-muted text-nowrap">
-                    {{ product.prod.product_category?.category_name }}
+                    {{ product.product.product_category?.category_name }}
                   </small>
+                </div> -->
+
+                <div
+                  class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap"
+                >
+                  <div class="">
+                    <select
+                      [(ngModel)]="product.quantity"
+                      (change)="updateQuantity(product)"
+                    >
+                      <option value="“1”">1</option>
+                      <option value="“2”">2</option>
+                      <option value="“3”">3</option>
+                    </select>
+                    <!-- <select
+                      [(ngModel)]="product.quantity"
+                      (change)="updateQuantity(product)"
+                    >
+                      <option *ngFor="let i of [1, 2, 3, 4]" [value]="i">
+                        {{ i }}
+                      </option>
+                    </select> -->
+                  </div>
+                  <div class="">
+                    <span class="h6">{{ product.subtotal }} Mt</span>
+                    <br />
+                    <small class="text-muted text-nowrap">
+                      {{ product.product.product_category?.category_name }}
+                    </small>
+                  </div>
                 </div>
               </div>
               <div
@@ -81,10 +117,10 @@
       </div>
       <!-- cart -->
       <!-- summary -->
-      <div class="col-lg-3">
-        <div class="card mb-3 border shadow-0">
-          <!-- <div class="card-body"> -->
-          <!-- <form>
+      <div class="col-lg-3 row1">
+        <!-- <div class="card mb-3 border shadow-0"> -->
+        <!-- <div class="card-body"> -->
+        <!-- <form>
               <div class="form-group">
                 <label class="form-label">Have coupon?</label>
                 <div class="input-group">
@@ -98,8 +134,8 @@
                 </div>
               </div>
             </form> -->
-          <!-- </div> -->
-        </div>
+        <!-- </div> -->
+        <!-- </div> -->
         <div class="card shadow-0 border">
           <div class="card-body">
             <!-- <div class="d-flex justify-content-between">

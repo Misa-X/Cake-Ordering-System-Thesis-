@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 import { OrderItem } from '../models/order-item';
-import { map } from 'rxjs/operators';
+
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderItemService {
+  private itemDoc!: AngularFirestoreDocument<OrderItem>;
   constructor(private afs: AngularFirestore) {}
 
   // add order item
   addOrderItem(item: OrderItem) {
+    item.id = this.afs.createId();
     return this.afs.collection('/Order-Item').add(item);
   }
 
@@ -29,12 +36,18 @@ export class OrderItemService {
 
   // delete order item
   deleteOrderItem(item: OrderItem) {
-    return this.afs.doc('/Oder-Item/' + item.id).delete();
+    return this.afs.doc('/Order-Item/' + item.id).delete();
   }
 
   // update order item
   updateOrderItem(item: OrderItem) {
-    this.deleteOrderItem(item);
-    this.addOrderItem(item);
+    this.itemDoc = this.afs.doc(`/Order-Item/${item.id}`);
+    const itemId = this.itemDoc.ref.id;
+    item.id = itemId;
+    return this.itemDoc.update(item);
+
+    // return this.afs.doc(`/Order-Item/${id}`).update(item);
+    // this.deleteOrderItem(item);
+    // this.addOrderItem(item);
   }
 }

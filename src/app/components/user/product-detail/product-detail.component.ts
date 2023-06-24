@@ -20,8 +20,11 @@ export class ProductDetailComponent implements OnInit {
   productList: Products[] = [];
   customizations: Custom[] = [];
   product: any = {};
-  // customList: Custom[] = [];
   orderItemList: OrderItem[] = [];
+
+  fillingArray: Custom[] = [];
+  flavorArray: Custom[] = [];
+  sizeArray: Custom[] = [];
 
   orderItemObj: OrderItem = {
     id: '',
@@ -33,23 +36,21 @@ export class ProductDetailComponent implements OnInit {
       product_image: '',
       product_price: 0,
     },
-    customization: {
-      id: '',
-      name: '',
-      type: '',
-      price: 0,
-    },
+    customization: [],
+    color: '',
     note: '',
-    quantity: 0,
+    quantity: 1,
     picture: '',
     subtotal: 0,
   };
 
   id: string = '';
   productt: string = '';
-  customization: string = '';
+
+  customization: string[] = [];
+  color: string = '';
   note: string = '';
-  quantity: number = 0;
+  quantity: number = 1;
   picture: string = '';
   subtotal: number = 0;
 
@@ -57,39 +58,18 @@ export class ProductDetailComponent implements OnInit {
   uploadProgress: number | null = null;
   downloadURL: string | null = null;
   selectedOrderItem: Products | null = null;
+  selectedOrderItemm: OrderItem | null = null;
 
-  // custom: Customization = {
-  //   id: '',
-  //   prod: {
-  //     id: '',
-  //     product_name: '',
-  //     product_category: { id: '', category_name: '' },
-  //     product_description: '',
-  //     product_image: '',
-  //     product_price: 0,
-  //   },
-  //   color: '',
-  //   size: 0,
-  //   filling: '',
-  //   flavor: '',
-  // };
-
-  // customObj: Custom = {
-  //   id: '',
-  //   name: '',
-  //   type: '',
-  //   price: '',
-  // };
-
-  // custom_id: string = '';
-  // name: string = '';
-  // type: string = '';
-
+  colorValue: string = '';
   quantityValue: number = 1;
   notesValue: string = '';
   pictureValue: any;
 
   selectedProduct: Products | null = null;
+
+  selectedSize: string = ''; // Declare the selectedSize variable
+  selectedFilling: string = ''; // Declare the selectedFilling variable
+  selectedFlavor: string = ''; // Declare the selectedFlavor variable
 
   constructor(
     private data: DataService,
@@ -104,6 +84,8 @@ export class ProductDetailComponent implements OnInit {
       .pipe(
         switchMap((params: ParamMap) => {
           const productId = params.get('id');
+
+          this.productt = productId !== null ? productId : '';
 
           return productId ? this.data.getProductById(productId) : of(null);
         })
@@ -130,6 +112,22 @@ export class ProductDetailComponent implements OnInit {
         const id = e.payload.doc.id;
         return { id, ...data } as Custom;
       });
+
+      console.log('Lista: ', this.customizations);
+
+      this.sizeArray = this.customizations.filter(
+        (custom) => custom.type === 'size'
+      );
+      this.fillingArray = this.customizations.filter(
+        (custom) => custom.type === 'filling'
+      );
+      this.flavorArray = this.customizations.filter(
+        (custom) => custom.type === 'flavor'
+      );
+
+      console.log('Size Array: ', this.sizeArray);
+      console.log('Filling Array: ', this.fillingArray);
+      console.log('Flavor Array: ', this.flavorArray);
     });
 
     // this.getAllCustom();
@@ -138,7 +136,8 @@ export class ProductDetailComponent implements OnInit {
   resetForm() {
     this.id = '';
     this.productt = '';
-    this.customization = '';
+    this.customization = [];
+    this.color = '';
     this.note = '';
     this.quantity = 0;
     this.picture = '';
@@ -148,43 +147,51 @@ export class ProductDetailComponent implements OnInit {
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
   }
+  updateCustomization(custId: string) {
+    console.log('Cust ID:', custId);
+    if (this.customization.includes(custId)) {
+      // Remove the custId from the customization array if it already exists
+      this.customization = this.customization.filter((id) => id !== custId);
+    } else {
+      // Add the custId to the customization array if it doesn't exist
+      this.customization.push(custId);
+    }
+  }
 
   addOrderItem() {
+    console.log('Selected Product ID:', this.productt);
+    console.log('Selected Customization ID:', this.customization);
+
     const selectedProduct = this.productList.find(
       (product) => product.id === this.productt
     );
 
+    console.log('Selected Product:', selectedProduct);
+
     if (selectedProduct) {
       this.orderItemObj.product = selectedProduct;
     } else {
-      this.orderItemObj.product = {
-        id: '',
-        product_name: '',
-        product_category: { id: '', category_name: '' },
-        product_description: '',
-        product_image: '',
-        product_price: 0,
-      };
+      console.log('Selected product not found.');
+      return; // Stop the execution if the selected product is not found
     }
 
-    const selectedCustomization = this.customizations.find(
-      (custom) => custom.id === this.customization
+    const selectedCustomizationIds = this.customization;
+    const selectedCustomizations = this.customizations.filter((custom) =>
+      selectedCustomizationIds.includes(custom.id)
     );
 
-    if (selectedCustomization) {
-      this.orderItemObj.customization = selectedCustomization;
+    if (selectedCustomizations.length > 0) {
+      this.orderItemObj.customization = selectedCustomizations;
     } else {
-      this.orderItemObj.customization = {
-        id: '',
-        name: '',
-        type: '',
-        price: 0,
-      };
+      console.log('Selected customizations not found.');
+      return; // Stop the execution if the selected customizations are not found
     }
 
+    console.log('Selected Customizations: ', selectedCustomizations);
+
+    this.orderItemObj.color = this.color;
     this.orderItemObj.note = this.note;
     this.orderItemObj.quantity = this.quantity;
-    // this.orderItemObj.picture = this.picture;
     this.orderItemObj.subtotal = this.subtotal;
 
     if (this.selectedFile) {
@@ -205,58 +212,20 @@ export class ProductDetailComponent implements OnInit {
         )
         .subscribe();
     } else {
+      // this.orderItemObj.picture = this.selectedOrderItemm.picture;
       this.itemData.addOrderItem(this.orderItemObj);
+      console.log('object: ', this.orderItemObj);
+      console.log('Selected Filling: ', this.selectedFilling);
       this.resetForm();
     }
   }
 
-  /*
-  addToCart(cust: Customization) {
-    console.log('The category ', this.product.product_category);
-    this.custom.prod.product_name = this.product.product_name;
-    this.custom.prod.product_description = this.product.product_description;
-    this.custom.prod.product_image = this.product.product_image;
-    this.custom.prod.product_price = this.product.product_price;
-    this.custom.prod.product_category = this.product.product_category;
+  checkout() {
+    this.addOrderItem();
 
-    // prod: {
-    //   id: '',
-    //   product_name: '',
-    //   product_category: { id: '', category_name: '' },
-    //   product_description: '',
-    //   product_image: '',
-    //   product_price: 0,
-    // },
+    const addedItemId = this.orderItemObj.id;
 
-    // Get the form data here
-
-    const formData = {
-      color: this.custom.color,
-      size: this.custom.size,
-      cakeFilling: this.custom.filling,
-      cakeFlavor: this.custom.flavor,
-      quantity: this.quantityValue,
-      notes: this.notesValue,
-      picture: this.pictureValue,
-    };
-    console.log('form data: ', formData);
-
-    // Navigate to the cart component and pass the form data as route parameters
-    this.router.navigate(['/cart'], { queryParams: formData });
-
-    // Add the product to the cart (your existing code)
-    this.data.addToCart(this.custom);
+    // Navigate to the checkout page with the order item ID as a parameter
+    this.router.navigate(['/checkout', addedItemId]);
   }
-
-  // get all customizations
-  getAllCustom() {
-    this.data.getAllCustom().subscribe((res) => {
-      this.customList = res.map((e: any) => {
-        const data = e.payload.doc.data();
-        const id = e.pauload.doc.id;
-        return { id, ...data } as Custom;
-      });
-    });
-  }
-*/
 }
