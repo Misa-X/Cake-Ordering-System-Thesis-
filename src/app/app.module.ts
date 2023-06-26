@@ -54,6 +54,7 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { SidenavComponent } from './components/admin/dashboard/sidenav/sidenav.component';
 import { UserComponent } from './components/user/user.component';
 import { OrdersComponent } from './components/admin/dashboard/orders/orders.component';
+// import { AdminDashComponent } from './components/admin/dashboard/admin-dash/admin-dash.component';
 
 @NgModule({
   declarations: [

@@ -1,0 +1,142 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  background: url(/assets/images/bgImage.jpg) no-repeat;
+  align-items: center;
+  background-size: cover;
+  justify-content: center;
+}
+
+.login-form {
+  background-color: darkgray;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 50px;
+  width: 30%;
+}
+
+.login-form h1 {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.row a {
+  color: #777;
+  text-decoration: none;
+}
+
+.row a:hover {
+  color: #333;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.row-item {
+  display: inline-block;
+}
+
+.left {
+  align-self: flex-start;
+}
+
+.right {
+  align-self: flex-end;
+}
+
+.button {
+  text-align: center;
+}
+
+.btn {
+  width: 100%;
+  background-color: #5286f3;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #3f70c8;
+}
+
+hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 1.5px dashed white;
+}
+
+.create {
+  text-align: center;
+}
+
+.create a {
+  text-decoration: none;
+  color: black;
+}
+
+.social-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.social-signin h3 {
+  margin-right: 20px;
+  font-weight: normal;
+}
+
+.social-signin a {
+  margin-left: 15px;
+  padding: 10px;
+  display: inline-block;
+  border: 1.5px solid white;
+  border-radius: 40px;
+}
+
+.social-signin i {
+  font-size: 24px;
+  color: #333;
+}

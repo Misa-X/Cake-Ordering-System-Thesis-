@@ -13,28 +13,34 @@
         class="form-control"
         id="productName"
         name="productName"
+        [(ngModel)]="product_name"
         required
       />
     </div>
     <div class="form-group">
-      <label for="productPrice">Product Description</label>
+      <label for="productDescription">Product Description</label>
       <input
-        type="number"
+        type="texxt"
         class="form-control"
         id="productDescription"
         name="productDescription"
+        [(ngModel)]="product_description"
         required
       />
     </div>
     <div class="form-group">
-      <label for="productQuantity">Product Category</label>
-      <input
-        type="number"
-        class="form-control"
-        id="productCategory"
-        name="productCategory"
-        required
-      />
+      <label for="product_Category">Product Category</label>
+      <select
+        class="form-select"
+        id="product_category"
+        name="product_category"
+        [(ngModel)]="product_category"
+      >
+        <option value="">Select a category</option>
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.category_name }}
+        </option>
+      </select>
     </div>
     <div class="form-group">
       <label for="productPrice">Product Price</label>
@@ -43,16 +49,37 @@
         class="form-control"
         id="productPrice"
         name="productPrice"
+        [(ngModel)]="product_price"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="productImage">Product Image</label>
+      <input
+        type="file"
+        class="form-control"
+        id="productImage"
+        name="productImage"
+        (change)="onFileSelected($event)"
         required
       />
     </div>
   </form>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+<div class="modal-footer" style="display: flex; justify-content: center">
+  <button
+    type="button"
+    class="btn btn-secondary button-style"
+    (click)="closeDialog()"
+  >
     Cancel
   </button>
-  <button type="button" class="btn btn-primary" (click)="saveProduct()">
+  <button
+    type="button"
+    class="btn btn-primary button-style"
+    style="margin-left: 10px"
+    (click)="addProduct()"
+  >
     Save
   </button>
 </div>

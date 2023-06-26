@@ -26,7 +26,7 @@
       <mat-icon>help</mat-icon><span>Help</span>
     </button>
     <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="#">
+    <button mat-menu-item routerLink="#" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>Logout
     </button>
   </mat-menu>
@@ -40,14 +40,14 @@
     class="app-sidenav"
   >
     <mat-nav-list>
-      <mat-list-item routerLink="/Dashboard">
+      <mat-list-item routerLink="/dash/admin-dash">
         <mat-icon class="icon">dashboard </mat-icon><span> Dashboard</span>
       </mat-list-item>
 
       <mat-list-item routerLink="/dash/orders">
         <mat-icon class="icon">library_books</mat-icon><span> Orders</span>
       </mat-list-item>
-      <mat-list-item routerLink="/dash/product">
+      <mat-list-item routerLink="/dash/products">
         <mat-icon class="icon">library_books</mat-icon
         ><span> Manage Products</span>
       </mat-list-item>

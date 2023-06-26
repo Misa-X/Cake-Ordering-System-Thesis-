@@ -30,6 +30,8 @@ import { NavbarComponent } from '../components/user/navbar/navbar.component';
 import { FooterComponent } from '../components/user/footer/footer.component';
 import { UserComponent } from '../components/user/user.component';
 import { CartComponent } from '../components/user/cart/cart.component';
+import { AboutUsComponent } from '../components/user/about-us/about-us.component';
+import { ContactUsComponent } from '../components/user/contact-us/contact-us.component';
 
 const routes: Routes = [
   {
@@ -39,7 +41,10 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'product-detail/:id', component: ProductDetailComponent },
       { path: 'checkout', component: CheckoutComponent },
+      { path: 'checkout/:id', component: CheckoutComponent },
       { path: 'cart', component: CartComponent },
+      { path: 'about', component: AboutUsComponent },
+      { path: 'contact', component: ContactUsComponent },
     ],
   },
 ];
@@ -53,6 +58,8 @@ const routes: Routes = [
     FooterComponent,
     UserComponent,
     CartComponent,
+    AboutUsComponent,
+    ContactUsComponent,
   ],
   imports: [
     BrowserModule,

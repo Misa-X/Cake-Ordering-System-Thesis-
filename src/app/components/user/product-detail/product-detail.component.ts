@@ -124,10 +124,6 @@ export class ProductDetailComponent implements OnInit {
       this.flavorArray = this.customizations.filter(
         (custom) => custom.type === 'flavor'
       );
-
-      console.log('Size Array: ', this.sizeArray);
-      console.log('Filling Array: ', this.fillingArray);
-      console.log('Flavor Array: ', this.flavorArray);
     });
 
     // this.getAllCustom();
@@ -214,8 +210,7 @@ export class ProductDetailComponent implements OnInit {
     } else {
       // this.orderItemObj.picture = this.selectedOrderItemm.picture;
       this.itemData.addOrderItem(this.orderItemObj);
-      console.log('object: ', this.orderItemObj);
-      console.log('Selected Filling: ', this.selectedFilling);
+      this.calculateCustomization(this.orderItemObj);
       this.resetForm();
     }
   }
@@ -225,7 +220,37 @@ export class ProductDetailComponent implements OnInit {
 
     const addedItemId = this.orderItemObj.id;
 
+    console.log('Added Order Item ID:', addedItemId);
+
     // Navigate to the checkout page with the order item ID as a parameter
-    this.router.navigate(['/checkout', addedItemId]);
+    // this.router.navigate(['/user/checkout', addedItemId]);
+
+    // Navigate to the checkout page with the order item ID as a parameter
+    const checkoutUrl = `/user/checkout/${addedItemId}`;
+    this.router.navigateByUrl(checkoutUrl);
+  }
+
+  calculateCustomization(item: OrderItem) {
+    const productPrice = parseFloat(item.product.product_price.toString());
+    let totalPrice = productPrice; // Initialize totalPrice with the product price
+
+    item.customization.forEach((customization: Custom) => {
+      const custPrice = parseFloat(customization.price.toString());
+      if (!isNaN(custPrice)) {
+        totalPrice += custPrice;
+      }
+    });
+
+    item.subtotal = totalPrice;
+
+    this.itemData
+      .updateOrderItem(item)
+      .then(() => {
+        console.log('Subtotal updated:', item.subtotal);
+        // this.subtotal = item.subtotal;
+      })
+      .catch((error) => {
+        console.error('Error updating order item:', error);
+      });
   }
 }

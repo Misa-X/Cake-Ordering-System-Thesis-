@@ -27,6 +27,7 @@ export class DataService {
 
   //get product by id
   getProductById(id: string) {
+    console.log(id);
     return this.afs
       .collection('/Products', (ref) => ref.where('id', '==', id))
       .valueChanges()
@@ -169,7 +170,6 @@ export class DataService {
       .valueChanges()
       .pipe(map((custom) => custom[0]));
   }
-  
 
   // delete customization
   deleteCustom(custom: Custom) {

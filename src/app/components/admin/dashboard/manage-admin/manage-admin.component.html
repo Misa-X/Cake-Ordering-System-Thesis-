@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="card-header">
+    <a class="btn btn-success">Add Product [+]</a>
+  </div>
+  <br />
+  <mat-table class="mat-elevation-z8">
+    <!-- First Name Column -->
+    <ng-container matColumnDef="first">
+      <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+      <mat-cell>Misa</mat-cell>
+    </ng-container>
+
+    <!-- Last Name Column -->
+    <ng-container matColumnDef="last">
+      <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+      <mat-cell class="col-items">Xirinda</mat-cell>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+      <mat-cell class="col-items">misaxirinda@gmail.com</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>

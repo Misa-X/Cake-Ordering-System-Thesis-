@@ -29,6 +29,11 @@ import { CategoryComponent } from '../components/admin/dashboard/category/catego
 import { DashboardComponent } from '../components/admin/dashboard/dashboard.component';
 import { ProductComponent } from '../components/admin/dashboard/product/product.component';
 import { OrdersComponent } from '../components/admin/dashboard/orders/orders.component';
+import { ProductListComponent } from '../components/admin/dashboard/product-list/product-list.component';
+import { CreateProductComponent } from '../components/admin/dashboard/create-product/create-product.component';
+import { ManageAdminComponent } from '../components/admin/dashboard/manage-admin/manage-admin.component';
+import { RegisterComponent } from '../components/admin/dashboard/register/register.component';
+import { AdminDashComponent } from '../components/admin/dashboard/admin-dash/admin-dash.component';
 
 const routes: Routes = [
   {
@@ -37,7 +42,11 @@ const routes: Routes = [
     children: [
       { path: 'category', component: CategoryComponent },
       { path: 'product', component: ProductComponent },
+      { path: 'products', component: ProductListComponent },
       { path: 'orders', component: OrdersComponent },
+      { path: 'manageAdmin', component: ManageAdminComponent },
+      { path: 'admin-register', component: RegisterComponent },
+      { path: 'admin-dash', component: AdminDashComponent },
     ],
   },
 ];
@@ -48,7 +57,12 @@ const routes: Routes = [
     SidenavComponent,
     CategoryComponent,
     ProductComponent,
+    ProductListComponent,
     OrdersComponent,
+    CreateProductComponent,
+    ManageAdminComponent,
+    RegisterComponent,
+    AdminDashComponent,
   ],
   imports: [
     MDBBootstrapModule.forRoot(),

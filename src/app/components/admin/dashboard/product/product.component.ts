@@ -5,6 +5,9 @@ import { Products } from 'src/app/models/products';
 import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { CreateProductComponent } from '../create-product/create-product.component';
 
 @Component({
   selector: 'app-product',
@@ -35,7 +38,13 @@ export class ProductComponent implements OnInit {
   downloadURL: string | null = null;
   selectedProduct: Products | null = null;
 
-  constructor(private data: DataService, private storage: AngularFireStorage) {}
+  constructor(
+    private data: DataService,
+    private storage: AngularFireStorage,
+    private dialog: MatDialog
+  ) {}
+
+  dataSource!: MatTableDataSource<Products>;
 
   ngOnInit(): void {
     this.getAllProducts();
@@ -180,5 +189,17 @@ export class ProductComponent implements OnInit {
     ) {
       this.data.deleteProduct(product);
     }
+  }
+
+  openAddProduct() {
+    const dialogRef = this.dialog.open(CreateProductComponent, {
+      width: '400px', // Adjust the width as per your requirements
+      // You can also specify other dialog configuration options here
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // Handle any actions after the dialog is closed
+      console.log('Dialog closed', result);
+    });
   }
 }

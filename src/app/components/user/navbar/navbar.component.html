@@ -4,15 +4,25 @@
 
   <ul class="navbar">
     <li><a routerLink="/user/home">Home</a></li>
-    <li><a href="category">Category</a></li>
-
-    <li><a href="#about">About Us</a></li>
-    <li><a href="#contact">Contact Us</a></li>
+    <li class="dropdown">
+      <button mat-button [matMenuTriggerFor]="categoryMenu">Category</button>
+      <mat-menu #categoryMenu="matMenu">
+        <button
+          mat-menu-item
+          *ngFor="let category of categories"
+          [value]="category.id"
+        >
+          {{ category.category_name }}
+        </button>
+      </mat-menu>
+    </li>
+    <li><a routerLink="/user/about">About Us</a></li>
+    <li><a routerLink="/user/contact">Contact Us</a></li>
   </ul>
 
   <div class="icons">
     <a href="#"><i class="bx bx-search-alt-2"></i></a>
     <a href="#" (click)="logout()"><i class="bx bx-user"></i></a>
-    <a routerLink="/cart"><i class="bx bx-cart-alt"></i></a>
+    <a routerLink="/user/cart"><i class="bx bx-cart-alt"></i></a>
   </div>
 </header>

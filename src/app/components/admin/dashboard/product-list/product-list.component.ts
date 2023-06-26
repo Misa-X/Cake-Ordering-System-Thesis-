@@ -1,23 +1,28 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialog,
-} from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { Category } from 'src/app/models/category';
+import { __importDefault } from 'tslib';
+import { CreateProductComponent } from '../create-product/create-product.component';
+import { Products } from 'src/app/models/products';
 import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Category } from 'src/app/models/category';
 import { finalize } from 'rxjs/operators';
-import { Products } from 'src/app/models/products';
 
 @Component({
-  selector: 'app-create-product',
-  templateUrl: './create-product.component.html',
-  styleUrls: ['./create-product.component.css'],
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css'],
 })
-export class CreateProductComponent implements OnInit {
-  product: any = {};
+export class ProductListComponent implements OnInit {
+  displayedColumns: string[] = [
+    'name',
+    'description',
+    'category',
+    'price',
+    'action',
+  ];
+
   productList: Products[] = [];
   categories: Category[] = [];
 
@@ -42,27 +47,15 @@ export class CreateProductComponent implements OnInit {
   selectedProduct: Products | null = null;
 
   constructor(
-    public dialogRef: MatDialogRef<CreateProductComponent>,
-    @Inject(MAT_DIALOG_DATA) public datas: any,
+    private dialog: MatDialog,
     private data: DataService,
     private storage: AngularFireStorage
   ) {}
 
-  ngOnInit(): void {
-    this.getAllCategories();
-    if (this.data) {
-      this.product = { ...this.data }; // Assign a copy of the received product data to the component variable
-    }
-  }
+  dataSource!: MatTableDataSource<Products>;
 
-  getAllCategories() {
-    this.data.getAllCategories().subscribe((res) => {
-      this.categories = res.map((e: any) => {
-        const data = e.payload.doc.data();
-        const id = e.payload.doc.id;
-        return { id, ...data } as Category;
-      });
-    });
+  ngOnInit(): void {
+    this.getAllProducts();
   }
 
   resetForm() {
@@ -72,6 +65,27 @@ export class CreateProductComponent implements OnInit {
     this.product_description = '';
     this.product_image = '';
     this.product_price = 0;
+  }
+
+  getAllProducts() {
+    this.data.getAllProducts().subscribe(
+      (res) => {
+        this.productList = res.map((e: any) => {
+          const data = e.payload.doc.data();
+          data.id = e.payload.doc.id;
+          return data;
+        });
+        this.dataSource = new MatTableDataSource(this.productList);
+      },
+      (err: any) => {
+        alert('Error while fetching product data');
+      }
+    );
+  }
+
+  editProduct(product: Products) {
+    // Implement your logic for editing the product
+    console.log('Edit product:', product);
   }
 
   onFileSelected(event: any) {
@@ -172,7 +186,6 @@ export class CreateProductComponent implements OnInit {
     this.product_price = this.selectedProduct.product_price;
   }
 
-  // delete product
   deleteProduct(product: Products) {
     if (
       window.confirm(
@@ -183,16 +196,28 @@ export class CreateProductComponent implements OnInit {
     }
   }
 
-  saveProduct() {
-    // Perform any necessary operations with the product data
-    console.log('Product:', this.product);
+  openAddProduct() {
+    const dialogRef = this.dialog.open(CreateProductComponent, {
+      width: '400px', // Adjust the width as per your requirements
+      // You can also specify other dialog configuration options here
+    });
 
-    // Close the dialog and pass the product data back to the parent component
-    this.dialogRef.close(this.product);
+    dialogRef.afterClosed().subscribe((result) => {
+      // Handle any actions after the dialog is closed
+      console.log('Dialog closed', result);
+    });
   }
 
-  closeDialog() {
-    // Close the dialog without passing any data
-    this.dialogRef.close();
+  openEditProduct(product: Products | null) {
+    const dialogRef = this.dialog.open(CreateProductComponent, {
+      width: '400px', // Adjust the width as per your requirements
+      data: product, // Pass the selected product data to the dialog
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.updateProduct(result); // Handle the updated product data
+      }
+    });
   }
 }

@@ -5,46 +5,129 @@ import { GoogleAuthProvider } from '@angular/fire/auth';
 // import { auth } from 'firebase/compat/app'
 import { Auth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs/operators';
+//import * as admin from 'firebase-admin';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(private fireauth: AngularFireAuth, private router: Router) {}
-
-  //login method
+  // new login method
   login(email: string, password: string) {
-    this.fireauth.signInWithEmailAndPassword(email, password).then(
-      (res) => {
+    this.fireauth
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
         localStorage.setItem('token', 'true');
 
-        if (res.user?.emailVerified == true) {
-          this.router.navigate(['/home']);
+        if (res.user?.emailVerified) {
+          if (res.user.displayName === 'admin') {
+            this.router.navigate(['/dash']);
+          } else {
+            this.router.navigate(['/user/home']);
+          }
         } else {
           this.router.navigate(['/verify-email']);
         }
-      },
-      (err) => {
+      })
+      .catch((err) => {
         alert(err.message);
         this.router.navigate(['/login']);
-      }
-    );
+      });
   }
 
-  //register method
-  register(email: string, password: string) {
-    this.fireauth.createUserWithEmailAndPassword(email, password).then(
-      (res) => {
+  //Original login method
+  // login(email: string, password: string) {
+  //   this.fireauth.signInWithEmailAndPassword(email, password).then(
+  //     (res) => {
+  //       localStorage.setItem('token', 'true');
+
+  //       if (res.user?.emailVerified == true) {
+  //         this.router.navigate(['/home']);
+  //       } else {
+  //         this.router.navigate(['/verify-email']);
+  //       }
+  //     },
+  //     (err) => {
+  //       alert(err.message);
+  //       this.router.navigate(['/login']);
+  //     }
+  //   );
+  // }
+
+  // register an admin user
+  registerAdmin(email: string, password: string) {
+    this.fireauth
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
         alert('Registration successful');
         this.router.navigate(['/login']);
         this.sendEmailVerification(res.user);
-      },
-      (err) => {
+
+        // Assign "user" role to newly registered user
+        if (res.user) {
+          res.user
+            .updateProfile({
+              displayName: 'admin',
+              // Add other user profile data as needed
+            })
+            .then(() => {
+              // User profile updated successfully
+            })
+            .catch((error) => {
+              // Error updating user profile
+            });
+        }
+      })
+      .catch((err) => {
         alert(err.message);
         this.router.navigate(['/register']);
-      }
-    );
+      });
   }
+
+  // new register method basic user
+  register(email: string, password: string) {
+    this.fireauth
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        alert('Registration successful');
+        this.router.navigate(['/login']);
+        this.sendEmailVerification(res.user);
+
+        // Assign "user" role to newly registered user
+        if (res.user) {
+          res.user
+            .updateProfile({
+              displayName: 'user',
+              // Add other user profile data as needed
+            })
+            .then(() => {
+              // User profile updated successfully
+            })
+            .catch((error) => {
+              // Error updating user profile
+            });
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+        this.router.navigate(['/register']);
+      });
+  }
+
+  // original register method
+  // register(email: string, password: string) {
+  //   this.fireauth.createUserWithEmailAndPassword(email, password).then(
+  //     (res) => {
+  //       alert('Registration successful');
+  //       this.router.navigate(['/login']);
+  //       this.sendEmailVerification(res.user);
+  //     },
+  //     (err) => {
+  //       alert(err.message);
+  //       this.router.navigate(['/register']);
+  //     }
+  //   );
+  // }
 
   //sign out
   logout() {

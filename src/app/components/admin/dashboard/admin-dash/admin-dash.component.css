@@ -1,0 +1,74 @@
+.container {
+  margin-top: 20px;
+}
+
+.card {
+  min-height: 150px;
+  text-align: center;
+  padding: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.bg-peach {
+  background-color: #ffcba4; /* Use peach color */
+}
+
+.bg-light-pink {
+  background-color: #ffd8c0; /* Use light pink color */
+}
+.bg-c-blue {
+  background: linear-gradient(45deg, #4099ff, #4a5c64);
+}
+
+.bg-c-green {
+  background: linear-gradient(45deg, #2ed8b6, #4a5c64);
+}
+
+.bg-c-yellow {
+  background: linear-gradient(45deg, #ffb64d, #4a5c64);
+}
+
+.bg-c-pink {
+  background: linear-gradient(45deg, #30a33a, #4a5c64);
+}
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  border: none;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  font: small-caps;
+}
+
+.card .card-block {
+  padding: 25px;
+}
+.order-card i {
+  font-size: 26px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: right;
+}
+.text-right {
+  font-size: 10px;
+}
+.w3-panel h3 {
+  padding-top: 10px;
+  padding-left: 20px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  font-size: large;
+}
+.w3-panel {
+  align-items: center;
+  text-align: left;
+}
