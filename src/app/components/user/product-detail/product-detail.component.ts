@@ -10,6 +10,7 @@ import { OrderItem } from 'src/app/models/order-item';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { OrderItemService } from 'src/app/shared/order-item.service';
+import { CheckoutService } from 'src/app/shared/checkout.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -42,6 +43,7 @@ export class ProductDetailComponent implements OnInit {
     quantity: 1,
     picture: '',
     subtotal: 0,
+    // selected: false,
   };
 
   id: string = '';
@@ -76,7 +78,8 @@ export class ProductDetailComponent implements OnInit {
     private itemData: OrderItemService,
     private route: ActivatedRoute,
     private router: Router,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private ItemData: CheckoutService
   ) {}
 
   ngOnInit(): void {
@@ -125,8 +128,6 @@ export class ProductDetailComponent implements OnInit {
         (custom) => custom.type === 'flavor'
       );
     });
-
-    // this.getAllCustom();
   }
 
   resetForm() {
@@ -202,15 +203,142 @@ export class ProductDetailComponent implements OnInit {
             fileRef.getDownloadURL().subscribe((imageUrl) => {
               this.orderItemObj.picture = imageUrl;
               this.itemData.addOrderItem(this.orderItemObj);
+
+              // .then(() => {
+              //   const subtotal = this.itemData.calculateSubtotal(
+              //     this.orderItemObj
+              //   );
+              //   this.orderItemObj.subtotal = subtotal;
+              //   console.log('some oject: ', this.orderItemObj);
+              // })
+
+              // this.itemData
+              //   .updateOrderItemSubtotal(this.orderItemObj)
+              //   .then(() => {
+              //     this.resetForm();
+              //   })
+              //   .catch((error) => {
+              //     console.log('Error updating order item subtotal:', error);
+              //   })
+              //   .catch((error) => {
+              //     console.log('Error adding order item:', error);
+              //   });
+
               this.resetForm();
             });
           })
         )
         .subscribe();
     } else {
+      // try {
+      //   const docRef = await this.itemData.addOrderItem(this.orderItemObj);
+      //   this.orderItemList.push(this.orderItemObj); // Add the newly created order item to the order item list
+
+      //   await this.itemData.updateOrderItemSubtotal(this.orderItemObj);
+      //   console.log('Subtotal updated successfully.');
+
+      //   this.resetForm();
+      // } catch (error) {
+
+      //   console.log('Error adding order item or updating subtotal:', error);
+      // }
+
       // this.orderItemObj.picture = this.selectedOrderItemm.picture;
       this.itemData.addOrderItem(this.orderItemObj);
-      this.calculateCustomization(this.orderItemObj);
+      this.resetForm();
+    }
+  }
+
+  addCheckoutItem() {
+    console.log('Selected Product ID:', this.productt);
+    console.log('Selected Customization ID:', this.customization);
+
+    const selectedProduct = this.productList.find(
+      (product) => product.id === this.productt
+    );
+
+    console.log('Selected Product:', selectedProduct);
+
+    if (selectedProduct) {
+      this.orderItemObj.product = selectedProduct;
+    } else {
+      console.log('Selected product not found.');
+      return; // Stop the execution if the selected product is not found
+    }
+
+    const selectedCustomizationIds = this.customization;
+    const selectedCustomizations = this.customizations.filter((custom) =>
+      selectedCustomizationIds.includes(custom.id)
+    );
+
+    if (selectedCustomizations.length > 0) {
+      this.orderItemObj.customization = selectedCustomizations;
+    } else {
+      console.log('Selected customizations not found.');
+      return; // Stop the execution if the selected customizations are not found
+    }
+
+    console.log('Selected Customizations: ', selectedCustomizations);
+
+    this.orderItemObj.color = this.color;
+    this.orderItemObj.note = this.note;
+    this.orderItemObj.quantity = this.quantity;
+    this.orderItemObj.subtotal = this.subtotal;
+
+    if (this.selectedFile) {
+      const filePath = `image_upload/${Date.now()}_${this.selectedFile.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, this.selectedFile);
+
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe((imageUrl) => {
+              this.orderItemObj.picture = imageUrl;
+              this.ItemData.addCheckoutItem(this.orderItemObj);
+
+              // .then(() => {
+              //   const subtotal = this.itemData.calculateSubtotal(
+              //     this.orderItemObj
+              //   );
+              //   this.orderItemObj.subtotal = subtotal;
+              //   console.log('some oject: ', this.orderItemObj);
+              // })
+
+              // this.itemData
+              //   .updateOrderItemSubtotal(this.orderItemObj)
+              //   .then(() => {
+              //     this.resetForm();
+              //   })
+              //   .catch((error) => {
+              //     console.log('Error updating order item subtotal:', error);
+              //   })
+              //   .catch((error) => {
+              //     console.log('Error adding order item:', error);
+              //   });
+
+              this.resetForm();
+            });
+          })
+        )
+        .subscribe();
+    } else {
+      // try {
+      //   const docRef = await this.itemData.addOrderItem(this.orderItemObj);
+      //   this.orderItemList.push(this.orderItemObj); // Add the newly created order item to the order item list
+
+      //   await this.itemData.updateOrderItemSubtotal(this.orderItemObj);
+      //   console.log('Subtotal updated successfully.');
+
+      //   this.resetForm();
+      // } catch (error) {
+
+      //   console.log('Error adding order item or updating subtotal:', error);
+      // }
+
+      // this.orderItemObj.picture = this.selectedOrderItemm.picture;
+      this.ItemData.addCheckoutItem(this.orderItemObj);
       this.resetForm();
     }
   }
@@ -230,24 +358,55 @@ export class ProductDetailComponent implements OnInit {
     this.router.navigateByUrl(checkoutUrl);
   }
 
-  calculateCustomization(item: OrderItem) {
-    const productPrice = parseFloat(item.product.product_price.toString());
-    let totalPrice = productPrice; // Initialize totalPrice with the product price
+  // calculateCustomization(item: OrderItem) {
+  //   const productPrice = parseFloat(item.product.product_price.toString());
+  //   let totalPrice = productPrice; // Initialize totalPrice with the product price
 
-    item.customization.forEach((customization: Custom) => {
-      const custPrice = parseFloat(customization.price.toString());
-      if (!isNaN(custPrice)) {
-        totalPrice += custPrice;
-      }
-    });
+  //   item.customization.forEach((customization: Custom) => {
+  //     const custPrice = parseFloat(customization.price.toString());
+  //     if (!isNaN(custPrice)) {
+  //       totalPrice += custPrice;
+  //     }
+  //   });
 
-    item.subtotal = totalPrice;
+  //   item.subtotal = totalPrice;
+
+  //   this.itemData
+  //     .updateOrderItem(item)
+  //     .then(() => {
+  //       console.log('Subtotal updated:', item.subtotal);
+  //       // this.subtotal = item.subtotal;
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error updating order item:', error);
+  //     });
+  // }
+
+  calcSubtotal(item: OrderItem) {
+    console.log('Faulty item: ', item);
+    if (!item || !item.product || !item.product.product_price) {
+      console.error('Invalid item or missing properties.');
+      return;
+    }
+    // const productPrice = parseFloat(item.product.product_price.toString());
+
+    console.log('Product Price : ', item.product.product_price);
+    if (!isNaN(item.product.product_price)) {
+      item.subtotal += item.product.product_price;
+
+      item.customization.forEach((custom: Custom) => {
+        item.subtotal += custom.price;
+      });
+    } else {
+      item.subtotal = 0;
+    }
 
     this.itemData
       .updateOrderItem(item)
       .then(() => {
-        console.log('Subtotal updated:', item.subtotal);
-        // this.subtotal = item.subtotal;
+        this.subtotal = item.subtotal;
+        // Update the subtotal locally after successful update in the database
+        console.log('calc sub 2:', this.subtotal);
       })
       .catch((error) => {
         console.error('Error updating order item:', error);

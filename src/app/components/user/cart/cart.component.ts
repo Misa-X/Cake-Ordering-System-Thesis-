@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/data.service';
 import { Products } from 'src/app/models/products';
 import { ActivatedRoute } from '@angular/router';
-import { Customization } from 'src/app/models/customization';
 import { Custom } from 'src/app/models/custom';
 import { OrderItemService } from 'src/app/shared/order-item.service';
 import { OrderItem } from 'src/app/models/order-item';
@@ -10,6 +9,7 @@ import { forkJoin } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { CheckoutService } from 'src/app/shared/checkout.service';
 
 @Component({
   selector: 'app-cart',
@@ -19,14 +19,34 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 export class CartComponent implements OnInit {
   cartItems: OrderItem[] = [];
   dt: OrderItem[] = [];
+  selectedItems: OrderItem[] = [];
   showDataNotFound = true;
   message = '';
 
-  selectedItem: OrderItem | null = null;
+  // selectedItem: OrderItem[] = [];
 
   // Not Found Message
   messageTitle = 'No Products Found in Cart';
   messageDescription = 'Please, Add Products to Cart';
+
+  checkoutItemObj: OrderItem = {
+    id: '',
+    product: {
+      id: '',
+      product_name: '',
+      product_category: { id: '', category_name: '' },
+      product_description: '',
+      product_image: '',
+      product_price: 0,
+    },
+    customization: [],
+    color: '',
+    note: '',
+    quantity: 1,
+    picture: '',
+    subtotal: 0,
+    // selected: false,
+  };
 
   id: string = '';
   product: string = '';
@@ -44,7 +64,8 @@ export class CartComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private itemData: OrderItemService,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private checkoutData: CheckoutService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +73,15 @@ export class CartComponent implements OnInit {
     this.getCartProduct();
 
     this.getOrderItemCount();
+    setTimeout(() => {
+      this.calculateSubtotal();
+    }, 5000); // Delay of 10000 milliseconds (10 seconds)
+
+    setTimeout(() => {
+      this.calculateTotalPriceCart();
+    }, 7000);
+
+    // this.calculateSubtotal();
   }
 
   removeCartProduct(item: OrderItem) {
@@ -61,120 +91,22 @@ export class CartComponent implements OnInit {
     this.getCartProduct();
   }
 
-  //from chatgpt u can delete
+  //Orginal Get product
   getCartProduct() {
-    let data_list: OrderItem[] = [];
-
     this.itemData.getAllOrderItems().subscribe(
       (res) => {
         this.cartItems = res.map((e: any) => {
           const data = e.payload.doc.data();
           const id = e.payload.doc.id;
-          let totalCustPrice = 0;
-
-          data_list.push(data);
 
           return { id, ...data } as OrderItem;
         });
-
-        console.log('item:', data_list);
-
-        data_list.forEach((data) => {
-          let itemCustPrice = 0;
-
-          data.customization.forEach((customization: Custom) => {
-            const custPrice = parseFloat(customization.price.toString());
-            itemCustPrice += custPrice;
-          });
-          console.log('Total Customization price for item:', itemCustPrice);
-          const qty_total = data.quantity * data.product.product_price;
-          console.log('Qty Total: ', qty_total);
-
-          let subtotal_price = qty_total + itemCustPrice;
-          data.subtotal = subtotal_price;
-
-          console.log('Item SubTotal (qty ft cust) : ', subtotal_price);
-          this.calculateTotalPriceCart();
-        });
-
-        // Calculate customization for each cart item
-        // this.cartItems.forEach((item) => {
-        //   this.calculateCustomization(item);
-        // });
-        // this.calculateCustomizations();
-
-        // this.calculateSubtotal();
       },
       (err: any) => {
         alert('Error while fetching cart items');
       }
     );
   }
-
-  //Orginal Get product
-  // getCartProduct() {
-  //   let data_list: OrderItem[] = []; // Declare an array to store the data
-
-  //   this.itemData.getAllOrderItems().subscribe(
-  //     (res) => {
-  //       this.cartItems = res.map((e: any) => {
-  //         const data = e.payload.doc.data();
-  //         const id = e.payload.doc.id;
-  //         let totalCustPrice = 0;
-  //         // console.log('this data: ', data);
-  //         data_list.push(data);
-
-  //         // data.customization.forEach((customization: Custom) => {
-  //         //   const custPrice = parseFloat(customization.price.toString());
-  //         //   totalCustPrice += custPrice;
-
-  //         // console.log('Some Customization prices : ', custPrice);
-  //         // });
-  //         // console.log('Total Customizations', totalCustPrice);
-  //         // const qty_total = data.quantity * data.product.product_price;
-  //         // // console.log('Cust Total: ', qty_total);
-
-  //         // let subtotal_price = qty_total + totalCustPrice;
-  //         // data.subtotal = subtotal_price;
-  //         // console.log('Item SubTotal (qty ft cust) : ', subtotal_price);
-
-  //         // this.itemData.updateOrderItem(data);
-  //         // this.itemData
-  //         //   .updateOrderItem(data)
-  //         //   .then(() => {
-  //         //     this.subtotal = data.subtotal; // Update the subtotal locally after successful update in the database
-  //         //   })
-  //         //   .catch((error) => {
-  //         //     console.error('Error updating order item:', error);
-  //         //   });
-
-  //         return { id, ...data } as OrderItem;
-  //       });
-
-  //       console.log('item:', data_list);
-
-  //       let totalCustPrice = 0;
-  //       data_list.forEach((data) => {
-  //         data.customization.forEach((customization: Custom) => {
-  //           const custPrice = parseFloat(customization.price.toString());
-  //           totalCustPrice += custPrice;
-  //           console.log('Some Customization prices : ', custPrice);
-  //         });
-  //       });
-
-  //       // Calculate customization for each cart item
-  //       // this.cartItems.forEach((item) => {
-  //       //   this.calculateCustomization(item);
-  //       // });
-  //       // this.calculateCustomizations();
-
-  //       // this.calculateSubtotal();
-  //     },
-  //     (err: any) => {
-  //       alert('Error while fetching cart items');
-  //     }
-  //   );
-  // }
 
   calculateSubtotal() {
     // this.cartItems.forEach((item) => {
@@ -183,40 +115,36 @@ export class CartComponent implements OnInit {
 
     this.cartItems.forEach((item) => {
       const productPrice = parseFloat(item.product.product_price.toString());
+      let totalPrice = productPrice;
+      // console.log('Customizations: ', item.customization);
+      // console.log('This Product Price: ', productPrice);
       const quantity = parseFloat(item.quantity.toString());
 
+      item.customization.forEach((customization: Custom) => {
+        const custPrice = parseFloat(customization.price.toString());
+        if (!isNaN(custPrice)) {
+          totalPrice += custPrice;
+        }
+      });
+
       if (!isNaN(productPrice) && !isNaN(quantity)) {
-        item.subtotal = productPrice * quantity;
+        item.subtotal = totalPrice * quantity;
       } else {
         item.subtotal = 0;
       }
+
+      this.itemData
+        .updateOrderItem(item)
+        .then(() => {
+          console.log('Subtotal updated:', item.subtotal);
+          this.calculateTotalPriceCart();
+          // this.subtotal = item.subtotal;
+        })
+        .catch((error) => {
+          console.error('Error updating order item:', error);
+        });
     });
   }
-
-  // calculateCustomization(item: OrderItem) {
-  //   console.log('its working');
-  //   const productPrice = parseFloat(item.product.product_price.toString());
-  //   let totalPrice = productPrice; // Initialize totalPrice with the product price
-
-  //   item.customization.forEach((customization: Custom) => {
-  //     const custPrice = parseFloat(customization.price.toString());
-  //     if (!isNaN(custPrice)) {
-  //       totalPrice += custPrice;
-  //     }
-  //   });
-
-  //   item.subtotal = totalPrice;
-
-  //   this.itemData
-  //     .updateOrderItem(item)
-  //     .then(() => {
-  //       console.log('Subtotal updated:', item.subtotal);
-  //       // this.subtotal = item.subtotal;
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating order item:', error);
-  //     });
-  // }
 
   calculateCustomizations() {
     this.cartItems.forEach((item) => {
@@ -249,21 +177,11 @@ export class CartComponent implements OnInit {
     this.cartItems.forEach((item) => {
       this.totalPriceCart += item.subtotal; // Add the subtotal of each item to totalPriceCart
     });
+
+    console.log('Total price:', this.totalPriceCart);
   }
 
   updateQuantity(item: OrderItem) {
-    // console.log(item);
-    // this.itemData.updateOrderItem(item);
-
-    // this.itemData
-    //   .updateOrderItem(item)
-    //   .then(() => {
-    //     this.calculateSubtotal(); // Update the subtotal locally after successful update in the database
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error updating order item:', error);
-    //   });
-
     const productPrice = parseFloat(item.product.product_price.toString());
     const quantity = parseFloat(item.quantity.toString());
 
@@ -277,6 +195,8 @@ export class CartComponent implements OnInit {
       .updateOrderItem(item)
       .then(() => {
         this.subtotal = item.subtotal; // Update the subtotal locally after successful update in the database
+        this.calculateSubtotal();
+        this.calculateTotalPriceCart();
       })
       .catch((error) => {
         console.error('Error updating order item:', error);
@@ -296,5 +216,21 @@ export class CartComponent implements OnInit {
         alert('Error while fetching order item count');
       }
     );
+  }
+  toggleSelection(product: OrderItem) {
+    const index = this.selectedItems.indexOf(product);
+
+    if (index > -1) {
+      this.selectedItems.splice(index, 1); // Item was previously selected, remove it from the list
+      // console.log(this.selectedItem);
+    } else {
+      this.selectedItems.push(product); // Item was not selected, add it to the list
+      console.log(this.selectedItems);
+    }
+  }
+  addCheckout() {
+    for (const item of this.selectedItems) {
+      this.checkoutData.addCheckoutItem(item);
+    }
   }
 }

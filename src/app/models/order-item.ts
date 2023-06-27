@@ -10,4 +10,5 @@ export interface OrderItem {
   quantity: number;
   picture: string;
   subtotal: number;
+  // selected: boolean;
 }

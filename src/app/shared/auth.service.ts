@@ -6,12 +6,22 @@ import { GoogleAuthProvider } from '@angular/fire/auth';
 import { Auth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs/operators';
 //import * as admin from 'firebase-admin';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { uuidv4 } from '@firebase/util';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private fireauth: AngularFireAuth, private router: Router) {}
+  constructor(
+    private fireauth: AngularFireAuth,
+    private router: Router,
+    private afs: AngularFirestore
+  ) {}
   // new login method
   login(email: string, password: string) {
     this.fireauth
@@ -34,25 +44,6 @@ export class AuthService {
         this.router.navigate(['/login']);
       });
   }
-
-  //Original login method
-  // login(email: string, password: string) {
-  //   this.fireauth.signInWithEmailAndPassword(email, password).then(
-  //     (res) => {
-  //       localStorage.setItem('token', 'true');
-
-  //       if (res.user?.emailVerified == true) {
-  //         this.router.navigate(['/home']);
-  //       } else {
-  //         this.router.navigate(['/verify-email']);
-  //       }
-  //     },
-  //     (err) => {
-  //       alert(err.message);
-  //       this.router.navigate(['/login']);
-  //     }
-  //   );
-  // }
 
   // register an admin user
   registerAdmin(email: string, password: string) {
@@ -85,34 +76,34 @@ export class AuthService {
   }
 
   // new register method basic user
-  register(email: string, password: string) {
-    this.fireauth
-      .createUserWithEmailAndPassword(email, password)
-      .then((res) => {
-        alert('Registration successful');
-        this.router.navigate(['/login']);
-        this.sendEmailVerification(res.user);
+  // register(email: string, password: string) {
+  //   this.fireauth
+  //     .createUserWithEmailAndPassword(email, password)
+  //     .then((res) => {
+  //       alert('Registration successful');
+  //       this.router.navigate(['/login']);
+  //       this.sendEmailVerification(res.user);
 
-        // Assign "user" role to newly registered user
-        if (res.user) {
-          res.user
-            .updateProfile({
-              displayName: 'user',
-              // Add other user profile data as needed
-            })
-            .then(() => {
-              // User profile updated successfully
-            })
-            .catch((error) => {
-              // Error updating user profile
-            });
-        }
-      })
-      .catch((err) => {
-        alert(err.message);
-        this.router.navigate(['/register']);
-      });
-  }
+  //       // Assign "user" role to newly registered user
+  //       if (res.user) {
+  //         res.user
+  //           .updateProfile({
+  //             displayName: 'user',
+  //             // Add other user profile data as needed
+  //           })
+  //           .then(() => {
+  //             // User profile updated successfully
+  //           })
+  //           .catch((error) => {
+  //             // Error updating user profile
+  //           });
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       alert(err.message);
+  //       this.router.navigate(['/register']);
+  //     });
+  // }
 
   // original register method
   // register(email: string, password: string) {
@@ -130,6 +121,44 @@ export class AuthService {
   // }
 
   //sign out
+
+  register(email: string, password: string) {
+    this.fireauth
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        if (res.user) {
+          alert('Registration successful');
+          this.router.navigate(['/login']);
+          this.sendEmailVerification(res.user);
+
+          // Create user profile document in Firestore
+          const userId = res.user.uid;
+          const userProfile = {
+            displayName: 'user',
+            name: 'John Doe',
+            email: email,
+            phoneNumber: '123 456 789',
+            address: 'Your Home',
+            // Add other user profile data as needed
+          };
+          this.afs
+            .collection('/userProfiles')
+            .doc(userId)
+            .set(userProfile)
+            .then(() => {
+              // User profile created successfully
+            })
+            .catch((error) => {
+              // Error creating user profile
+            });
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+        this.router.navigate(['/register']);
+      });
+  }
+
   logout() {
     this.fireauth.signOut().then(
       () => {

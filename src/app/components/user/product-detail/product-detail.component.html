@@ -108,10 +108,21 @@
       <button type="button" class="btn btn-primary" (click)="addOrderItem()">
         Add to Cart
       </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="calcSubtotal(product)"
+      >
+        Calc
+      </button>
 
-      <button type="button" class="btn btn-success" (click)="checkout()">
+      <button type="button" class="btn btn-success" (click)="addCheckoutItem()">
         Checkout
       </button>
+
+      <div *ngFor="let ord of orderItemList">
+        <p>{{ ord.product.product_price }}</p>
+      </div>
     </div>
   </div>
 </div>

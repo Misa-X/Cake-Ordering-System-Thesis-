@@ -7,7 +7,10 @@
         <span class="badge badge-secondary badge-pill">3</span>
       </h4>
       <ul class="list-group mb-3">
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <li
+          class="list-group-item d-flex justify-content-between lh-condensed"
+          *ngFor="let item of checkoutItems"
+        >
           <div>
             <h6 class="my-0">{{ item.product?.product_name }}</h6>
             <small class="text-muted">{{
@@ -19,11 +22,14 @@
 
         <li class="list-group-item d-flex justify-content-between bg-light">
           <span>Subtotal</span>
-          <strong>20 Mt</strong>
+          <strong>{{ subtotalCheckout }} Mt</strong>
         </li>
-        <li class="list-group-item d-flex justify-content-between bg-light">
+        <li
+          class="list-group-item d-flex justify-content-between bg-light"
+          [(ngModel)]="delivery_price"
+        >
           <span>Delivery</span>
-          <strong>20 Mt</strong>
+          <strong>{{ selectedCityDeliveryPrice }} Mt</strong>
         </li>
         <li class="list-group-item d-flex justify-content-between bg-light">
           <span>Total</span>
@@ -44,7 +50,7 @@
             value="PickUp"
             required=""
           />
-          <label class="custom-control-label" for="PickUp"
+          <label class="custom-control-label selection" for="PickUp"
             >Pick up from bakery</label
           >
         </div>
@@ -58,7 +64,7 @@
             value="Delivery"
             required=""
           />
-          <label class="custom-control-label" for="Delivery"
+          <label class="custom-control-label selection" for="Delivery"
             >Deliver to my address</label
           >
         </div>
@@ -167,20 +173,14 @@
                 class="custom-select d-block w-100"
                 id="state"
                 required=""
+                [(ngModel)]="selectedDeliveryMethod"
+                value="Delivery"
+                (change)="calculateDelivery()"
               >
                 <option value="">Choose...</option>
-                <option>Boane</option>
-                <option>Chamanculo</option>
-                <option>Infulene</option>
-                <option>KaMubukwane</option>
-                <option>KaMpfumo</option>
-                <option>Machava</option>
-                <option>Marracuene</option>
-                <option>Maxaquene</option>
-                <option>Matola-Sede</option>
-                <option>Matola-Rio</option>
-                <option>Matola Cidade</option>
-                <option>Mavota</option>
+                <option *ngFor="let city of cities">
+                  {{ city.delivery_city }}
+                </option>
               </select>
               <div class="invalid-feedback">Please provide a valid state.</div>
             </div>
@@ -256,7 +256,7 @@
               checked=""
               required=""
             />
-            <label class="custom-control-label" for="credit"
+            <label class="custom-control-label selection" for="credit"
               >Bank Transfer</label
             >
           </div>
@@ -268,7 +268,7 @@
               class="custom-control-input"
               required=""
             />
-            <label class="custom-control-label" for="debit"
+            <label class="custom-control-label selection" for="debit"
               >Cash On Delivery</label
             >
           </div>
@@ -277,6 +277,16 @@
         <hr class="mb-4" />
         <button class="btn btn-primary btn-lg btn-block" type="submit">
           Complete order
+        </button>
+        <button type="button" class="btn btn-success" (click)="addCity()">
+          City
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="getAllDeliveries()"
+        >
+          City get
         </button>
       </form>
     </div>

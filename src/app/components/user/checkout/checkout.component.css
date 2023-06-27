@@ -5,3 +5,7 @@
 .lh-condensed {
   line-height: 1.25;
 }
+
+.selection {
+  padding-left: 5px;
+}

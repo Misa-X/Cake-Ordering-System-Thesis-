@@ -12,24 +12,18 @@ import { Custom } from '../models/custom';
 @Injectable({
   providedIn: 'root',
 })
-export class OrderItemService {
+export class CheckoutService {
   private itemDoc!: AngularFirestoreDocument<OrderItem>;
   constructor(private afs: AngularFirestore) {}
 
-  // add order item
-  // addOrderItem(item: OrderItem) {
-  //   item.id = this.afs.createId();
-  //   return this.afs.collection('/Order-Item').add(item);
-  // }
-
-  addOrderItem(item: OrderItem) {
-    const { id, ...orderItemData } = item;
+  addCheckoutItem(item: OrderItem) {
+    const { id, ...checkoutItemData } = item;
     // Add the orderItemData to Firestore without specifying the document ID
-    const docRef = this.afs.collection('Order-Item').add(orderItemData);
+    const docRef = this.afs.collection('Checkout-Item').add(checkoutItemData);
 
     // Retrieve the generated document ID and set it as the id field
     return docRef.then((doc) => {
-      const updatedOrderItem = { ...orderItemData, id: doc.id };
+      const updateCheckoutItem = { ...checkoutItemData, id: doc.id };
       // Do whatever you need to do with the updatedOrderItem
       // console.log(updatedOrderItem);
       return docRef;
@@ -37,65 +31,64 @@ export class OrderItemService {
   }
 
   // get all order items
-  getAllOrderItems() {
-    return this.afs.collection('/Order-Item').snapshotChanges();
+  getAllCheckoutItems() {
+    return this.afs.collection('/Checkout-Item').snapshotChanges();
   }
-
   // get order item by id
-  getOrderItemById(id: string) {
+  getCheckoutItemById(id: string) {
     return this.afs
-      .collection('/Order-Item', (ref) => ref.where('id', '==', id))
+      .collection('/Checkout-Item', (ref) => ref.where('id', '==', id))
       .valueChanges()
       .pipe(map((item) => item[0]));
   }
 
   // delete order item
-  deleteOrderItem(item: OrderItem) {
-    return this.afs.doc('/Order-Item/' + item.id).delete();
+  deleteCheckoutItem(item: OrderItem) {
+    return this.afs.doc('/Checkout-Item/' + item.id).delete();
   }
 
-  updateOrderItem(item: OrderItem) {
-    this.itemDoc = this.afs.doc(`/Order-Item/${item.id}`);
+  updateCheckoutItem(item: OrderItem) {
+    this.itemDoc = this.afs.doc(`/Checkout-Item/${item.id}`);
     const itemId = this.itemDoc.ref.id;
     item.id = itemId;
     return this.itemDoc.update(item);
   }
 
-  getOrderItemCount(): Observable<number> {
+  getCheckoutItemCount(): Observable<number> {
     return this.afs
-      .collection('Order-Item')
+      .collection('Checkout-Item')
       .valueChanges()
       .pipe(
-        tap((items) => console.log()), //('Order Items:', items)
+        tap((items) => console.log()), //('Checkout Items:', items)
         map((items) => items.length),
         catchError((error) => {
-          console.log('Error while fetching order item count:', error);
+          console.log('Error while fetching Checkout item count:', error);
           return throwError(
-            'An error occurred while fetching order item count.'
+            'An error occurred while fetching Checkout item count.'
           );
         })
       );
   }
 
-  calculateSubtotal(orderItem: OrderItem): number {
+  calculateSubtotal(checkoutitem: OrderItem): number {
     let subtotal = 0;
 
     // Add product_price to subtotal
-    subtotal += orderItem.product.product_price;
+    subtotal += checkoutitem.product.product_price;
 
     // Add customization prices to subtotal
-    orderItem.customization.forEach((custom: Custom) => {
+    checkoutitem.customization.forEach((custom: Custom) => {
       subtotal += custom.price;
     });
 
     return subtotal;
   }
 
-  updateOrderItemSubtotal(item: OrderItem) {
+  updateCheckoutItemSubtotal(item: OrderItem) {
     const subtotal = this.calculateSubtotal(item);
 
     // Update the subtotal field of the order item
-    this.itemDoc = this.afs.doc(`/Order-Item/${item.id}`);
+    this.itemDoc = this.afs.doc(`/Checkout-Item/${item.id}`);
     return this.itemDoc.update({ subtotal });
   }
 }
