@@ -4,7 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { DataService } from 'src/app/shared/data.service';
 import { Category } from 'src/app/models/category';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -15,7 +15,11 @@ export class NavbarComponent implements OnInit {
 
   categories: any = {};
 
-  constructor(private auth: AuthService, private data: DataService) {}
+  constructor(
+    private auth: AuthService,
+    private data: DataService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -34,7 +38,29 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  gotToOrders() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.router.navigate(['/user/orders', userId]);
+    } else {
+      console.log('There Is an Error');
+      // Handle the case when userId is not available
+      // You can redirect to a login page or display an error message
+    }
+  }
+  goToProfile() {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.router.navigate(['/user/profile', userId]);
+    } else {
+      console.log('There Is an Error');
+      // Handle the case when userId is not available
+      // You can redirect to a login page or display an error message
+    }
+  }
+
   logout() {
+    localStorage.removeItem('userId');
     this.auth.logout();
   }
 }

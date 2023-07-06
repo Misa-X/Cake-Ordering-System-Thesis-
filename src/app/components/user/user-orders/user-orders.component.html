@@ -58,7 +58,7 @@
     <mat-row
       *matRowDef="let row; columns: displayedColumns"
       (click)="onRowClick(row)"
-      [routerLink]="'/dash/order-details/' + row.id"
+      [routerLink]="'/user/payment/' + row.id"
       class="clickable-row"
     ></mat-row>
   </mat-table>

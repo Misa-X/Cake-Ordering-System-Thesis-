@@ -40,22 +40,8 @@ import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-// import { HomeComponent } from './components/user/home/home.component';
-// import { NavbarComponent } from './components/user/navbar/navbar.component';
-// import { FooterComponent } from './components/user/footer/footer.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-import { ProductComponent } from './components/admin/dashboard/product/product.component';
-// import { CategoryComponent } from './components/admin/dashboard/category/category.component';
-// import { ProductDetailComponent } from './components/user/product-detail/product-detail.component';
-// import { CartComponent } from './components/user/cart/cart.component';
-// import { CheckoutComponent } from './components/user/checkout/checkout.component';
-import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
-import { SidenavComponent } from './components/admin/dashboard/sidenav/sidenav.component';
-import { UserComponent } from './components/user/user.component';
-import { OrdersComponent } from './components/admin/dashboard/orders/orders.component';
-import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
-// import { AdminDashComponent } from './components/admin/dashboard/admin-dash/admin-dash.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +50,6 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
     RegisterComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,7 @@
       <ul class="list-group mb-3">
         <li
           class="list-group-item d-flex justify-content-between lh-condensed"
-          *ngFor="let item of checkoutItems"
+          *ngFor="let item of Profile"
         >
           <div>
             <h6 class="my-0">{{ item.product?.product_name }}</h6>
@@ -33,7 +33,7 @@
         </li>
         <li class="list-group-item d-flex justify-content-between bg-light">
           <span>Total</span>
-          <strong>20 Mt</strong>
+          <strong>{{ Total }} Mt</strong>
         </li>
       </ul>
     </div>
@@ -81,65 +81,31 @@
           <p>We only deliver within Maputo Province</p>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="firstName">First name</label>
+              <label for="fullName">Full name</label>
               <input
                 type="text"
                 class="form-control"
-                id="firstName"
+                id="fullName"
+                name="fullName"
                 placeholder=""
                 value=""
                 required=""
+                [(ngModel)]="fullName"
               />
               <div class="invalid-feedback">Valid first name is required.</div>
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="lastName">Last name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="lastName"
-                placeholder=""
-                value=""
-                required=""
-              />
-              <div class="invalid-feedback">Valid last name is required.</div>
-            </div>
           </div>
-          <div class="mb-3">
-            <label for="username">Username</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">@</span>
-              </div>
-              <input
-                type="text"
-                class="form-control"
-                id="username"
-                placeholder="Username"
-                required=""
-              />
-              <div class="invalid-feedback" style="width: 100%">
-                Your username is required.
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="email"
-              >Email <span class="text-muted">(Optional)</span></label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="you@example.com"
-            />
-            <div class="invalid-feedback">
-              Please enter a valid email address for shipping updates.
-            </div>
-          </div>
+
           <div class="mb-3">
             <label for="phone">Phone</label>
-            <input type="text" class="form-control" id="phone" required="" />
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              name="phone"
+              required=""
+              [(ngModel)]="phone"
+            />
             <div class="invalid-feedback">Please enter your phone number.</div>
           </div>
           <div class="mb-3">
@@ -148,40 +114,32 @@
               type="text"
               class="form-control"
               id="address"
+              name="address"
               placeholder="1234 Main St"
               required=""
+              [(ngModel)]="address"
             />
             <div class="invalid-feedback">
               Please enter your shipping address.
             </div>
           </div>
-          <div class="mb-3">
-            <label for="address2"
-              >Address 2 <span class="text-muted">(Optional)</span></label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="address2"
-              placeholder="Apartment or suite"
-            />
-          </div>
+
           <div class="row">
             <div class="col-md-4 mb-3">
               <label for="state">City</label>
               <select
-                class="custom-select d-block w-100"
+                class="form-select d-block w-100"
                 id="state"
-                required=""
-                [(ngModel)]="selectedDeliveryMethod"
-                value="Delivery"
-                (change)="calculateDelivery()"
+                name="state"
+                [(ngModel)]="DCity"
+                (ngModelChange)="calculateDelivery(DCity)"
               >
                 <option value="">Choose...</option>
-                <option *ngFor="let city of cities">
+                <option *ngFor="let city of cities" [value]="city.id">
                   {{ city.delivery_city }}
                 </option>
               </select>
+
               <div class="invalid-feedback">Please provide a valid state.</div>
             </div>
             <div class="col-md-3 mb-3">
@@ -232,6 +190,7 @@
                 placeholder="yyyy-mm-dd"
                 name="dp"
                 [(ngModel)]="model"
+                (ngModelChange)="orderDate = $event"
                 ngbDatepicker
                 #d="ngbDatepicker"
                 [minDate]="getMinDate()"
@@ -251,12 +210,14 @@
             <input
               id="bankTransfer"
               name="paymentMethod"
+              [(ngModel)]="selectedPaymentMethod"
               type="radio"
               class="custom-control-input"
+              value="bankTransfer"
               checked=""
               required=""
             />
-            <label class="custom-control-label selection" for="credit"
+            <label class="custom-control-label selection" for="bankTransfer"
               >Bank Transfer</label
             >
           </div>
@@ -264,18 +225,24 @@
             <input
               id="cod"
               name="paymentMethod"
+              [(ngModel)]="selectedPaymentMethod"
               type="radio"
+              value="cod"
               class="custom-control-input"
               required=""
             />
-            <label class="custom-control-label selection" for="debit"
+            <label class="custom-control-label selection" for="cod"
               >Cash On Delivery</label
             >
           </div>
         </div>
 
         <hr class="mb-4" />
-        <button class="btn btn-primary btn-lg btn-block" type="submit">
+        <button
+          class="btn btn-primary btn-lg btn-block"
+          type="submit"
+          (click)="addOrder()"
+        >
           Complete order
         </button>
         <button type="button" class="btn btn-success" (click)="addCity()">
@@ -284,9 +251,9 @@
         <button
           type="button"
           class="btn btn-success"
-          (click)="getAllDeliveries()"
+          (click)="deleteCheckoutItems()"
         >
-          City get
+          Clear
         </button>
       </form>
     </div>

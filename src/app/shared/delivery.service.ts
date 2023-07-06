@@ -6,12 +6,14 @@ import {
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Delivery } from '../models/delivery';
+import { DeliveryItem } from '../models/delivery-item';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DeliveryService {
   private deliveryDoc!: AngularFirestoreDocument<Delivery>;
+  private addressDoc!: AngularFirestoreDocument<DeliveryItem>;
 
   constructor(private afs: AngularFirestore) {}
 
@@ -53,5 +55,31 @@ export class DeliveryService {
     const deliveryId = this.deliveryDoc.ref.id;
     delivery.id = deliveryId;
     return this.deliveryDoc.update(delivery);
+  }
+
+  // DELIVERY ADDRESS ------------->
+
+  // add delivery address
+  addDeliveryAddress(address: DeliveryItem) {
+    address.id = this.afs.createId();
+    return this.afs.collection('/Delivery-address').add(address);
+  }
+
+  // get all delivery address
+  getAllDeliveryAddress() {
+    return this.afs.collection('/Delivery-address').snapshotChanges();
+  }
+
+  // delete delivery address
+  deleteDeliveryAddress(address: DeliveryItem) {
+    return this.afs.doc('/Delivery-address/' + address.id).delete();
+  }
+
+  // update delivery address
+  updateDeliveryAddress(address: DeliveryItem) {
+    this.addressDoc = this.afs.doc(`/Delivery-address/${address.id}`);
+    const addressId = this.addressDoc.ref.id;
+    address.id = addressId;
+    return this.addressDoc.update(address);
   }
 }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { GoogleAuthProvider } from '@angular/fire/auth';
 // import { auth } from 'firebase/compat/app'
 import { Auth } from '@angular/fire/auth';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 //import * as admin from 'firebase-admin';
 import {
   AngularFirestore,
@@ -33,6 +33,8 @@ export class AuthService {
           if (res.user.displayName === 'admin') {
             this.router.navigate(['/dash']);
           } else {
+            const userId = res.user.uid;
+            localStorage.setItem('userId', userId);
             this.router.navigate(['/user/home']);
           }
         } else {
@@ -134,6 +136,7 @@ export class AuthService {
           // Create user profile document in Firestore
           const userId = res.user.uid;
           const userProfile = {
+            id: userId,
             displayName: 'user',
             name: 'John Doe',
             email: email,
@@ -194,6 +197,22 @@ export class AuthService {
         alert('Something went wrong');
       }
     );
+  }
+
+  //get product by id
+  getProfileById(id: string | null) {
+    console.log('UserID: ', id);
+    return this.afs
+      .collection('/userProfiles', (ref) => ref.where('id', '==', id))
+      .valueChanges()
+      .pipe(
+        map((profile) => profile[0]) // Retrieve the first matching product
+      );
+  }
+
+  // get all products
+  getAllProfiles() {
+    return this.afs.collection('/userProfiles').snapshotChanges();
   }
 
   //sign in with google

@@ -11,6 +11,8 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { OrderItemService } from 'src/app/shared/order-item.service';
 import { CheckoutService } from 'src/app/shared/checkout.service';
+import { UserProfile } from 'src/app/models/user-profiles';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,13 +24,27 @@ export class ProductDetailComponent implements OnInit {
   customizations: Custom[] = [];
   product: any = {};
   orderItemList: OrderItem[] = [];
+  profileList: UserProfile[] = [];
+  idUser: string | null = '';
+
+  Profile: any = {};
 
   fillingArray: Custom[] = [];
   flavorArray: Custom[] = [];
   sizeArray: Custom[] = [];
 
+  // user: UserProfile | null = null;
+
   orderItemObj: OrderItem = {
     id: '',
+    user: {
+      id: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      image: '',
+    },
     product: {
       id: '',
       product_name: '',
@@ -43,12 +59,12 @@ export class ProductDetailComponent implements OnInit {
     quantity: 1,
     picture: '',
     subtotal: 0,
-    // selected: false,
   };
 
   id: string = '';
   productt: string = '';
 
+  userr: string = '';
   customization: string[] = [];
   color: string = '';
   note: string = '';
@@ -79,7 +95,8 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private storage: AngularFireStorage,
-    private ItemData: CheckoutService
+    private ItemData: CheckoutService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -100,6 +117,31 @@ export class ProductDetailComponent implements OnInit {
           console.log('Product not found.');
         }
       });
+
+    // get authenticated user
+    this.auth.getAllProfiles().subscribe((prof) => {
+      this.profileList = prof.map((e: any) => {
+        const data = e.payload.doc.data();
+        const id = e.payload.doc.id;
+        console.log(this.profileList);
+
+        return { id, ...data } as UserProfile;
+      });
+      console.log('The userID: ', localStorage.getItem('userId'));
+      const userId = localStorage.getItem('userId');
+      console.log('Data & ', this.profileList, 'Profile list');
+      this.Profile = this.profileList.find(
+        (userProfile) => userProfile.id === userId
+      );
+
+      if (this.Profile) {
+        // The userProfile with matching user ID is found
+        console.log('Found profile:', this.Profile);
+      } else {
+        // No matching userProfile is found
+        console.log('Profile not found.');
+      }
+    });
 
     this.data.getAllProducts().subscribe((products) => {
       this.productList = products.map((e: any) => {
@@ -172,6 +214,10 @@ export class ProductDetailComponent implements OnInit {
       return; // Stop the execution if the selected product is not found
     }
 
+    if (this.Profile) {
+      this.orderItemObj.user = this.Profile;
+    }
+
     const selectedCustomizationIds = this.customization;
     const selectedCustomizations = this.customizations.filter((custom) =>
       selectedCustomizationIds.includes(custom.id)
@@ -203,47 +249,12 @@ export class ProductDetailComponent implements OnInit {
             fileRef.getDownloadURL().subscribe((imageUrl) => {
               this.orderItemObj.picture = imageUrl;
               this.itemData.addOrderItem(this.orderItemObj);
-
-              // .then(() => {
-              //   const subtotal = this.itemData.calculateSubtotal(
-              //     this.orderItemObj
-              //   );
-              //   this.orderItemObj.subtotal = subtotal;
-              //   console.log('some oject: ', this.orderItemObj);
-              // })
-
-              // this.itemData
-              //   .updateOrderItemSubtotal(this.orderItemObj)
-              //   .then(() => {
-              //     this.resetForm();
-              //   })
-              //   .catch((error) => {
-              //     console.log('Error updating order item subtotal:', error);
-              //   })
-              //   .catch((error) => {
-              //     console.log('Error adding order item:', error);
-              //   });
-
               this.resetForm();
             });
           })
         )
         .subscribe();
     } else {
-      // try {
-      //   const docRef = await this.itemData.addOrderItem(this.orderItemObj);
-      //   this.orderItemList.push(this.orderItemObj); // Add the newly created order item to the order item list
-
-      //   await this.itemData.updateOrderItemSubtotal(this.orderItemObj);
-      //   console.log('Subtotal updated successfully.');
-
-      //   this.resetForm();
-      // } catch (error) {
-
-      //   console.log('Error adding order item or updating subtotal:', error);
-      // }
-
-      // this.orderItemObj.picture = this.selectedOrderItemm.picture;
       this.itemData.addOrderItem(this.orderItemObj);
       this.resetForm();
     }
@@ -264,6 +275,10 @@ export class ProductDetailComponent implements OnInit {
     } else {
       console.log('Selected product not found.');
       return; // Stop the execution if the selected product is not found
+    }
+
+    if (this.Profile) {
+      this.orderItemObj.user = this.Profile;
     }
 
     const selectedCustomizationIds = this.customization;
@@ -298,48 +313,26 @@ export class ProductDetailComponent implements OnInit {
               this.orderItemObj.picture = imageUrl;
               this.ItemData.addCheckoutItem(this.orderItemObj);
 
-              // .then(() => {
-              //   const subtotal = this.itemData.calculateSubtotal(
-              //     this.orderItemObj
-              //   );
-              //   this.orderItemObj.subtotal = subtotal;
-              //   console.log('some oject: ', this.orderItemObj);
-              // })
-
-              // this.itemData
-              //   .updateOrderItemSubtotal(this.orderItemObj)
-              //   .then(() => {
-              //     this.resetForm();
-              //   })
-              //   .catch((error) => {
-              //     console.log('Error updating order item subtotal:', error);
-              //   })
-              //   .catch((error) => {
-              //     console.log('Error adding order item:', error);
-              //   });
-
               this.resetForm();
+
+              // Navigate to the checkout page
+              const checkoutUrl = '/user/checkout';
+              this.router.navigateByUrl(checkoutUrl);
+
+              // const checkoutUrl = `/user/checkout`;
+              // this.router.navigateByUrl(checkoutUrl);
             });
           })
         )
         .subscribe();
     } else {
-      // try {
-      //   const docRef = await this.itemData.addOrderItem(this.orderItemObj);
-      //   this.orderItemList.push(this.orderItemObj); // Add the newly created order item to the order item list
-
-      //   await this.itemData.updateOrderItemSubtotal(this.orderItemObj);
-      //   console.log('Subtotal updated successfully.');
-
-      //   this.resetForm();
-      // } catch (error) {
-
-      //   console.log('Error adding order item or updating subtotal:', error);
-      // }
-
-      // this.orderItemObj.picture = this.selectedOrderItemm.picture;
       this.ItemData.addCheckoutItem(this.orderItemObj);
+
       this.resetForm();
+
+      // Navigate to the checkout page
+      const checkoutUrl = '/user/checkout';
+      this.router.navigateByUrl(checkoutUrl);
     }
   }
 
@@ -357,30 +350,6 @@ export class ProductDetailComponent implements OnInit {
     const checkoutUrl = `/user/checkout/${addedItemId}`;
     this.router.navigateByUrl(checkoutUrl);
   }
-
-  // calculateCustomization(item: OrderItem) {
-  //   const productPrice = parseFloat(item.product.product_price.toString());
-  //   let totalPrice = productPrice; // Initialize totalPrice with the product price
-
-  //   item.customization.forEach((customization: Custom) => {
-  //     const custPrice = parseFloat(customization.price.toString());
-  //     if (!isNaN(custPrice)) {
-  //       totalPrice += custPrice;
-  //     }
-  //   });
-
-  //   item.subtotal = totalPrice;
-
-  //   this.itemData
-  //     .updateOrderItem(item)
-  //     .then(() => {
-  //       console.log('Subtotal updated:', item.subtotal);
-  //       // this.subtotal = item.subtotal;
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating order item:', error);
-  //     });
-  // }
 
   calcSubtotal(item: OrderItem) {
     console.log('Faulty item: ', item);

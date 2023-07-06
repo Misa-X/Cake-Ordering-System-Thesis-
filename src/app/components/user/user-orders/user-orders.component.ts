@@ -4,23 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/shared/order.service';
 
-// export interface Order {
-//   name: string;
-//   amount: number;
-//   date: string;
-//   status: string;
-//   paymentStatus: string;
-//   delivery: string;
-//   category: string;
-//   orderNumber: string;
-// }
-
 @Component({
-  selector: 'app-orders',
-  templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.css'],
+  selector: 'app-user-orders',
+  templateUrl: './user-orders.component.html',
+  styleUrls: ['./user-orders.component.css'],
 })
-export class OrdersComponent implements OnInit {
+export class UserOrdersComponent implements OnInit {
   displayedColumns: string[] = [
     'orderNumber',
     'customer',
@@ -32,6 +21,7 @@ export class OrdersComponent implements OnInit {
   ];
 
   ordersList: Order[] = [];
+  userOrderList: Order[] = [];
 
   constructor(private dialog: MatDialog, private orderData: OrderService) {}
 
@@ -49,8 +39,17 @@ export class OrdersComponent implements OnInit {
           data.id = e.payload.doc.id;
           return data;
         });
-        console.log(this.ordersList);
-        this.dataSource = new MatTableDataSource(this.ordersList);
+
+        console.log('This Order List: ', this.ordersList);
+        // Filter orders based on userId
+        const userId = localStorage.getItem('userId');
+        console.log(userId);
+        this.userOrderList = this.ordersList.filter(
+          (order: any) => order.orderItem[0].user.id === userId
+        );
+
+        console.log(this.userOrderList);
+        this.dataSource = new MatTableDataSource(this.userOrderList);
       },
       (err: any) => {
         alert('Error while fetching orders data');

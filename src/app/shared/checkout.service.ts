@@ -34,6 +34,13 @@ export class CheckoutService {
   getAllCheckoutItems() {
     return this.afs.collection('/Checkout-Item').snapshotChanges();
   }
+
+  // getCheckoutItemsByUser(userId: string): Observable<any[]> {
+  //   return this.afs
+  //     .collection('/Checkout-Item', (ref) => ref.where('userId', '==', userId))
+  //     .valueChanges();
+  // }
+
   // get order item by id
   getCheckoutItemById(id: string) {
     return this.afs

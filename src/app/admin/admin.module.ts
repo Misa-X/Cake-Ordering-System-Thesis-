@@ -20,7 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { CheckboxModule, MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ToastrModule } from 'ngx-toastr';
 import { MatTableModule } from '@angular/material/table';
 
@@ -34,6 +34,8 @@ import { CreateProductComponent } from '../components/admin/dashboard/create-pro
 import { ManageAdminComponent } from '../components/admin/dashboard/manage-admin/manage-admin.component';
 import { RegisterComponent } from '../components/admin/dashboard/register/register.component';
 import { AdminDashComponent } from '../components/admin/dashboard/admin-dash/admin-dash.component';
+import { OrderDetailsComponent } from '../components/admin/dashboard/order-details/order-details.component';
+import { CheckPaymentsComponent } from '../components/admin/dashboard/check-payments/check-payments.component';
 
 const routes: Routes = [
   {
@@ -44,9 +46,12 @@ const routes: Routes = [
       { path: 'product', component: ProductComponent },
       { path: 'products', component: ProductListComponent },
       { path: 'orders', component: OrdersComponent },
+      { path: 'order-details', component: OrderDetailsComponent },
+      { path: 'order-details/:id', component: OrderDetailsComponent },
       { path: 'manageAdmin', component: ManageAdminComponent },
       { path: 'admin-register', component: RegisterComponent },
       { path: 'admin-dash', component: AdminDashComponent },
+      { path: 'check-payments', component: CheckPaymentsComponent },
     ],
   },
 ];
@@ -59,10 +64,12 @@ const routes: Routes = [
     ProductComponent,
     ProductListComponent,
     OrdersComponent,
+    OrderDetailsComponent,
     CreateProductComponent,
     ManageAdminComponent,
     RegisterComponent,
     AdminDashComponent,
+    CheckPaymentsComponent,
   ],
   imports: [
     MDBBootstrapModule.forRoot(),

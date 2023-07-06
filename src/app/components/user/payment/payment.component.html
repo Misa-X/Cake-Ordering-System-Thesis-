@@ -1,0 +1,75 @@
+<div class="mt-5 mb-5 container" id="receipt">
+  <div class="row">
+    <div
+      class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3"
+      style="margin: auto"
+    >
+      <div class="row">
+        <div class="text-center">
+          <h3 class="title">Bank Transfer</h3>
+        </div>
+
+        <div *ngIf="remainingTime > 0">
+          <p>Countdown Timer:</p>
+          <p>{{ getFormattedTime() }}</p>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6">
+            <strong
+              ><h4>Username: {{ order.orderItem[0].user.name }}</h4></strong
+            >
+            <hr />
+            <address>
+              <h5>Deliver to: {{ order.delivery.fullName }}</h5>
+              <br />
+              {{ order.delivery.address }},
+              {{ order.delivery.city.delivery_city }}
+              <br />
+              <abbr title="Phone">Phone:</abbr> {{ order.delivery.phone }}
+            </address>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+            <p>
+              <em>Receipt #: {{ order.id }}</em>
+            </p>
+          </div>
+        </div>
+        <hr />
+        <ul class="list-group mb-3" *ngFor="let item of productt">
+          <li
+            class="list-group-item d-flex justify-content-between lh-condensed"
+          >
+            <div>
+              <h6 class="my-0">{{ item.product.product_name }}</h6>
+              <small class="text-muted">{{
+                item.product.product_description
+              }}</small>
+            </div>
+          </li>
+        </ul>
+        <h4 class="price">
+          Total: <span class="text-muted">{{ order.total }}</span>
+        </h4>
+
+        <div class="mb-3">
+          <label for="picture-upload">Upload Receipt:</label>
+          <input
+            type="file"
+            class="form-control"
+            id="picture-upload"
+            name="picture-upload"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn btn-success btn-lg btn-block"
+          (click)="makePayment()"
+        >
+          Pay Now <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

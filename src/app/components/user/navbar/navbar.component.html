@@ -22,7 +22,32 @@
 
   <div class="icons">
     <a href="#"><i class="bx bx-search-alt-2"></i></a>
-    <a href="#" (click)="logout()"><i class="bx bx-user"></i></a>
     <a routerLink="/user/cart"><i class="bx bx-cart-alt"></i></a>
+    <!-- <a href="#" (click)="logout()"><i class="bx bx-user"></i></a> -->
+    <button
+      mat-icon-button
+      matTooltip="My Account"
+      [matMenuTriggerFor]="userAccountMenu"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+      <button mat-menu-item routerLink="#" (click)="goToProfile()">
+        <mat-icon>person</mat-icon><span>My Account</span>
+      </button>
+      <button mat-menu-item routerLink="#" (click)="gotToOrders()">
+        <mat-icon>library_books</mat-icon><span>Orders</span>
+      </button>
+      <button mat-menu-item routerLink="#">
+        <mat-icon>settings</mat-icon><span>Settings</span>
+      </button>
+      <button mat-menu-item routerLink="#">
+        <mat-icon>help</mat-icon><span>Help</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item routerLink="#" (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>Logout
+      </button>
+    </mat-menu>
   </div>
 </header>

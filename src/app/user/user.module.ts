@@ -8,6 +8,7 @@ import {
   NgbAlertModule,
   NgbDatepickerModule,
   NgbDateStruct,
+  NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ToastrModule } from 'ngx-toastr';
 import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { HomeComponent } from '../components/user/home/home.component';
 import { ProductDetailComponent } from '../components/user/product-detail/product-detail.component';
@@ -32,6 +34,9 @@ import { UserComponent } from '../components/user/user.component';
 import { CartComponent } from '../components/user/cart/cart.component';
 import { AboutUsComponent } from '../components/user/about-us/about-us.component';
 import { ContactUsComponent } from '../components/user/contact-us/contact-us.component';
+import { UserProfileComponent } from '../components/user/user-profile/user-profile.component';
+import { PaymentComponent } from '../components/user/payment/payment.component';
+import { UserOrdersComponent } from '../components/user/user-orders/user-orders.component';
 
 const routes: Routes = [
   {
@@ -45,6 +50,10 @@ const routes: Routes = [
       { path: 'cart', component: CartComponent },
       { path: 'about', component: AboutUsComponent },
       { path: 'contact', component: ContactUsComponent },
+      { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'payment', component: PaymentComponent },
+      { path: 'payment/:id', component: PaymentComponent },
+      { path: 'orders/:id', component: UserOrdersComponent },
     ],
   },
 ];
@@ -60,6 +69,9 @@ const routes: Routes = [
     CartComponent,
     AboutUsComponent,
     ContactUsComponent,
+    UserProfileComponent,
+    PaymentComponent,
+    UserOrdersComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,8 +89,11 @@ const routes: Routes = [
     MatExpansionModule,
     MatTooltipModule,
     ToastrModule.forRoot(),
+    NgbModule,
     MatTableModule,
+    // MatTableDataSource,
     MatDialogModule,
+    // MatTableDataSource,
     MDBBootstrapModule,
   ],
 })

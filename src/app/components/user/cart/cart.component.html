@@ -122,7 +122,10 @@
       <!-- cart -->
       <div class="col-lg-9 row1">
         <h4 class="card-title mb-4">Your shopping cart</h4>
-        <div class="card border shadow-0" *ngFor="let product of cartItems">
+        <!-- <p class="text-muted">
+          {{ Profile.product.product_name }}
+        </p> -->
+        <div class="card border shadow-0" *ngFor="let item of Profile">
           <div class="m-4">
             <div class="row gy-3 mb-4">
               <div class="col-lg-1">
@@ -130,7 +133,7 @@
                   <input
                     type="checkbox"
                     class="form-check-input"
-                    (change)="toggleSelection(product)"
+                    (change)="toggleSelection(Profile)"
                   />
                 </div>
               </div>
@@ -138,20 +141,21 @@
                 <div class="me-lg-5">
                   <div class="d-flex">
                     <img
-                      [src]="product.product.product_image"
+                      [src]="item.product.product_image"
                       class="border rounded me-3"
                       style="width: 96px; height: 96px"
                     />
                     <div class="">
                       <a href="#" class="nav-link">{{
-                        product.product.product_name
+                        item.product.product_name
                       }}</a>
                       <p class="text-muted">
-                        {{ product.product.product_description }}
+                        {{ item.product.product_description }}
                       </p>
+
                       <h6 class="text-muted">Customizations</h6>
-                      <p class="text-muted">Color: {{ product.color }}</p>
-                      <div class="text-muted">Note: {{ product.note }}</div>
+                      <p class="text-muted">Color: {{ item.color }}</p>
+                      <div class="text-muted">Note: {{ item.note }}</div>
                     </div>
                   </div>
                 </div>
@@ -159,8 +163,8 @@
               <div class="col-lg-2">
                 <div class="form-floating">
                   <select
-                    [(ngModel)]="product.quantity"
-                    (change)="updateQuantity(product)"
+                    [(ngModel)]="item.quantity"
+                    (change)="updateQuantity(item)"
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -170,10 +174,10 @@
               </div>
               <div class="col-lg-2">
                 <div class="">
-                  <span class="h6">{{ product.subtotal }} Mt</span>
+                  <span class="h6">{{ item.subtotal }} Mt</span>
                   <br />
                   <small class="text-muted text-nowrap">
-                    {{ product.product.product_category?.category_name }}
+                    {{ item.product.product_category?.category_name }}
                   </small>
                 </div>
               </div>
@@ -184,7 +188,7 @@
                   <button
                     mat-icon-button
                     color="warn"
-                    (click)="deleteOrderItem(product)"
+                    (click)="deleteOrderItem(item)"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>

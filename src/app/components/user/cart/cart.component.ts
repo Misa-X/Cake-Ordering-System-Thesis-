@@ -23,6 +23,8 @@ export class CartComponent implements OnInit {
   showDataNotFound = true;
   message = '';
 
+  Profile: any = [];
+
   // selectedItem: OrderItem[] = [];
 
   // Not Found Message
@@ -31,6 +33,14 @@ export class CartComponent implements OnInit {
 
   checkoutItemObj: OrderItem = {
     id: '',
+    user: {
+      id: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      image: '',
+    },
     product: {
       id: '',
       product_name: '',
@@ -72,7 +82,10 @@ export class CartComponent implements OnInit {
     // Get the cart products
     this.getCartProduct();
 
-    this.getOrderItemCount();
+    setTimeout(() => {
+      this.getOrderItemCount();
+    }, 5000);
+
     setTimeout(() => {
       this.calculateSubtotal();
     }, 5000); // Delay of 10000 milliseconds (10 seconds)
@@ -80,8 +93,6 @@ export class CartComponent implements OnInit {
     setTimeout(() => {
       this.calculateTotalPriceCart();
     }, 7000);
-
-    // this.calculateSubtotal();
   }
 
   removeCartProduct(item: OrderItem) {
@@ -92,28 +103,71 @@ export class CartComponent implements OnInit {
   }
 
   //Orginal Get product
-  getCartProduct() {
-    this.itemData.getAllOrderItems().subscribe(
-      (res) => {
-        this.cartItems = res.map((e: any) => {
-          const data = e.payload.doc.data();
-          const id = e.payload.doc.id;
+  // getCartProduct() {
+  //   this.itemData.getAllOrderItems().subscribe(
+  //     (res) => {
+  //       this.cartItems = res.map((e: any) => {
+  //         const data = e.payload.doc.data();
+  //         const id = e.payload.doc.id;
 
-          return { id, ...data } as OrderItem;
-        });
-      },
-      (err: any) => {
-        alert('Error while fetching cart items');
+  //         return { id, ...data } as OrderItem;
+  //       });
+  //     },
+  //     (err: any) => {
+  //       alert('Error while fetching cart items');
+  //     }
+  //   );
+  // }
+
+  getCartProduct() {
+    this.itemData.getAllOrderItems().subscribe((prof) => {
+      this.cartItems = prof.map((e: any) => {
+        const data = e.payload.doc.data();
+        const id = e.payload.doc.id;
+        console.log(this.cartItems);
+
+        return { id, ...data } as OrderItem;
+      });
+      console.log('The userID: ', localStorage.getItem('userId'));
+      const userId = localStorage.getItem('userId');
+      console.log('Data & ', this.cartItems, 'Profile list');
+      // this.Profile = this.cartItems.find(
+      //   (userProfile) => userProfile.user.id === userId
+
+      // );
+      this.Profile = this.cartItems.filter(
+        (userProfile) => userProfile.user.id === userId
+      );
+
+      if (this.Profile.length > 0) {
+        // Cart items with matching user ID are found
+        console.log('Found profile:', this.Profile);
+      } else {
+        // No matching cart items are found
+        console.log('No cart items found for the user.');
       }
-    );
+
+      if (this.Profile) {
+        // The userProfile with matching user ID is found
+        console.log('Found profile:', this.Profile);
+      } else {
+        // No matching userProfile is found
+        console.log('Profile not found.');
+      }
+    });
   }
 
   calculateSubtotal() {
+    const userId = localStorage.getItem('userId');
+    this.Profile = this.cartItems.filter(
+      (userProfile) => userProfile.user.id === userId
+    );
+    console.log('Profile cart items: ', this.Profile);
     // this.cartItems.forEach((item) => {
     //   this.subtotal = item.product.product_price * item.quantity;
     // });
 
-    this.cartItems.forEach((item) => {
+    this.Profile.forEach((item: OrderItem) => {
       const productPrice = parseFloat(item.product.product_price.toString());
       let totalPrice = productPrice;
       // console.log('Customizations: ', item.customization);
@@ -136,7 +190,7 @@ export class CartComponent implements OnInit {
       this.itemData
         .updateOrderItem(item)
         .then(() => {
-          console.log('Subtotal updated:', item.subtotal);
+          console.log('Subtotal updatedd:', item.subtotal);
           this.calculateTotalPriceCart();
           // this.subtotal = item.subtotal;
         })
@@ -146,35 +200,14 @@ export class CartComponent implements OnInit {
     });
   }
 
-  calculateCustomizations() {
-    this.cartItems.forEach((item) => {
-      const productPrice = parseFloat(item.product.product_price.toString());
-      let totalPrice = productPrice; // Initialize totalPrice with the product price
-
-      item.customization.forEach((customization: Custom) => {
-        const custPrice = parseFloat(customization.price.toString());
-        if (!isNaN(custPrice)) {
-          totalPrice += custPrice;
-        }
-      });
-
-      item.subtotal = totalPrice;
-
-      this.itemData
-        .updateOrderItem(item)
-        .then(() => {
-          console.log('Subtotal updated:', item.subtotal);
-        })
-        .catch((error) => {
-          console.error('Error updating order item:', error);
-        });
-    });
-  }
-
   calculateTotalPriceCart() {
+    const userId = localStorage.getItem('userId');
+    this.Profile = this.cartItems.filter(
+      (userProfile) => userProfile.user.id === userId
+    );
     this.totalPriceCart = 0; // Reset totalPriceCart to 0 before calculating
 
-    this.cartItems.forEach((item) => {
+    this.Profile.forEach((item: { subtotal: number }) => {
       this.totalPriceCart += item.subtotal; // Add the subtotal of each item to totalPriceCart
     });
 
@@ -208,14 +241,20 @@ export class CartComponent implements OnInit {
   }
 
   getOrderItemCount() {
-    this.itemData.getOrderItemCount().subscribe(
-      (count: number) => {
-        this.orderItemCount = count;
-      },
-      (err: any) => {
-        alert('Error while fetching order item count');
-      }
+    const userId = localStorage.getItem('userId');
+    this.Profile = this.cartItems.filter(
+      (userProfile) => userProfile.user.id === userId
     );
+    console.log(this.Profile.length);
+    this.orderItemCount = this.Profile.length;
+    // this.itemData.getOrderItemCount().subscribe(
+    //   (count: number) => {
+    //     this.orderItemCount = count;
+    //   },
+    //   (err: any) => {
+    //     alert('Error while fetching order item count');
+    //   }
+    // );
   }
   toggleSelection(product: OrderItem) {
     const index = this.selectedItems.indexOf(product);

@@ -49,6 +49,12 @@ export class OrderItemService {
       .pipe(map((item) => item[0]));
   }
 
+  getOrdersByUser(userId: string): Observable<any[]> {
+    return this.afs
+      .collection('/Order-Item', (ref) => ref.where('userId', '==', userId))
+      .valueChanges();
+  }
+
   // delete order item
   deleteOrderItem(item: OrderItem) {
     return this.afs.doc('/Order-Item/' + item.id).delete();
