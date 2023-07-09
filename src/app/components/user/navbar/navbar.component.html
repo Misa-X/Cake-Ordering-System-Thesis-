@@ -20,6 +20,36 @@
     <li><a routerLink="/user/contact">Contact Us</a></li>
   </ul>
 
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search" />
+    <button><i class="bx bx-search-alt"></i></button>
+  </div> -->
+
+  <div class="input-group search-box" style="max-width: 300px">
+    <!-- <input type="text" class="form-control" placeholder="Search" />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button">
+        <i class="bx bx-search-alt"></i>
+      </button>
+    </div> -->
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search"
+      [(ngModel)]="searchQuery"
+      (keydown.enter)="searchProducts()"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        (click)="searchProducts()"
+      >
+        <i class="bx bx-search-alt"></i>
+      </button>
+    </div>
+  </div>
+
   <div class="icons">
     <a href="#"><i class="bx bx-search-alt-2"></i></a>
     <a routerLink="/user/cart"><i class="bx bx-cart-alt"></i></a>

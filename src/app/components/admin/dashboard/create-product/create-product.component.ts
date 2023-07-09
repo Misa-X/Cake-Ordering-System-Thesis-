@@ -21,6 +21,8 @@ export class CreateProductComponent implements OnInit {
   productList: Products[] = [];
   categories: Category[] = [];
 
+  isEditMode = false;
+
   productObj: Products = {
     id: '',
     product_name: '',
@@ -49,9 +51,11 @@ export class CreateProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('data from table', this.data);
     this.getAllCategories();
-    if (this.data) {
-      this.product = { ...this.data }; // Assign a copy of the received product data to the component variable
+    if (this.datas) {
+      this.productObj = { ...this.datas.productObj }; // Assign a copy of the received product data to the component variable
+      this.isEditMode = true;
     }
   }
 
@@ -66,12 +70,22 @@ export class CreateProductComponent implements OnInit {
   }
 
   resetForm() {
-    this.id = '';
-    this.product_name = '';
-    this.product_category = '';
-    this.product_description = '';
-    this.product_image = '';
-    this.product_price = 0;
+    // this.id = '';
+    // this.product_name = '';
+    // this.product_category = '';
+    // this.product_description = '';
+    // this.product_image = '';
+    // this.product_price = 0;
+
+    this.productObj = {
+      id: '',
+      product_name: '',
+      product_category: { id: '', category_name: '' },
+      product_description: '',
+      product_image: '',
+      product_price: 0,
+    };
+    this.selectedFile = null;
   }
 
   onFileSelected(event: any) {
@@ -149,28 +163,100 @@ export class CreateProductComponent implements OnInit {
             finalize(() => {
               fileRef.getDownloadURL().subscribe((imageUrl) => {
                 this.productObj.product_image = imageUrl;
-                this.data.addProduct(this.productObj);
+                if (this.isEditMode) {
+                  this.data.updateProduct(this.productObj);
+                } else {
+                  this.data.addProduct(this.productObj);
+                }
                 this.resetForm();
+                this.dialogRef.close();
+                // this.data.addProduct(this.productObj);
+                // this.resetForm();
               });
             })
           )
           .subscribe();
       } else {
-        this.data.addProduct(this.productObj);
+        if (this.isEditMode) {
+          this.data.updateProduct(this.productObj);
+        } else {
+          this.data.addProduct(this.productObj);
+        }
         this.resetForm();
+        this.dialogRef.close();
+        // this.data.addProduct(this.productObj);
+        // this.resetForm();
       }
     }
   }
 
   // update product
-  updateProduct(product: Products) {
-    this.selectedProduct = { ...product };
-    this.id = this.selectedProduct.id;
-    this.product_name = this.selectedProduct.product_name;
-    this.product_category = this.selectedProduct.product_category.id;
-    this.product_description = this.selectedProduct.product_description;
-    this.product_price = this.selectedProduct.product_price;
-  }
+  // updateProduct() {
+  //   // this.selectedProduct = { ...product };
+  //   // this.id = this.selectedProduct.id;
+  //   // this.product_name = this.selectedProduct.product_name;
+  //   // this.product_category = this.selectedProduct.product_category.id;
+  //   // this.product_description = this.selectedProduct.product_description;
+  //   // this.product_price = this.selectedProduct.product_price;
+
+  //   // if (
+  //   //   this.product.product_name === '' ||
+  //   //   this.product.product_description === '' ||
+  //   //   this.product.product_category === '' ||
+  //   //   this.product.product_price === 0
+  //   // ) {
+  //   //   alert('Fill all input fields');
+  //   //   return;
+  //   // }
+
+  //   if (
+  //     this.product_name == '' ||
+  //     this.product_description == '' ||
+  //     this.product_category == '' ||
+  //     this.product_price == 0
+  //   ) {
+  //     alert('Fill all input fields');
+  //     return;
+  //   }
+
+  //   this.productObj.product_name = this.product_name;
+  //   this.productObj.product_description = this.product_description;
+
+  //   const selectedCategory = this.categories.find(
+  //     (category) => category.id === this.product_category
+  //   );
+
+  //   if (selectedCategory) {
+  //     this.productObj.product_category = selectedCategory;
+  //   } else {
+  //     this.productObj.product_category = {
+  //       id: '',
+  //       category_name: '',
+  //     };
+  //   }
+
+  //   this.productObj.product_price = this.product_price;
+
+  //   if (this.selectedFile) {
+  //     const filePath = `product_images/${Date.now()}_${this.selectedFile.name}`;
+  //     const fileRef = this.storage.ref(filePath);
+  //     const task = this.storage.upload(filePath, this.selectedFile);
+
+  //     task
+  //       .snapshotChanges()
+  //       .pipe(
+  //         finalize(() => {
+  //           fileRef.getDownloadURL().subscribe((imageUrl) => {
+  //             this.productObj.product_image = imageUrl;
+  //             this.saveProduct();
+  //           });
+  //         })
+  //       )
+  //       .subscribe();
+  //   } else {
+  //     this.saveProduct();
+  //   }
+  // }
 
   // delete product
   deleteProduct(product: Products) {
@@ -183,13 +269,85 @@ export class CreateProductComponent implements OnInit {
     }
   }
 
-  saveProduct() {
-    // Perform any necessary operations with the product data
-    console.log('Product:', this.product);
+  // ------------------
 
-    // Close the dialog and pass the product data back to the parent component
-    this.dialogRef.close(this.product);
+  saveProduct() {
+    if (
+      this.product_name === '' ||
+      this.product_description === '' ||
+      this.product_category === '' ||
+      this.product_price === 0
+    ) {
+      alert('Fill all input fields');
+      return;
+    }
+    this.productObj.product_name = this.product_name;
+    this.productObj.product_description = this.product_description;
+    const selectedCategory = this.categories.find(
+      (category) => category.id === this.product_category
+    );
+
+    if (selectedCategory) {
+      this.productObj.product_category = selectedCategory;
+    } else {
+      this.productObj.product_category = {
+        id: '',
+        category_name: '',
+      };
+    }
+
+    this.productObj.product_price = this.product_price;
+
+    if (this.selectedFile) {
+      const filePath = `product_images/${Date.now()}_${this.selectedFile.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, this.selectedFile);
+
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe((imageUrl) => {
+              this.productObj.product_image = imageUrl;
+              if (this.isEditMode) {
+                this.data.updateProduct(this.productObj);
+              } else {
+                this.data.addProduct(this.productObj);
+              }
+              this.resetForm();
+              this.dialogRef.close();
+            });
+          })
+        )
+        .subscribe();
+    } else {
+      if (this.isEditMode) {
+        this.data.updateProduct(this.productObj);
+      } else {
+        this.data.addProduct(this.productObj);
+      }
+      this.resetForm();
+      this.dialogRef.close();
+    }
   }
+
+  // ------------------
+
+  // saveProduct() {
+  //   // // Perform any necessary operations with the product data
+  //   // console.log('Product:', this.product);
+
+  //   // // Close the dialog and pass the product data back to the parent component
+  //   // this.dialogRef.close(this.product);
+
+  //   if (this.isEditMode) {
+  //     this.data.updateProduct(this.productObj);
+  //   } else {
+  //     this.data.addProduct(this.productObj);
+  //   }
+  //   this.resetForm();
+  //   this.dialogRef.close();
+  // }
 
   closeDialog() {
     // Close the dialog without passing any data

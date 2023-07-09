@@ -14,6 +14,9 @@ import { Order } from 'src/app/models/order';
 import { DeliveryItem } from 'src/app/models/delivery-item';
 import { OrderService } from 'src/app/shared/order.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { NotificationsService } from 'src/app/shared/notifications.service';
+import { Notification } from 'src/app/models/notifications';
+// import { FcmService } from 'src/app/shared/fcm.service';
 
 @Component({
   selector: 'app-checkout',
@@ -56,6 +59,17 @@ export class CheckoutComponent implements OnInit {
 
   // checkoutItems: OrderItem[] = [];
   filteredItems: OrderItem[] = [];
+
+  // notificationObj: any;
+
+  // notificationObj: Notification = {
+  //   id: '', // ID will be generated automatically by the service
+  //   user: [], // Provide the UserProfile object
+  //   text: '', // Notification message
+  //   time: '', // Current timestamp
+  //   status: 'new', // Set the initial status as 'new'
+  //   order: , // Provide the OrderItem object
+  // };
 
   orderObj: Order = {
     id: '',
@@ -111,7 +125,8 @@ export class CheckoutComponent implements OnInit {
     private deliveryData: DeliveryService,
     private orderData: OrderService,
     private router: Router,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
+    private notificationService: NotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -298,7 +313,12 @@ export class CheckoutComponent implements OnInit {
     console.log('order id: ', this.orderObj.id);
 
     this.deleteCheckoutItems();
+
     this.orderData.addOrder(this.orderObj);
+    console.log('Object: ', this.orderObj);
+    console.log('This Profile >> ', this.orderObj.orderItem[0].user);
+
+    this.addNewNotification(this.orderObj);
 
     if (this.selectedPaymentMethod === 'bankTransfer') {
       const checkoutUrl = `/user/payment/${this.orderObj.id}`;
@@ -319,5 +339,28 @@ export class CheckoutComponent implements OnInit {
       1
     );
     return minDate;
+  }
+
+  addNewNotification(order: Order) {
+    const notificationObj: Notification = {
+      id: '',
+      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+      text: this.orderObj.orderItem[0].user.name + ' created a new order!',
+      time: new Date().toLocaleString('en-US', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+      status: 'new',
+      order: order,
+    };
+
+    this.notificationService
+      .addNotificationItem(notificationObj)
+      .then(() => {
+        console.log('Notification added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding notification:', error);
+      });
   }
 }

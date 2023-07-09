@@ -4,7 +4,7 @@
     <p>
       We make different type of cakes, cupcakes, pastries or anything you want.
     </p>
-    <a routerLink="/products" class="btn">View Products</a>
+    <a routerLink="/user/products" class="btn">View Products</a>
   </div>
 </section>
 
@@ -12,7 +12,7 @@
   <h2>Featured Products</h2>
 
   <div class="product-list">
-    <div class="product-item" *ngFor="let product of productList">
+    <div class="product-item" *ngFor="let product of featuredProducts">
       <img
         [src]="product.product_image"
         alt="Croissant"

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 import { Category } from '../models/category';
 import { Products } from '../models/products';
 import { map } from 'rxjs/operators';
@@ -11,6 +14,7 @@ import { Custom } from '../models/custom';
   providedIn: 'root',
 })
 export class DataService {
+  private itemDoc!: AngularFirestoreDocument<Products>;
   constructor(private afs: AngularFirestore) {}
 
   // PRODUCT ---------->
@@ -43,8 +47,26 @@ export class DataService {
 
   // update product
   updateProduct(product: Products) {
-    this.deleteProduct(product);
-    this.addProduct(product);
+    // this.deleteProduct(product);
+    // this.addProduct(product);
+
+    const productRef = this.afs.collection('/Products').doc(product.id);
+
+    console.log('product ref: ', product.id);
+
+    productRef
+      .update(product)
+      .then(() => {
+        console.log('Product updated successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating product:', error);
+      });
+
+    // this.itemDoc = this.afs.doc(`/Products/${product.id}`);
+    // const itemId = this.itemDoc.ref.id;
+    // product.id = itemId;
+    // return this.itemDoc.update(product);
   }
 
   //CATEGORY ---------->

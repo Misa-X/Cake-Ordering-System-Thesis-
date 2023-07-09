@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   @Input() isLoginPage: boolean = false;
+  searchQuery: string = '';
 
   categories: any = {};
 
@@ -36,6 +37,15 @@ export class NavbarComponent implements OnInit {
         return { id, ...data } as Category;
       });
     });
+  }
+
+  searchProducts(): void {
+    if (this.searchQuery.trim() !== '') {
+      this.router.navigate(['/user/products'], {
+        queryParams: { query: this.searchQuery },
+      });
+      this.searchQuery = '';
+    }
   }
 
   gotToOrders() {

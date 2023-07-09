@@ -33,6 +33,17 @@ export class ProductDetailComponent implements OnInit {
   flavorArray: Custom[] = [];
   sizeArray: Custom[] = [];
 
+  notificationObj: any;
+
+  // notificationObj: Notification = {
+  //   id: '', // ID will be generated automatically by the service
+  //   user: [], // Provide the UserProfile object
+  //   text: '', // Notification message
+  //   time: '', // Current timestamp
+  //   status: 'new', // Set the initial status as 'new'
+  //   order: , // Provide the OrderItem object
+  // };
+
   // user: UserProfile | null = null;
 
   orderItemObj: OrderItem = {
@@ -172,6 +183,12 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  isCakeCategory(categoryName: string): boolean {
+    // return !!categoryName && categoryName.trim().startsWith('Korean');
+    const regex = /\bCake\b/i;
+    return !!categoryName && regex.test(categoryName);
+  }
+
   resetForm() {
     this.id = '';
     this.productt = '';
@@ -227,7 +244,8 @@ export class ProductDetailComponent implements OnInit {
       this.orderItemObj.customization = selectedCustomizations;
     } else {
       console.log('Selected customizations not found.');
-      return; // Stop the execution if the selected customizations are not found
+      this.orderItemObj.customization = selectedCustomizations;
+      // return; // Stop the execution if the selected customizations are not found
     }
 
     console.log('Selected Customizations: ', selectedCustomizations);
@@ -290,7 +308,8 @@ export class ProductDetailComponent implements OnInit {
       this.orderItemObj.customization = selectedCustomizations;
     } else {
       console.log('Selected customizations not found.');
-      return; // Stop the execution if the selected customizations are not found
+      this.orderItemObj.customization = selectedCustomizations;
+      // return; // Stop the execution if the selected customizations are not found
     }
 
     console.log('Selected Customizations: ', selectedCustomizations);

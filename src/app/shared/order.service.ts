@@ -31,6 +31,18 @@ export class OrderService {
         map((order) => order[0]) // Retrieve the first matching order
       );
   }
+  updateOrderStatus(order: Order) {
+    const orderRef = this.afs.collection('/Order').doc(order.id);
+    orderRef
+      .update({ order_status: 'Canceled' })
+      .then(() => {
+        console.log('Order status updated successfully');
+        // Optionally, you can perform any other actions after updating the payment status
+      })
+      .catch((error) => {
+        console.error('Error updating order status:', error);
+      });
+  }
 
   updatePaymentStatus(order: Order) {
     const orderRef = this.afs.collection('/Order').doc(order.id);

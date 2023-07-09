@@ -12,7 +12,13 @@
       <h2>{{ product.product_name }}</h2>
       <p>{{ product.product_description }}</p>
       <h4>Customize Your Order</h4>
-      <div class="mb-3">
+      <div
+        class="mb-3"
+        *ngIf="
+          isCakeCategory(product.product_category?.category_name) ||
+          product.product_category?.category_name === 'CupCake'
+        "
+      >
         <label for="color">Color:</label>
         <select class="form-select" id="color" name="color" [(ngModel)]="color">
           <option value="">Select a color</option>
@@ -26,7 +32,10 @@
         </select>
       </div>
 
-      <div class="mb-3">
+      <div
+        class="mb-3"
+        *ngIf="isCakeCategory(product.product_category?.category_name)"
+      >
         <label for="filling">Size:</label>
         <select
           class="form-select"
@@ -42,7 +51,10 @@
         </select>
       </div>
 
-      <div class="mb-3">
+      <div
+        class="mb-3"
+        *ngIf="isCakeCategory(product.product_category?.category_name)"
+      >
         <label for="filling">Filling:</label>
         <select
           class="form-select"
@@ -58,7 +70,10 @@
         </select>
       </div>
 
-      <div class="mb-3">
+      <div
+        class="mb-3"
+        *ngIf="isCakeCategory(product.product_category?.category_name)"
+      >
         <label for="flavor">Flavor:</label>
         <select
           class="form-select"
@@ -84,6 +99,9 @@
           min="1"
           [(ngModel)]="quantity"
         />
+        <p *ngIf="product.product_category?.category_name === 'CupCake'">
+          Per half a dozen
+        </p>
       </div>
       <div class="mb-3">
         <label for="notes">Notes:</label>
@@ -95,25 +113,24 @@
           [(ngModel)]="note"
         ></textarea>
       </div>
-      <div class="mb-3">
+      <div
+        class="mb-3"
+        *ngIf="
+          isCakeCategory(product.product_category?.category_name) ||
+          product.product_category?.category_name === 'CupCake'
+        "
+      >
         <label for="picture-upload">Upload Picture:</label>
         <input
           type="file"
           class="form-control"
           id="picture-upload"
           name="picture-upload"
-          [(ngModel)]="picture"
+          (change)="onFileSelected($event)"
         />
       </div>
       <button type="button" class="btn btn-primary" (click)="addOrderItem()">
         Add to Cart
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="calcSubtotal(product)"
-      >
-        Calc
       </button>
 
       <button type="button" class="btn btn-success" (click)="addCheckoutItem()">

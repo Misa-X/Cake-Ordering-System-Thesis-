@@ -1,5 +1,6 @@
 body {
-  background-color: blanchedalmond;
+  /* background-color: blanchedalmond; */
+  padding-top: 60px;
 }
 
 header {
@@ -7,9 +8,10 @@ header {
   top: 0;
   right: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 9999;
   position: fixed;
   background-color: #fbc5c5;
+  height: 60px;
   box-shadow: 0px 2px 18px 0 rgb(129 162 182 / 20%);
   display: flex;
   align-items: center;
@@ -34,7 +36,7 @@ header {
 }
 
 .navbar {
-  display: flex;
+  /* display: flex; */
   align-items: center;
 }
 
@@ -53,6 +55,34 @@ header {
 
 ul {
   list-style: none;
+}
+
+.main-search .input-group {
+  padding: 0;
+}
+/*
+.main-search .input-group .form-control {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+} */
+
+.main-search .input-group .search-close {
+  display: none;
+}
+
+/* .main-search .input-group .search-btn {
+  border-radius: 2px;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+} */
+
+.main-search .input-group .form-control {
+  transition: all 0.3s ease-in-out;
+  font-size: 14px;
 }
 
 .icons {

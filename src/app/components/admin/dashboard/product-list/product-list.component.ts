@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { __importDefault } from 'tslib';
@@ -8,6 +8,7 @@ import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Category } from 'src/app/models/category';
 import { finalize } from 'rxjs/operators';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-product-list',
@@ -83,10 +84,10 @@ export class ProductListComponent implements OnInit {
     );
   }
 
-  editProduct(product: Products) {
-    // Implement your logic for editing the product
-    console.log('Edit product:', product);
-  }
+  // editProduct(product: Products) {
+  //   // Implement your logic for editing the product
+  //   console.log('Edit product:', product);
+  // }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -209,6 +210,7 @@ export class ProductListComponent implements OnInit {
   }
 
   openEditProduct(product: Products | null) {
+    console.log('Product Print: ', product);
     const dialogRef = this.dialog.open(CreateProductComponent, {
       width: '400px', // Adjust the width as per your requirements
       data: product, // Pass the selected product data to the dialog
@@ -219,5 +221,9 @@ export class ProductListComponent implements OnInit {
         this.updateProduct(result); // Handle the updated product data
       }
     });
+  }
+
+  editProduct(product: Products) {
+    this.openEditProduct(product); // Open the dialog in edit mode
   }
 }

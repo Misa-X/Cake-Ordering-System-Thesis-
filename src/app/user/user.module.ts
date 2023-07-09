@@ -25,6 +25,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatTableModule } from '@angular/material/table';
 import { MatTableDataSource } from '@angular/material/table';
 
+// import { AngularFireModule } from '@angular/fire';
+// import { AngularFireMessagingModule } from '@angular/fire/messaging';
+// import { AngularFireAuthModule } from '@angular/fire/auth';
+// import { environment } from 'src/environments/environment';
+
 import { HomeComponent } from '../components/user/home/home.component';
 import { ProductDetailComponent } from '../components/user/product-detail/product-detail.component';
 import { CheckoutComponent } from '../components/user/checkout/checkout.component';
@@ -37,6 +42,7 @@ import { ContactUsComponent } from '../components/user/contact-us/contact-us.com
 import { UserProfileComponent } from '../components/user/user-profile/user-profile.component';
 import { PaymentComponent } from '../components/user/payment/payment.component';
 import { UserOrdersComponent } from '../components/user/user-orders/user-orders.component';
+import { ProductsComponent } from '../components/user/products/products.component';
 
 const routes: Routes = [
   {
@@ -45,6 +51,7 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'product-detail/:id', component: ProductDetailComponent },
+      { path: 'products', component: ProductsComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'checkout/:id', component: CheckoutComponent },
       { path: 'cart', component: CartComponent },
@@ -72,6 +79,7 @@ const routes: Routes = [
     UserProfileComponent,
     PaymentComponent,
     UserOrdersComponent,
+    ProductsComponent,
   ],
   imports: [
     BrowserModule,

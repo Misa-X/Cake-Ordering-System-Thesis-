@@ -9,6 +9,9 @@ import { finalize } from 'rxjs/operators';
 import { Products } from 'src/app/models/products';
 import { Payment } from 'src/app/models/payment';
 import { PaymentService } from 'src/app/shared/payment.service';
+import { NotificationsService } from 'src/app/shared/notifications.service';
+import { Notification } from 'src/app/models/notifications';
+import { OrderItem } from 'src/app/models/order-item';
 
 @Component({
   selector: 'app-payment',
@@ -23,7 +26,7 @@ export class PaymentComponent implements OnInit {
 
   order: any = {};
   userName: string = '';
-  productt: any = [];
+  product: any = [];
   orders: string = '';
 
   selectedFile: File | null = null;
@@ -32,7 +35,8 @@ export class PaymentComponent implements OnInit {
     private orderData: OrderService,
     private route: ActivatedRoute,
     private storage: AngularFireStorage,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private notificationService: NotificationsService
   ) {}
 
   ngOnInit() {
@@ -49,13 +53,12 @@ export class PaymentComponent implements OnInit {
       .subscribe((order: unknown) => {
         if (order) {
           this.order = order as Order;
+          this.product = [...this.order.orderItem];
 
-          this.order.orderItem.forEach((product: any) => {
-            this.productt.push(product);
-          });
-          console.log('found products', this.productt);
-
-          console.log(typeof this.productt, this.productt[0].product_name);
+          // this.order.orderItem.forEach((product: any) => {
+          //   this.product.push(product);
+          // });
+          console.log('found products', this.product);
         } else {
           console.log('Order not found.');
         }
@@ -79,6 +82,7 @@ export class PaymentComponent implements OnInit {
       this.remainingTime = this.countdownDate.getTime() - now;
 
       if (this.remainingTime <= 0) {
+        this.updateOrderStatus();
         // Countdown timer has expired
         clearInterval(this.countdownTimer);
         // Perform any necessary actions when the timer expires
@@ -87,6 +91,7 @@ export class PaymentComponent implements OnInit {
   }
 
   stopCountdown() {
+    this.updateOrderStatus();
     clearInterval(this.countdownTimer);
   }
 
@@ -139,6 +144,7 @@ export class PaymentComponent implements OnInit {
                 .then(() => {
                   console.log('Payment added successfully');
                   // Optionally, you can navigate to a success page or perform any other actions.
+                  this.addNewNotification(this.order);
                 })
                 .catch((error) => {
                   console.error('Error adding payment:', error);
@@ -150,5 +156,40 @@ export class PaymentComponent implements OnInit {
     } else {
       console.error('No file selected');
     }
+  }
+
+  updateOrderStatus() {
+    if (this.order.order_status !== 'Canceled') {
+      this.orderData.updateOrderStatus(this.order);
+      console.log('Order status successfully updated');
+      // Optionally, you can navigate to a success page or perform any other actions.
+    } else {
+      console.log('Order is already Canceled');
+    }
+  }
+  addNewNotification(payment: Order) {
+    const notificationObj: Notification = {
+      id: '',
+      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+      text:
+        this.order.orderItem[0].user.name +
+        ' payed for their order!' +
+        this.order.id,
+      time: new Date().toLocaleString('en-US', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+      status: 'new',
+      order: payment,
+    };
+
+    this.notificationService
+      .addNotificationItem(notificationObj)
+      .then(() => {
+        console.log('Notification added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding notification:', error);
+      });
   }
 }

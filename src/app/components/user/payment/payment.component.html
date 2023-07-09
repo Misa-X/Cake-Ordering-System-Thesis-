@@ -10,8 +10,10 @@
         </div>
 
         <div *ngIf="remainingTime > 0">
-          <p>Countdown Timer:</p>
-          <p>{{ getFormattedTime() }}</p>
+          <span
+            ><strong><p>Please Make Payment before Time:</p></strong
+            >{{ getFormattedTime() }}</span
+          >
         </div>
 
         <div class="row">
@@ -36,7 +38,8 @@
           </div>
         </div>
         <hr />
-        <ul class="list-group mb-3" *ngFor="let item of productt">
+
+        <ul class="list-group mb-3" *ngFor="let item of product">
           <li
             class="list-group-item d-flex justify-content-between lh-condensed"
           >
@@ -48,6 +51,7 @@
             </div>
           </li>
         </ul>
+
         <h4 class="price">
           Total: <span class="text-muted">{{ order.total }}</span>
         </h4>
@@ -66,6 +70,7 @@
           type="button"
           class="btn btn-success btn-lg btn-block"
           (click)="makePayment()"
+          [disabled]="order.order_status == 'Canceled'"
         >
           Pay Now <span class="glyphicon glyphicon-chevron-right"></span>
         </button>

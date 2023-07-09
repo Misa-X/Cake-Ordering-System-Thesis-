@@ -5,9 +5,38 @@
   <span>Sweet & Salty</span>
   <span class="toolbar-item-spacer"></span>
 
-  <button mat-icon-button matTooltip="Notifications">
+  <button
+    mat-icon-button
+    matTooltip="Notifications"
+    [matMenuTriggerFor]="userNotifications"
+  >
     <mat-icon>notifications</mat-icon>
+    <span
+      class="badge"
+      *ngIf="unreadNotifications$ | async as unreadNotifications"
+    >
+      {{ unreadNotifications.length }}
+    </span>
   </button>
+
+  <mat-menu #userNotifications [overlapTrigger]="false" yPosition="below">
+    <ng-container *ngIf="unreadNotifications$ | async as unreadNotifications">
+      <mat-list>
+        <mat-list-item
+          *ngFor="let notification of unreadNotifications"
+          (click)="handleNotificationClick(notification)"
+          [routerLink]="'/dash/order-details/' + notification.order.id"
+          class="clickable-row"
+        >
+          {{ notification.text }}
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+    <div *ngIf="!(notifications$ | async)?.length" class="empty-notification">
+      No new notifications.
+    </div>
+  </mat-menu>
+
   <button
     mat-icon-button
     matTooltip="My Account"
@@ -55,28 +84,6 @@
       <mat-list-item routerLink="customizations-list">
         <mat-icon class="icon">build</mat-icon><span> Manage Admins</span>
       </mat-list-item>
-
-      <!-- <mat-expansion-panel [class.mat-elevation-z0]="true">
-        <mat-expansion-panel-header>
-          Manage Products
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item routerLink="#">
-            <mat-icon>library_books</mat-icon><span>Add Product</span>
-          </a>
-          <a mat-list-item routerLink="customizations-list">
-            <mat-icon>android</mat-icon><span>Add Customizations</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true">
-        <mat-expansion-panel-header> Frameworks </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item routerLink="#">Spring</a>
-          <a mat-list-item routerLink="#">Hibernate</a>
-          <a mat-list-item routerLink="#">Struts</a>
-        </mat-nav-list>
-      </mat-expansion-panel> -->
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

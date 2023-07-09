@@ -1,112 +1,80 @@
-<!--
-
 <div class="container">
-  <div class="w3-panel bg-c-blue">
-    <h3>Orders</h3>
-  </div>
-  <br />
   <div class="row">
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-green order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Total Orders</h5>
-          <h6 class="text-right">
-            <i class="fa fa-list-alt f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
+    <div class="col-xl-3 col-md-6">
+      <div class="card prod-p-card bg-c-red">
+        <div class="card-body">
+          <div class="row align-items-center m-b-25">
+            <div class="col">
+              <h6 class="m-b-5 text-white">Total Products</h6>
+              <h3 class="m-b-0 text-white">{{ productList.length }}</h3>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa fa-book text-c-red f-18"></i>
+            </div>
+          </div>
+          <p class="m-b-0 text-white">
+            <span class="label label-danger m-r-10">+11%</span>From Previous
+            Month
+          </p>
         </div>
       </div>
     </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-yellow order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Completed Orders</h5>
-          <h6 class="text-right">
-            <i class="fa fa-check-circle f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
+    <div class="col-xl-3 col-md-6">
+      <div class="card prod-p-card bg-c-blue">
+        <div class="card-body">
+          <div class="row align-items-center m-b-25">
+            <div class="col">
+              <h6 class="m-b-5 text-white">Total Orders</h6>
+              <h3 class="m-b-0 text-white">{{ ordersList.length }}</h3>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-database text-c-blue f-18"></i>
+            </div>
+          </div>
+          <p class="m-b-0 text-white">
+            <span class="label label-primary m-r-10">+12%</span>From Previous
+            Month
+          </p>
         </div>
       </div>
     </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-pink order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Pending Orders</h5>
-          <h6 class="text-right">
-            <i class="fa fa-clock-o f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
+    <div class="col-xl-3 col-md-6">
+      <div class="card prod-p-card bg-c-green">
+        <div class="card-body">
+          <div class="row align-items-center m-b-25">
+            <div class="col">
+              <h6 class="m-b-5 text-white">Total Revenue</h6>
+              <h3 class="m-b-0 text-white">Mt {{ orderTotal }}</h3>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign text-c-green f-18"></i>
+            </div>
+          </div>
+          <p class="m-b-0 text-white">
+            <span class="label label-success m-r-10">+52%</span>From Previous
+            Month
+          </p>
         </div>
       </div>
     </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Cancelled</h5>
-          <h6 class="text-right">
-            <i class="fa fa-list-alt f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="w3-panel bg-c-blue">
-    <h3>Others</h3>
-  </div>
-  <br />
-  <div class="row">
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-yellow order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Total Products</h5>
-          <h6 class="text-right">
-            <i class="fa fa-list-alt f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-green order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Categories</h5>
-          <h6 class="text-right">
-            <i class="fa fa-check-circle f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Users</h5>
-          <h6 class="text-right">
-            <i class="fa fa-clock-o f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-pink order-card">
-        <div class="card-block">
-          <h5 class="m-b-20">Customizations</h5>
-          <h6 class="text-right">
-            <i class="fa fa-list-alt f-left" aria-hidden="true"></i
-            ><span>44</span>
-          </h6>
-
+    <div class="col-xl-3 col-md-6">
+      <div class="card prod-p-card bg-c-yellow">
+        <div class="card-body">
+          <div class="row align-items-center m-b-25">
+            <div class="col">
+              <h6 class="m-b-5 text-white">Pending Orders</h6>
+              <h3 class="m-b-0 text-white">{{ pendingOrders.length }}</h3>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-tags text-c-yellow f-18"></i>
+            </div>
+          </div>
+          <p class="m-b-0 text-white">
+            <span class="label label-warning m-r-10">+52%</span>From Previous
+            Month
+          </p>
         </div>
       </div>
     </div>
   </div>
-</div> -->
+</div>

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Add Product</h5>
+  <h5 class="modal-title">{{ isEditMode ? "Edit" : "Add" }} Product</h5>
   <button type="button" class="close" (click)="closeDialog()">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -80,6 +80,6 @@
     style="margin-left: 10px"
     (click)="addProduct()"
   >
-    Save
+    {{ isEditMode ? "Update" : "Add" }}
   </button>
 </div>

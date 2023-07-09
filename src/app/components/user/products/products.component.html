@@ -1,0 +1,90 @@
+<section class="banner" id="banner">
+  <div class="content">
+    <h1>Products</h1>
+  </div>
+</section>
+<section class="filter" id="filter">
+  <div class="filter-content">
+    <div class="row">
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group">
+          <label for="categoryFilter">Filter by Category:</label>
+          <select
+            class="form-control"
+            id="categoryFilter"
+            [(ngModel)]="selectedCategory"
+            (change)="filterProducts(selectedCategory)"
+          >
+            <option value="all">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.category_name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group">
+          <label for="sortOption">Sort By:</label>
+          <select
+            class="form-control"
+            id="sortOption"
+            [(ngModel)]="sortOption"
+            (change)="sortProducts(sortOption)"
+          >
+            <option value="">None</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-4">
+        <div class="form-group">
+          <label for="searchInput">Search:</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="text"
+              id="searchInput"
+              [(ngModel)]="searchQuery"
+              (input)="searchProducts()"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="searchProducts()"
+              >
+                <i class="bx bx-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="products">
+  <h2>Products</h2>
+
+  <div class="product-list">
+    <div class="product-item" *ngFor="let product of filteredProductList">
+      <img
+        [src]="product.product_image"
+        alt="Croissant"
+        style="max-width: 100%; width: 100%; height: 300px"
+      />
+      <h3>{{ product.product_name }}</h3>
+      <p class="description">
+        {{ product.product_description }}
+      </p>
+      <p class="product-price">
+        <span class="price">{{ product.product_price }}</span>
+        <span class="currency"> MT </span>
+      </p>
+      <a [routerLink]="'/user/product-detail/' + product.id" class="btn"
+        >Order Now</a
+      >
+    </div>
+  </div>
+</section>

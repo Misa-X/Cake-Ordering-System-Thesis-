@@ -92,11 +92,16 @@
 
         <div class="col-md-7 mb-4 mb-md-0">
           <p class="fw-bold">{{ item.product.product_name }}</p>
-          <p class="mb-1">
+          <p class="mb-1" *ngIf="item.customization.type === 'size'">
             <span class="text-muted me-2">Size:</span
-            ><span>{{ item.customization[0].size }}</span>
+            ><span>{{ item.customization.type }}</span>
           </p>
-          <p><span class="text-muted me-2">Color:</span><span>Gray</span></p>
+          <div *ngFor="let cust of order.orderItem.customization">
+            <p>
+              <span class="text-muted me-2">Color:</span
+              ><span>{{ cust.name }}</span>
+            </p>
+          </div>
           <p>
             <span class="text-muted me-2">Filling:</span><span>Strawberry</span>
           </p>
@@ -106,9 +111,13 @@
             <span class="text-muted me-2">Flavor:</span><span>8.5</span>
           </p>
           <p>
-            <span class="text-muted me-2">Note:</span><span>Make it moist</span>
+            <span class="text-muted me-2">Note:</span
+            ><span>{{ item.note }}</span>
           </p>
-          <p><span class="text-muted me-2">Quantity:</span><span>2</span></p>
+          <p>
+            <span class="text-muted me-2">Quantity:</span
+            ><span>{{ item.quantity }}</span>
+          </p>
         </div>
       </div>
       <hr />
