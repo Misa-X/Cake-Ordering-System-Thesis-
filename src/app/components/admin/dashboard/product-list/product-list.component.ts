@@ -9,6 +9,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Category } from 'src/app/models/category';
 import { finalize } from 'rxjs/operators';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -50,7 +51,8 @@ export class ProductListComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private data: DataService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private router: Router
   ) {}
 
   dataSource!: MatTableDataSource<Products>;
@@ -200,7 +202,6 @@ export class ProductListComponent implements OnInit {
   openAddProduct() {
     const dialogRef = this.dialog.open(CreateProductComponent, {
       width: '400px', // Adjust the width as per your requirements
-      // You can also specify other dialog configuration options here
     });
 
     dialogRef.afterClosed().subscribe((result) => {

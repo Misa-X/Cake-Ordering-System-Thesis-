@@ -102,23 +102,6 @@ export class CartComponent implements OnInit {
     this.getCartProduct();
   }
 
-  //Orginal Get product
-  // getCartProduct() {
-  //   this.itemData.getAllOrderItems().subscribe(
-  //     (res) => {
-  //       this.cartItems = res.map((e: any) => {
-  //         const data = e.payload.doc.data();
-  //         const id = e.payload.doc.id;
-
-  //         return { id, ...data } as OrderItem;
-  //       });
-  //     },
-  //     (err: any) => {
-  //       alert('Error while fetching cart items');
-  //     }
-  //   );
-  // }
-
   getCartProduct() {
     this.itemData.getAllOrderItems().subscribe((prof) => {
       this.cartItems = prof.map((e: any) => {
@@ -224,6 +207,20 @@ export class CartComponent implements OnInit {
       item.subtotal = 0;
     }
 
+    const itemIndex = this.cartItems.findIndex(
+      (cartItem) => cartItem.id === item.id
+    );
+    if (itemIndex > -1) {
+      this.cartItems[itemIndex] = item; // Update the item in the cartItems array
+
+      const selectedItemsIndex = this.selectedItems.findIndex(
+        (selectedItem) => selectedItem.id === item.id
+      );
+      if (selectedItemsIndex > -1) {
+        this.selectedItems[selectedItemsIndex] = item; // Update the item in the selectedItems array
+      }
+    }
+
     this.itemData
       .updateOrderItem(item)
       .then(() => {
@@ -247,26 +244,20 @@ export class CartComponent implements OnInit {
     );
     console.log(this.Profile.length);
     this.orderItemCount = this.Profile.length;
-    // this.itemData.getOrderItemCount().subscribe(
-    //   (count: number) => {
-    //     this.orderItemCount = count;
-    //   },
-    //   (err: any) => {
-    //     alert('Error while fetching order item count');
-    //   }
-    // );
   }
+
   toggleSelection(product: OrderItem) {
     const index = this.selectedItems.indexOf(product);
 
     if (index > -1) {
       this.selectedItems.splice(index, 1); // Item was previously selected, remove it from the list
-      // console.log(this.selectedItem);
     } else {
       this.selectedItems.push(product); // Item was not selected, add it to the list
-      console.log(this.selectedItems);
     }
+
+    console.log('Selected Cart Items:', this.selectedItems);
   }
+
   addCheckout() {
     for (const item of this.selectedItems) {
       this.checkoutData.addCheckoutItem(item);
