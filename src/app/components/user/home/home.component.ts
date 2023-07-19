@@ -5,6 +5,7 @@ import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { OrderItemService } from 'src/app/shared/order-item.service';
 import { OrderItem } from 'src/app/models/order-item';
+import { NotificationsService } from 'src/app/shared/notifications.service';
 
 @Component({
   selector: 'app-home',
@@ -19,10 +20,14 @@ export class HomeComponent implements OnInit {
   constructor(
     private data: DataService,
     private storage: AngularFireStorage,
-    private orderIData: OrderItemService
+    private orderIData: OrderItemService,
+    private notif: NotificationsService
   ) {}
 
   ngOnInit(): void {
+    // this.sendEmail();
+    console.log('bla');
+
     this.data.getAllCategories().subscribe((res) => {
       this.categories = res.map((e: any) => {
         const data = e.payload.doc.data();

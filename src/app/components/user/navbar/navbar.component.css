@@ -3,6 +3,12 @@ body {
   padding-top: 60px;
 }
 
+.dropdown button.mat-button {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
 header {
   width: 100%;
   top: 0;
@@ -24,7 +30,7 @@ header {
   color: black;
   font-size: 2.2rem;
   font-weight: 500;
-  line-height: 0.8;
+  line-height: 1; /*mudei  0.8*/
   padding-left: 70px;
   text-decoration: none;
 }
@@ -36,15 +42,16 @@ header {
 }
 
 .navbar {
-  /* display: flex; */
   align-items: center;
+  margin-top: 10px;
+  padding: 0; /*novo*/
 }
 
 .navbar a {
   color: black;
   font-size: 15px;
   padding: 10px 15px;
-  margin: 0 10px;
+  margin: 0; /*mudei 0 10px*/
   transition: all 0.4s ease;
   text-decoration: none;
 }
@@ -60,33 +67,23 @@ ul {
 .main-search .input-group {
   padding: 0;
 }
-/*
-.main-search .input-group .form-control {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-} */
 
 .main-search .input-group .search-close {
   display: none;
 }
-
-/* .main-search .input-group .search-btn {
-  border-radius: 2px;
-  padding: 0;
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-} */
 
 .main-search .input-group .form-control {
   transition: all 0.3s ease-in-out;
   font-size: 14px;
 }
 
+.acc-btn {
+  margin-left: 10px;
+}
+
 .icons {
-  display: inline-block;
+  display: flex; /*mudei inline-block*/
+  align-items: center; /*novo*/
   padding-right: 70px;
 }
 

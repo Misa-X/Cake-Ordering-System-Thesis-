@@ -32,13 +32,13 @@
                       <a href="#" class="nav-link">{{
                         item.product.product_name
                       }}</a>
-                      <p class="text-muted">
+                      <!-- <p class="text-muted">
                         {{ item.product.product_description }}
-                      </p>
+                      </p> -->
 
-                      <h6 class="text-muted">Customizations</h6>
-                      <p class="text-muted">Color: {{ item.color }}</p>
-                      <div class="text-muted">Note: {{ item.note }}</div>
+                      <!-- <h6 class="cust text-muted">Customizations</h6> -->
+
+                      <!-- <div class="text-muted">Note: {{ item.note }}</div> -->
                     </div>
                   </div>
                 </div>
@@ -76,6 +76,24 @@
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
+              </div>
+            </div>
+            <div class="row m-4 custrow">
+              <div class="col-sm col-lg-4">
+                <h6 class="custs text-muted">Icing Color:</h6>
+                <p class="text-muted">{{ item.color }}</p>
+              </div>
+              <div class="col-sm col-lg-4">
+                <h6 class="custs text-muted">Filling:</h6>
+                <p class="text-muted">Strawberry Compote</p>
+              </div>
+              <!-- <div class="col-sm col-lg-4">
+                <h6 class="custs text-muted">Size:</h6>
+                <p class="text-muted">24</p>
+              </div> -->
+              <div class="col-sm col-lg-4">
+                <h6 class="custs text-muted">Note:</h6>
+                <p class="text-muted">{{ item.note }}</p>
               </div>
             </div>
           </div>

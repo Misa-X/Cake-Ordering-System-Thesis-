@@ -55,6 +55,23 @@ section {
   padding-right: 200px;
 }
 
+#searchInput {
+  height: 38px;
+}
+
+.srch-btn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.srch-btn i {
+  margin: 0;
+  padding: 0;
+}
+
 .product-list {
   display: flex;
   flex-wrap: wrap;

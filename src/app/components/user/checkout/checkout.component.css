@@ -9,3 +9,7 @@
 .selection {
   padding-left: 5px;
 }
+
+.custom-control-label {
+  margin-left: 10px;
+}

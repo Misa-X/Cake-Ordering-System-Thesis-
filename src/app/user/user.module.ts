@@ -43,6 +43,7 @@ import { UserProfileComponent } from '../components/user/user-profile/user-profi
 import { PaymentComponent } from '../components/user/payment/payment.component';
 import { UserOrdersComponent } from '../components/user/user-orders/user-orders.component';
 import { ProductsComponent } from '../components/user/products/products.component';
+import { OrderConfirmationComponent } from '../components/user/order-confirmation/order-confirmation.component';
 
 const routes: Routes = [
   {
@@ -61,6 +62,7 @@ const routes: Routes = [
       { path: 'payment', component: PaymentComponent },
       { path: 'payment/:id', component: PaymentComponent },
       { path: 'orders/:id', component: UserOrdersComponent },
+      { path: 'confirmation', component: OrderConfirmationComponent },
     ],
   },
 ];
@@ -80,6 +82,7 @@ const routes: Routes = [
     PaymentComponent,
     UserOrdersComponent,
     ProductsComponent,
+    OrderConfirmationComponent,
   ],
   imports: [
     BrowserModule,

@@ -173,7 +173,7 @@ export class PaymentComponent implements OnInit {
       //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
       text:
         this.order.orderItem[0].user.name +
-        ' payed for their order!' +
+        ' paid for their order!' +
         this.order.id,
       time: new Date().toLocaleString('en-US', {
         dateStyle: 'short',
@@ -183,6 +183,8 @@ export class PaymentComponent implements OnInit {
       order: payment,
     };
 
+    this.sendEmail();
+
     this.notificationService
       .addNotificationItem(notificationObj)
       .then(() => {
@@ -190,6 +192,26 @@ export class PaymentComponent implements OnInit {
       })
       .catch((error) => {
         console.error('Error adding notification:', error);
+      });
+  }
+
+  sendEmail() {
+    const toName = 'Sweet and Salty Bakery';
+    const toEmail = 'sweetandsaltymz@gmail.com';
+    const fromName = this.order.orderItem[0].user.name;
+    const themessage =
+      this.order.orderItem[0].user.name + ' paid for order: ' + this.order.id;
+
+    this.notificationService
+      .sendEmail(toEmail, toName, fromName, themessage)
+      .then(() => {
+        // Email sent successfully
+        alert('Email sent successfully!');
+      })
+      .catch((error) => {
+        // Error sending email
+        alert('Error sending email. Please try again later.');
+        console.error('Error sending email:', error);
       });
   }
 }

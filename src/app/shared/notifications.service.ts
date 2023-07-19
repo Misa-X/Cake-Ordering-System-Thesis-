@@ -7,7 +7,7 @@ import {
 import { Notification } from '../models/notifications';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import * as sgMail from '@sendgrid/mail';
+import emailjs from 'emailjs-com';
 
 @Injectable({
   providedIn: 'root',
@@ -53,5 +53,44 @@ export class NotificationsService {
         ref.where('status', '==', 'new')
       )
       .valueChanges();
+  }
+
+  sendEmail(
+    toEmail: string,
+    toName: string,
+    fromName: string,
+    themessage: string
+  ) {
+    const serviceID = 'service_vfoiu1a';
+    const templateID = 'template_d293c6t';
+    const userID = 'akM8E6TNzXE5uRHPK';
+    // const templateParams = {
+    //   to_email: toEmail,
+    // };
+    return new Promise((resolve, reject) => {
+      emailjs
+        .send(
+          serviceID,
+          templateID,
+          {
+            to_name: toName,
+            to_email: toEmail,
+            from_name: fromName,
+            message: themessage,
+            reply_to: 'Sweet & Salty',
+            // to_name: 'Recipient Name',
+            // message: 'This is a test email sent from my Angular app!',
+          },
+          userID
+        )
+        .then((response) => {
+          console.log('Email sent:', response.status);
+          resolve(response);
+        })
+        .catch((error) => {
+          console.error('Error sending email:', error);
+          reject(error);
+        });
+    });
   }
 }

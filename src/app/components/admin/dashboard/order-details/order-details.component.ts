@@ -8,6 +8,8 @@ import { PaymentService } from 'src/app/shared/payment.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CheckPaymentsComponent } from '../check-payments/check-payments.component';
 import { Payment } from 'src/app/models/payment';
+import { NotificationsService } from 'src/app/shared/notifications.service';
+import { Notification } from 'src/app/models/notifications';
 
 @Component({
   selector: 'app-order-details',
@@ -25,7 +27,8 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderData: OrderService,
     private paymentData: PaymentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private notificationService: NotificationsService
   ) {}
 
   ngOnInit() {
@@ -84,6 +87,12 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
+  openDesignDialog() {
+    const dialogRef = this.dialog.open(CheckPaymentsComponent, {
+      data: { receiptUrl: this.receipt_url }, // Pass the receipt URL to the dialog component
+    });
+  }
+
   updateOrderPaymentStatus() {
     this.route.paramMap
       .pipe(
@@ -104,6 +113,7 @@ export class OrderDetailsComponent implements OnInit {
 
           if (this.payment.payment_status !== 'Approved') {
             this.paymentData.updatePaymentStatus(this.payment);
+            this.addNewNotification(this.order);
             console.log('Payment status successfully updated');
             // Optionally, you can navigate to a success page or perform any other actions.
           } else {
@@ -116,10 +126,60 @@ export class OrderDetailsComponent implements OnInit {
 
     if (this.order.payment_status !== 'Approved') {
       this.orderData.updatePaymentStatus(this.order);
+      this.addNewNotification(this.order);
       console.log('Order Payment status successfully updated');
       // Optionally, you can navigate to a success page or perform any other actions.
     } else {
       console.log('Order Payment Status is already approved');
     }
+  }
+
+  addNewNotification(payment: Order) {
+    const notificationObj: Notification = {
+      id: '',
+      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+      text:
+        this.order.orderItem[0].user.name +
+        ' Your payment for order: ' +
+        this.order.id +
+        ' has been approved',
+      time: new Date().toLocaleString('en-US', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+      status: 'new',
+      order: payment,
+    };
+
+    this.sendEmail();
+
+    this.notificationService
+      .addNotificationItem(notificationObj)
+      .then(() => {
+        console.log('Notification added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding notification:', error);
+      });
+  }
+
+  sendEmail() {
+    const toName = this.order.orderItem[0].user.name;
+    const toEmail = 'misaxirinda@gmail.com';
+    const fromName = 'Sweet and Salty Bakery';
+    const themessage =
+      ' Your payment for order: ' + this.order.id + ' has been approved';
+
+    this.notificationService
+      .sendEmail(toEmail, toName, fromName, themessage)
+      .then(() => {
+        // Email sent successfully
+        alert('Email sent successfully!');
+      })
+      .catch((error) => {
+        // Error sending email
+        alert('Error sending email. Please try again later.');
+        console.error('Error sending email:', error);
+      });
   }
 }

@@ -28,7 +28,6 @@ export class OrdersComponent implements OnInit {
     'status',
     'paymentStatus',
     'delivery',
-    'category',
   ];
 
   ordersList: Order[] = [];

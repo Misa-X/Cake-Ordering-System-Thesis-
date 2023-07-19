@@ -51,15 +51,48 @@
   </div>
 
   <div class="icons">
-    <a href="#"><i class="bx bx-search-alt-2"></i></a>
+    <!-- <a href="#"><i class="bx bx-search-alt-2"></i></a> -->
     <a routerLink="/user/cart"><i class="bx bx-cart-alt"></i></a>
-    <!-- <a href="#" (click)="logout()"><i class="bx bx-user"></i></a> -->
+
     <button
+      mat-icon-button
+      matTooltip="Notifications"
+      [matMenuTriggerFor]="userNotifications"
+    >
+      <mat-icon>notifications</mat-icon>
+      <span
+        class="badge"
+        *ngIf="unreadNotifications$ | async as unreadNotifications"
+      >
+        {{ unreadNotifications.length }}
+      </span>
+    </button>
+
+    <mat-menu #userNotifications [overlapTrigger]="false" yPosition="below">
+      <ng-container *ngIf="unreadNotifications$ | async as unreadNotifications">
+        <mat-list>
+          <mat-list-item
+            *ngFor="let notification of unreadNotifications"
+            (click)="handleNotificationClick(notification)"
+            routerLink="/user/cart"
+            class="clickable-row"
+          >
+            {{ notification.text }}
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <div *ngIf="!(notifications$ | async)?.length" class="empty-notification">
+        No new notifications.
+      </div>
+    </mat-menu>
+
+    <button
+      class="acc-btn"
       mat-icon-button
       matTooltip="My Account"
       [matMenuTriggerFor]="userAccountMenu"
     >
-      <mat-icon>account_circle</mat-icon>
+      <mat-icon>perm_identity</mat-icon>
     </button>
     <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
       <button mat-menu-item routerLink="#" (click)="goToProfile()">

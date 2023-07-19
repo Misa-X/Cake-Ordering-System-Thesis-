@@ -1,10 +1,8 @@
 {
   "hosting": {
     "target": "frontend",
-    "public": "dist/frontend",
-    "ignore": [
-      "**/.*"
-    ],
+    "public": "dist/frontend ",
+    "ignore": ["**/.*"],
     "headers": [
       {
         "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",

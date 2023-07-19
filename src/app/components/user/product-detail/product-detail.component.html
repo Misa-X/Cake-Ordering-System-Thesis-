@@ -8,7 +8,9 @@
       />
     </div>
     <div class="col-md-6">
-      <p class="category">{{ product.product_category?.category_name }}</p>
+      <p class="category text-muted">
+        {{ product.product_category?.category_name }}
+      </p>
       <h2>{{ product.product_name }}</h2>
       <p>{{ product.product_description }}</p>
       <h4>Customize Your Order</h4>
@@ -19,7 +21,7 @@
           product.product_category?.category_name === 'CupCake'
         "
       >
-        <label for="color">Color:</label>
+        <label for="color">Icing Color:</label>
         <select class="form-select" id="color" name="color" [(ngModel)]="color">
           <option value="">Select a color</option>
           <option value="red">Red</option>
@@ -70,7 +72,7 @@
         </select>
       </div>
 
-      <div
+      <!-- <div
         class="mb-3"
         *ngIf="isCakeCategory(product.product_category?.category_name)"
       >
@@ -87,7 +89,7 @@
             {{ cust.name }}
           </option>
         </select>
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <label for="quantity">Quantity:</label>
@@ -99,7 +101,10 @@
           min="1"
           [(ngModel)]="quantity"
         />
-        <p *ngIf="product.product_category?.category_name === 'CupCake'">
+        <p
+          class="text-muted"
+          *ngIf="product.product_category?.category_name === 'CupCake'"
+        >
           Per half a dozen
         </p>
       </div>
@@ -120,7 +125,10 @@
           product.product_category?.category_name === 'CupCake'
         "
       >
-        <label for="picture-upload">Upload Picture:</label>
+        <label for="picture-upload"
+          >Upload your own design:
+          <span class="text-muted">[Optional]</span></label
+        >
         <input
           type="file"
           class="form-control"

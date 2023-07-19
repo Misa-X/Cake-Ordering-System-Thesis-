@@ -42,7 +42,7 @@ export class AuthService {
         }
       })
       .catch((err) => {
-        alert(err.message);
+        alert('User not found' + err.message);
         this.router.navigate(['/login']);
       });
   }
