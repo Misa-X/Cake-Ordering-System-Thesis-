@@ -1,75 +1,51 @@
-<div class="container">
-  <div class="login-form">
-    <form>
-      <h1>Login</h1>
+<div class="full-screen-bg">
+  <div class="container">
+    <div class="login-form">
+      <form>
+        <h1>Login</h1>
 
-      <div class="form-group">
-        <label for="email">Email</label>
+        <div class="form-group">
+          <label for="email">Email</label>
 
-        <input
-          [(ngModel)]="email"
-          type="email"
-          id="email"
-          name="email"
-          required
-        />
-      </div>
-
-      <div class="form-group pass">
-        <label for="password">Password</label>
-
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          [(ngModel)]="password"
-        />
-      </div>
-
-      <div class="row">
-        <!-- <div class="row-item left">
-          <input type="checkbox" id="remember-me" name="remember-me" />
-          <label for="remember-me"> Remember Me</label>
-        </div> -->
-
-        <div class="row-item right">
-          <a href="/forgot-password">Forgot Password?</a>
+          <input
+            [(ngModel)]="email"
+            type="email"
+            id="email"
+            name="email"
+            required
+          />
         </div>
-      </div>
 
-      <div class="button">
-        <button type="submit" class="btn" (click)="login()">Login</button>
-      </div>
-    </form>
+        <div class="form-group pass">
+          <label for="password">Password</label>
 
-    <hr />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            [(ngModel)]="password"
+          />
+        </div>
 
-    <div class="create">
-      <a href="/register"
-        >Don't have an account? <span style="color: blue">Create</span></a
-      >
-    </div>
-
-    <!-- <div class="row mt-2">
-      <a
-        (click)="signInWithGoogle()"
-        style="text-decoration: none; cursor: pointer"
-      >
-        <div class="card shadow text-center">
-          <div class="card-body">
-            <i class="bx bxl-google"></i> Sign In with Google
+        <div class="row">
+          <div class="row-item right">
+            <a href="/forgot-password">Forgot Password?</a>
           </div>
         </div>
-      </a>
-    </div> -->
 
-    <!-- <div class="social-signin">
+        <div class="button">
+          <button type="submit" class="btn" (click)="login()">Login</button>
+        </div>
+      </form>
 
+      <hr />
 
-      <a href="#"><i class="bx bxl-facebook"></i></a>
-
-      <a href="#"><i class="bx bxl-google"></i></a>
-    </div> -->
+      <div class="create">
+        <a href="/register"
+          >Don't have an account? <span style="color: blue">Create</span></a
+        >
+      </div>
+    </div>
   </div>
 </div>

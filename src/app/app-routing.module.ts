@@ -13,6 +13,7 @@ import { ProductDetailComponent } from './components/user/product-detail/product
 import { RegisterComponent } from './components/register/register.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { UserModule } from './user/user.module';
+import { AuthService } from './shared/auth.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -30,16 +31,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./admin/admin.module').then((m) => m.AdminModule),
   },
-
-  // { path: 'products', component: ProductComponent },
-  // { path: 'categories', component: CategoryComponent },
-  // { path: 'dashboard', component: DashboardComponent },
-  // { path: 'sidenav', component: SidenavComponent },
-  // { path: 'product-detail/:id', component: ProductDetailComponent },
-  // { path: 'product-detail', component: ProductDetailComponent },
-  // { path: 'cart', component: CartComponent },
-  // { path: 'checkout', component: CheckoutComponent },
-  // { path: 'checkout/:id', component: CheckoutComponent },
 ];
 
 @NgModule({

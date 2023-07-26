@@ -7,5 +7,6 @@ export const environment = {
     authDomain: 'cake-ordering-system-fd6aa.firebaseapp.com',
     messagingSenderId: '314504391259',
   },
-  production: true
+  production: true,
+  jwtSecret: 'your-jwt-secret-key',
 };

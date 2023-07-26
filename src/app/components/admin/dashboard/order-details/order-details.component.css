@@ -5,3 +5,15 @@
 .card {
   margin-bottom: 10px;
 }
+
+.custName {
+  padding-top: 10px;
+}
+
+.details {
+  padding-top: 5px;
+}
+
+.status {
+  margin-top: 15px;
+}

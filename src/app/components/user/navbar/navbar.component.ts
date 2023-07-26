@@ -9,6 +9,8 @@ import { Observable, Subscription } from 'rxjs';
 import { Notification } from 'src/app/models/notifications';
 import { NotificationsService } from 'src/app/shared/notifications.service';
 import { map } from 'rxjs/operators';
+import { OrderItem } from 'src/app/models/order-item';
+import { OrderItemService } from 'src/app/shared/order-item.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,9 +18,13 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
+  cartItems: OrderItem[] = [];
   notifications$: Observable<Notification[]> | undefined;
   unreadNotifications$: Observable<Notification[]> | undefined;
   private notificationsSubscription: Subscription | undefined;
+
+  Profile: any = [];
+  orderItemCount: number = 0;
 
   // userNotifications: any = [];
 
@@ -30,17 +36,13 @@ export class NavbarComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private data: DataService,
+    private itemData: OrderItemService,
     private router: Router,
     private notificationService: NotificationsService
   ) {}
 
   ngOnInit(): void {
     this.notifications$ = this.notificationService.getNotifications();
-
-    // console.log('outside:', this.userNotifications);
-    // this.userNotifications = this.notifications$.filter(
-    //   (userProfile) => userProfile.order.orderItem[0].user.id === userId
-    // );
 
     this.unreadNotifications$ =
       this.notificationService.getUnreadNotifications();
@@ -50,15 +52,17 @@ export class NavbarComponent implements OnInit {
     if (userId) {
       this.unreadNotifications$ = this.unreadNotifications$.pipe(
         map((notifications: Notification[]) =>
-          notifications.filter(
-            (notification) => notification.order.orderItem[0].user.id === userId
-          )
+          notifications.filter((notification) => {
+            const orderId = notification.order.orderItem[0].user.name;
+            const userIdMatch =
+              notification.order.orderItem[0].user.id === userId;
+            const textContainsOrderId = notification.text.includes(orderId);
+            return userIdMatch && !textContainsOrderId;
+          })
         )
       );
-      // this.userNotifications = this.notifications$;
-      // console.log('inside:', notifications);
     }
-
+    this.getCartProduct();
     this.getAllCategories();
     if (this.data) {
       this.categories = { ...this.data }; // Assign a copy of the received product data to the component variable
@@ -67,6 +71,22 @@ export class NavbarComponent implements OnInit {
 
   ngOnDestroy() {
     this.unsubscribeFromNotifications();
+  }
+
+  getCartProduct() {
+    this.itemData.getAllOrderItems().subscribe((prof) => {
+      this.cartItems = prof.map((e: any) => {
+        const data = e.payload.doc.data();
+        const id = e.payload.doc.id;
+
+        return { id, ...data, selected: false } as OrderItem;
+      });
+
+      const userId = localStorage.getItem('userId');
+      this.Profile = this.cartItems.filter(
+        (userProfile) => userProfile.user.id === userId
+      );
+    });
   }
 
   getAllCategories() {
@@ -88,14 +108,18 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  filterCategory(selectedCategoryId: string): void {
+    this.router.navigate(['/user/products'], {
+      queryParams: { queryC: selectedCategoryId },
+    });
+  }
+
   gotToOrders() {
     const userId = localStorage.getItem('userId');
     if (userId) {
       this.router.navigate(['/user/orders', userId]);
     } else {
       console.log('There Is an Error');
-      // Handle the case when userId is not available
-      // You can redirect to a login page or display an error message
     }
   }
   goToProfile() {
@@ -104,8 +128,6 @@ export class NavbarComponent implements OnInit {
       this.router.navigate(['/user/profile', userId]);
     } else {
       console.log('There Is an Error');
-      // Handle the case when userId is not available
-      // You can redirect to a login page or display an error message
     }
   }
 
@@ -122,9 +144,6 @@ export class NavbarComponent implements OnInit {
   }
 
   handleNotificationClick(notification: Notification) {
-    // Add your logic to handle the click event for the notification
-    // console.log('Notification clicked:', notification);
-
     if (notification.status === 'new') {
       this.notificationService.updateNotificationStatus(notification, 'read');
     }

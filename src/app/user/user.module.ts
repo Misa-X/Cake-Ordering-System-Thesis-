@@ -23,12 +23,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ToastrModule } from 'ngx-toastr';
 import { MatTableModule } from '@angular/material/table';
-import { MatTableDataSource } from '@angular/material/table';
-
-// import { AngularFireModule } from '@angular/fire';
-// import { AngularFireMessagingModule } from '@angular/fire/messaging';
-// import { AngularFireAuthModule } from '@angular/fire/auth';
-// import { environment } from 'src/environments/environment';
 
 import { HomeComponent } from '../components/user/home/home.component';
 import { ProductDetailComponent } from '../components/user/product-detail/product-detail.component';
@@ -44,6 +38,7 @@ import { PaymentComponent } from '../components/user/payment/payment.component';
 import { UserOrdersComponent } from '../components/user/user-orders/user-orders.component';
 import { ProductsComponent } from '../components/user/products/products.component';
 import { OrderConfirmationComponent } from '../components/user/order-confirmation/order-confirmation.component';
+import { CartTestComponent } from '../components/user/cartTest/cartTest.component';
 
 const routes: Routes = [
   {
@@ -63,6 +58,8 @@ const routes: Routes = [
       { path: 'payment/:id', component: PaymentComponent },
       { path: 'orders/:id', component: UserOrdersComponent },
       { path: 'confirmation', component: OrderConfirmationComponent },
+      { path: 'confirmation/:id', component: OrderConfirmationComponent },
+      { path: 'carttest', component: CartTestComponent },
     ],
   },
 ];
@@ -83,6 +80,7 @@ const routes: Routes = [
     UserOrdersComponent,
     ProductsComponent,
     OrderConfirmationComponent,
+    CartTestComponent,
   ],
   imports: [
     BrowserModule,

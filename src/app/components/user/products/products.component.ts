@@ -17,6 +17,7 @@ export class ProductsComponent implements OnInit {
   selectedCategory: string = '';
   sortOption: string = '';
   searchQuery: string = '';
+  category: any = {};
 
   constructor(
     private data: DataService,
@@ -42,11 +43,17 @@ export class ProductsComponent implements OnInit {
       this.filteredProductList = [...this.productList];
       this.route.queryParams.subscribe((params) => {
         this.searchQuery = params['query'] || '';
-        this.filterProducts(this.selectedCategory);
+        this.searchProducts();
+
+        this.category.id = params['queryC'] || '';
+        this.filterProducts(this.category.id);
       });
+
+      this.filterProducts('all');
     });
   }
 
+  // FILTER Products by category
   filterProducts(categoryId: string): void {
     if (categoryId === 'all') {
       this.filteredProductList = [...this.productList];
@@ -66,11 +73,9 @@ export class ProductsComponent implements OnInit {
     }
 
     this.selectedCategory = categoryId;
-
-    // this.selectedCategory = categoryId;
-    // this.searchQuery = '';
   }
 
+  // SORT Products by price
   sortProducts(option: string): void {
     this.sortOption = option;
     if (option === 'priceAsc') {
@@ -84,6 +89,7 @@ export class ProductsComponent implements OnInit {
     }
   }
 
+  //  SEARCH Products
   searchProducts(): void {
     if (this.searchQuery.trim() === '') {
       this.filteredProductList = [...this.productList];

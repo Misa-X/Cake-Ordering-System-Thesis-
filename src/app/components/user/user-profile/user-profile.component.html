@@ -1,14 +1,53 @@
 <!-- user-profile.component.html -->
 
-<div class="profile-container">
-  <!-- <div class="profile-image"> -->
-  <!-- <img src="path_to_user_image" alt="User Image" /> -->
-  <!-- </div> -->
-  <div class="profile-details">
+<!-- <div class="profile-container"> -->
+<!-- <div class="profile-image"> -->
+<!-- <img src="path_to_user_image" alt="User Image" /> -->
+<!-- </div> -->
+<!-- <div class="profile-details">
     <h2>{{ Profile.name }}</h2>
     <p><strong>Emaill:</strong> {{ Profile.email }}</p>
     <p><strong>Address:</strong> {{ Profile.address }}</p>
-    <p><strong>Phone Number:</strong> {{ Profile.phoneNumber }}</p>
-    <!-- Add additional user details as needed -->
+    <p><strong>Phone Number:</strong> {{ Profile.phoneNumber }}</p> -->
+<!-- Add additional user details as needed -->
+<!-- </div>
+</div> -->
+
+<!-- user-profile.component.html -->
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <!-- Profile Image -->
+      <!-- Uncomment the image tag and set the 'src' attribute to the path of the user's image -->
+      <!-- <img src="path_to_user_image" alt="User Image" class="img-fluid rounded-circle profile-image" /> -->
+    </div>
+    <div class="col-md-8">
+      <!-- Profile Details -->
+      <div class="card profile-details">
+        <div class="card-body">
+          <h2 class="card-title">{{ Profile.name }}</h2>
+          <hr />
+          <div class="row">
+            <div class="col-sm-6">
+              <p class="card-text">
+                <strong>Email:</strong> {{ Profile.email }}
+              </p>
+              <p class="card-text">
+                <strong>Address:</strong> {{ Profile.address.city }}
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <p class="card-text">
+                <strong>Phone Number:</strong> {{ Profile.phoneNumber }}
+              </p>
+              <!-- Add additional user details here -->
+              <!-- <p class="card-text"><strong>Occupation:</strong> {{ Profile.occupation }}</p> -->
+              <!-- <p class="card-text"><strong>Date of Birth:</strong> {{ Profile.dateOfBirth }}</p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

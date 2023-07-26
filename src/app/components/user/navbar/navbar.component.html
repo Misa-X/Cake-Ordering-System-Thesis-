@@ -11,6 +11,7 @@
           mat-menu-item
           *ngFor="let category of categories"
           [value]="category.id"
+          (click)="filterCategory(category.id)"
         >
           {{ category.category_name }}
         </button>
@@ -20,18 +21,7 @@
     <li><a routerLink="/user/contact">Contact Us</a></li>
   </ul>
 
-  <!-- <div class="search-box">
-    <input type="text" placeholder="Search" />
-    <button><i class="bx bx-search-alt"></i></button>
-  </div> -->
-
   <div class="input-group search-box" style="max-width: 300px">
-    <!-- <input type="text" class="form-control" placeholder="Search" />
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button">
-        <i class="bx bx-search-alt"></i>
-      </button>
-    </div> -->
     <input
       type="text"
       class="form-control"
@@ -52,21 +42,28 @@
 
   <div class="icons">
     <!-- <a href="#"><i class="bx bx-search-alt-2"></i></a> -->
-    <a routerLink="/user/cart"><i class="bx bx-cart-alt"></i></a>
-
-    <button
-      mat-icon-button
-      matTooltip="Notifications"
-      [matMenuTriggerFor]="userNotifications"
-    >
-      <mat-icon>notifications</mat-icon>
-      <span
-        class="badge"
-        *ngIf="unreadNotifications$ | async as unreadNotifications"
+    <div class="ii">
+      <a routerLink="/user/cart"
+        ><i class="bx bx-cart-alt"></i>
+        <span class="badge">{{ Profile.length }}</span></a
       >
-        {{ unreadNotifications.length }}
-      </span>
-    </button>
+    </div>
+
+    <div class="ii">
+      <button
+        mat-icon-button
+        matTooltip="Notifications"
+        [matMenuTriggerFor]="userNotifications"
+      >
+        <mat-icon class="notif">notifications</mat-icon>
+        <span
+          class="badge"
+          *ngIf="unreadNotifications$ | async as unreadNotifications"
+        >
+          {{ unreadNotifications.length }}
+        </span>
+      </button>
+    </div>
 
     <mat-menu #userNotifications [overlapTrigger]="false" yPosition="below">
       <ng-container *ngIf="unreadNotifications$ | async as unreadNotifications">

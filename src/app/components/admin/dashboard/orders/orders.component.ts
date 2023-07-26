@@ -1,19 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/shared/order.service';
-
-// export interface Order {
-//   name: string;
-//   amount: number;
-//   date: string;
-//   status: string;
-//   paymentStatus: string;
-//   delivery: string;
-//   category: string;
-//   orderNumber: string;
-// }
 
 @Component({
   selector: 'app-orders',
@@ -31,6 +20,7 @@ export class OrdersComponent implements OnInit {
   ];
 
   ordersList: Order[] = [];
+  searchQuery: string = '';
 
   constructor(private dialog: MatDialog, private orderData: OrderService) {}
 
@@ -61,5 +51,9 @@ export class OrdersComponent implements OnInit {
     // Perform actions when a row is clicked
     console.log('Row clicked:', row.i);
     // You can navigate to a detailed view or perform any other action here
+  }
+
+  searchProducts(): void {
+    this.dataSource.filter = this.searchQuery.trim().toLowerCase();
   }
 }

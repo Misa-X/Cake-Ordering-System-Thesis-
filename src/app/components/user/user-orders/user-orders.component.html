@@ -1,6 +1,6 @@
 <div class="container">
   <div class="card-header">
-    <h3><strong>ORDERS</strong></h3>
+    <h3><strong>Your orders</strong></h3>
   </div>
   <br />
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -8,24 +8,6 @@
     <ng-container matColumnDef="orderNumber">
       <mat-header-cell *matHeaderCellDef>Order Number</mat-header-cell>
       <mat-cell *matCellDef="let order">{{ order.id }}</mat-cell>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="customer">
-      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-      <mat-cell *matCellDef="let order">{{
-        order.orderItem[0].user.name
-      }}</mat-cell>
-    </ng-container>
-
-    <!-- Date Column -->
-    <ng-container matColumnDef="delivery date">
-      <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-      <mat-cell *matCellDef="let order"
-        >{{ order.order_date.day }}-{{ order.order_date.month }}-{{
-          order.order_date.year
-        }}</mat-cell
-      >
     </ng-container>
 
     <!-- Status Column -->
@@ -48,10 +30,14 @@
       }}</mat-cell>
     </ng-container>
 
-    <!-- Category Column -->
-    <ng-container matColumnDef="category">
-      <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
-      <mat-cell *matCellDef="let order">{{ order.order_date }}</mat-cell>
+    <!-- Delivery Date Column -->
+    <ng-container matColumnDef="delivery date">
+      <mat-header-cell *matHeaderCellDef>Delivery Date</mat-header-cell>
+      <mat-cell *matCellDef="let order"
+        >{{ order.order_date.day }}-{{ order.order_date.month }}-{{
+          order.order_date.year
+        }}</mat-cell
+      >
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -8,7 +8,6 @@ import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Category } from 'src/app/models/category';
 import { finalize } from 'rxjs/operators';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
@@ -85,11 +84,6 @@ export class ProductListComponent implements OnInit {
       }
     );
   }
-
-  // editProduct(product: Products) {
-  //   // Implement your logic for editing the product
-  //   console.log('Edit product:', product);
-  // }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -182,11 +176,19 @@ export class ProductListComponent implements OnInit {
   // update product
   updateProduct(product: Products) {
     this.selectedProduct = { ...product };
-    this.id = this.selectedProduct.id;
-    this.product_name = this.selectedProduct.product_name;
-    this.product_category = this.selectedProduct.product_category.id;
-    this.product_description = this.selectedProduct.product_description;
-    this.product_price = this.selectedProduct.product_price;
+    this.productObj = {
+      id: this.selectedProduct.id,
+      product_name: this.selectedProduct.product_name,
+      product_category: this.selectedProduct.product_category,
+      product_description: this.selectedProduct.product_description,
+      product_image: this.selectedProduct.product_image,
+      product_price: this.selectedProduct.product_price,
+    };
+    // this.id = this.selectedProduct.id;
+    // this.product_name = this.selectedProduct.product_name;
+    // this.product_category = this.selectedProduct.product_category.id;
+    // this.product_description = this.selectedProduct.product_description;
+    // this.product_price = this.selectedProduct.product_price;
   }
 
   deleteProduct(product: Products) {
@@ -222,6 +224,9 @@ export class ProductListComponent implements OnInit {
         this.updateProduct(result); // Handle the updated product data
       }
     });
+    // dialogRef.componentInstance.productUpdated.subscribe(() => {
+    //   this.getAllProducts(); // Fetch updated product data after add/update
+    // });
   }
 
   editProduct(product: Products) {

@@ -10,6 +10,7 @@ import { DataService } from 'src/app/shared/data.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { Products } from 'src/app/models/products';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-create-product',
@@ -17,6 +18,8 @@ import { Products } from 'src/app/models/products';
   styleUrls: ['./create-product.component.css'],
 })
 export class CreateProductComponent implements OnInit {
+  productUpdated: EventEmitter<void> = new EventEmitter<void>();
+
   product: any = {};
   productList: Products[] = [];
   categories: Category[] = [];
@@ -51,11 +54,17 @@ export class CreateProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('product updated:', this.productUpdated);
     console.log('data from table', this.data);
     this.getAllCategories();
     if (this.datas) {
-      this.productObj = { ...this.datas.productObj }; // Assign a copy of the received product data to the component variable
+      this.productObj = { ...this.datas }; // Assign a copy of the received product data to the component variable
       this.isEditMode = true;
+      this.product_name = this.productObj.product_name;
+      this.product_description = this.productObj.product_description;
+      this.product_category = this.productObj.product_category.id;
+      this.product_price = this.productObj.product_price;
+      console.log('datas:  ', this.datas);
     }
   }
 
@@ -94,15 +103,15 @@ export class CreateProductComponent implements OnInit {
 
   // add product
   addProduct() {
-    if (
-      this.product_name == '' ||
-      this.product_description == '' ||
-      this.product_category == '' ||
-      this.product_price == 0
-    ) {
-      alert('Fill all input fields');
-      return;
-    }
+    // if (
+    //   this.product_name == '' ||
+    //   this.product_description == '' ||
+    //   this.product_category == '' ||
+    //   this.product_price == 0
+    // ) {
+    //   alert('Fill all input fields');
+    //   return;
+    // }
 
     this.productObj.product_name = this.product_name;
     this.productObj.product_description = this.product_description;
@@ -138,6 +147,8 @@ export class CreateProductComponent implements OnInit {
               fileRef.getDownloadURL().subscribe((imageUrl) => {
                 this.productObj.product_image = imageUrl;
                 this.data.updateProduct(this.productObj);
+                // this.productUpdated.emit();
+
                 this.resetForm();
               });
             })
@@ -146,6 +157,8 @@ export class CreateProductComponent implements OnInit {
       } else {
         this.productObj.product_image = this.selectedProduct.product_image;
         this.data.updateProduct(this.productObj);
+        // this.productUpdated.emit();
+
         this.resetForm();
       }
     } else {
@@ -165,8 +178,10 @@ export class CreateProductComponent implements OnInit {
                 this.productObj.product_image = imageUrl;
                 if (this.isEditMode) {
                   this.data.updateProduct(this.productObj);
+                  // this.productUpdated.emit();
                 } else {
                   this.data.addProduct(this.productObj);
+                  // this.productUpdated.emit();
                 }
                 this.resetForm();
                 this.dialogRef.close();
@@ -179,9 +194,12 @@ export class CreateProductComponent implements OnInit {
       } else {
         if (this.isEditMode) {
           this.data.updateProduct(this.productObj);
+          // this.productUpdated.emit();
         } else {
           this.data.addProduct(this.productObj);
+          // this.productUpdated.emit();
         }
+        this.productUpdated.emit();
         this.resetForm();
         this.dialogRef.close();
         // this.data.addProduct(this.productObj);
@@ -272,16 +290,16 @@ export class CreateProductComponent implements OnInit {
   // ------------------
 
   saveProduct() {
-    if (
-      this.product_name === '' ||
-      this.product_description === '' ||
-      this.product_category === '' ||
-      this.product_price === 0
-    ) {
-      alert('Fill all input fields');
-      return;
-    }
-    this.productObj.product_name = this.product_name;
+    // if (
+    //   this.product_name === '' ||
+    //   this.product_description === '' ||.
+    //   this.product_category === '' ||
+    //   this.product_price === 0
+    // ) {
+    //   alert('Fill all input fields');
+    //   return;
+    // }
+    this.productObj.product_name;
     this.productObj.product_description = this.product_description;
     const selectedCategory = this.categories.find(
       (category) => category.id === this.product_category

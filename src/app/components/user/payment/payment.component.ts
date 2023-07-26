@@ -19,7 +19,7 @@ import { OrderItem } from 'src/app/models/order-item';
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
-  countdownDate!: Date; // Add the '!' operator to indicate it will be initialized later
+  countdownDate!: Date;
 
   countdownTimer: any;
   remainingTime!: number;
@@ -34,6 +34,7 @@ export class PaymentComponent implements OnInit {
   constructor(
     private orderData: OrderService,
     private route: ActivatedRoute,
+    private router: Router,
     private storage: AngularFireStorage,
     private paymentService: PaymentService,
     private notificationService: NotificationsService
@@ -145,6 +146,13 @@ export class PaymentComponent implements OnInit {
                   console.log('Payment added successfully');
                   // Optionally, you can navigate to a success page or perform any other actions.
                   this.addNewNotification(this.order);
+
+                  const userId = localStorage.getItem('userId');
+                  if (userId) {
+                    this.router.navigate(['/user/orders', userId]);
+                  } else {
+                    console.log('There Is an Error');
+                  }
                 })
                 .catch((error) => {
                   console.error('Error adding payment:', error);
@@ -167,10 +175,10 @@ export class PaymentComponent implements OnInit {
       console.log('Order is already Canceled');
     }
   }
+
   addNewNotification(payment: Order) {
     const notificationObj: Notification = {
       id: '',
-      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
       text:
         this.order.orderItem[0].user.name +
         ' paid for their order!' +

@@ -2,12 +2,51 @@
   flex: 1 1 auto;
 }
 
+
+.navbr {
+  background-color: white;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: red; 
+  color: white; 
+  font-size: 10px; 
+  border-radius: 50%; 
+  padding: 4px 6px; 
+}
+
+.notif {
+  position: relative;
+  padding: 2px 10px;
+  margin-right: 1px;
+}
+
+.profile{
+  padding-top:2px;
+}
+
+.logo{
+  color: #9E4244;
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+
 .app-container {
   height: 100vh;
   margin: 0;
+  
 }
+
+.ii {
+  margin-right: 15px;
+}
+
 .app-sidenav {
   width: 230px;
+  background-color: #fbc5c5;
 }
 .app-sidenav-content {
   display: flex;

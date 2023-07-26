@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { GoogleAuthProvider } from '@angular/fire/auth';
+// import { JwtHelperService } from '@auth0/angular-jwt';
+// import * as jwt_decode from 'jwt-decode';
+// import * as jwt from 'jsonwebtoken';
 // import { auth } from 'firebase/compat/app'
 import { Auth } from '@angular/fire/auth';
 import { map, switchMap } from 'rxjs/operators';
@@ -13,6 +16,8 @@ import {
 import { Firestore } from '@angular/fire/firestore';
 import { uuidv4 } from '@firebase/util';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -22,6 +27,48 @@ export class AuthService {
     private router: Router,
     private afs: AngularFirestore
   ) {}
+  // private jwtSecret = environment.jwtSecret;
+  // start of login method
+  // async login(email: string, password: string) {
+  //   try {
+  //     const userCredential = await this.fireauth.signInWithEmailAndPassword(
+  //       email,
+  //       password
+  //     );
+  //     const user = userCredential.user;
+
+  //     if (user?.emailVerified) {
+  //       const token = this.generateJwtToken(user.uid);
+  //       localStorage.setItem('token', token);
+
+  //       if (user.displayName === 'admin') {
+  //         this.router.navigate(['/dash']);
+  //       } else {
+  //         localStorage.setItem('userId', user.uid);
+  //         this.router.navigate(['/user/home']);
+  //       }
+  //     } else {
+  //       this.router.navigate(['/verify-email']);
+  //     }
+  //   } catch (err: any) {
+  //     // Use 'any' type for 'err'
+  //     alert('User not found' + err.message);
+  //     this.router.navigate(['/login']);
+  //   }
+  // }
+
+  // // Generate a JWT token
+  // private generateJwtToken(uid: string): string {
+  //   const payload = {
+  //     sub: uid,
+  //     // Add additional claims if needed (e.g., roles, permissions, etc.)
+  //   };
+
+  //   return jwt.sign(payload, this.jwtSecret, { expiresIn: '1h' }); // Adjust the expiration time as needed
+  // }
+
+  //end of method
+
   // new login method
   login(email: string, password: string) {
     this.fireauth
@@ -77,53 +124,6 @@ export class AuthService {
       });
   }
 
-  // new register method basic user
-  // register(email: string, password: string) {
-  //   this.fireauth
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then((res) => {
-  //       alert('Registration successful');
-  //       this.router.navigate(['/login']);
-  //       this.sendEmailVerification(res.user);
-
-  //       // Assign "user" role to newly registered user
-  //       if (res.user) {
-  //         res.user
-  //           .updateProfile({
-  //             displayName: 'user',
-  //             // Add other user profile data as needed
-  //           })
-  //           .then(() => {
-  //             // User profile updated successfully
-  //           })
-  //           .catch((error) => {
-  //             // Error updating user profile
-  //           });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       alert(err.message);
-  //       this.router.navigate(['/register']);
-  //     });
-  // }
-
-  // original register method
-  // register(email: string, password: string) {
-  //   this.fireauth.createUserWithEmailAndPassword(email, password).then(
-  //     (res) => {
-  //       alert('Registration successful');
-  //       this.router.navigate(['/login']);
-  //       this.sendEmailVerification(res.user);
-  //     },
-  //     (err) => {
-  //       alert(err.message);
-  //       this.router.navigate(['/register']);
-  //     }
-  //   );
-  // }
-
-  //sign out
-
   register(email: string, password: string) {
     this.fireauth
       .createUserWithEmailAndPassword(email, password)
@@ -172,6 +172,25 @@ export class AuthService {
         alert(err.message);
       }
     );
+  }
+
+  async getUserRole(uid: string): Promise<string | null> {
+    try {
+      const doc = await this.afs
+        .collection('/userProfiles')
+        .doc(uid)
+        .get()
+        .toPromise();
+      const role = doc?.get('displayName') as string | undefined; // Use optional chaining
+
+      if (role !== 'admin') {
+        this.router.navigate(['/user/home']);
+      }
+      return role ?? null; // Use nullish coalescing
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null;
+    }
   }
 
   //forgot password
@@ -227,6 +246,4 @@ export class AuthService {
       }
     );
   }
-
-  //set custom claims
 }

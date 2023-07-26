@@ -305,7 +305,7 @@ export class CheckoutComponent implements OnInit {
     this.orderObj.total = this.Total;
     this.orderObj.order_status = 'pending';
     this.orderObj.payment_status = 'pending';
-    this.orderObj.order_time = new Date().toLocaleString('en-US', {
+    this.orderObj.order_time = new Date().toLocaleString('id-ID', {
       dateStyle: 'short',
       timeStyle: 'short',
     });
@@ -318,18 +318,17 @@ export class CheckoutComponent implements OnInit {
     console.log('Object: ', this.orderObj);
     console.log('This Profile >> ', this.orderObj.orderItem[0].user);
 
-    this.addNewNotification(this.orderObj);
-    this.addNewNotificationUser(this.orderObj);
+    // this.addNewNotification(this.orderObj);          UNCOMMENT THIS
+    // this.addNewNotificationUser(this.orderObj);       UNCOMMENT THIS
 
     if (this.selectedPaymentMethod === 'bankTransfer') {
       const checkoutUrl = `/user/payment/${this.orderObj.id}`;
       this.router.navigateByUrl(checkoutUrl);
     } else if (this.selectedPaymentMethod === 'cod') {
       console.log('Cash on delivery');
+      const checkoutUrl = `/user/confirmation/${this.orderObj.id}`;
+      this.router.navigateByUrl(checkoutUrl);
     }
-
-    // const checkoutUrl = `/user/payment/${this.orderObj.id}`;
-    // this.router.navigateByUrl(checkoutUrl);
   }
 
   getMinDate(): NgbDateStruct {
@@ -342,97 +341,97 @@ export class CheckoutComponent implements OnInit {
     return minDate;
   }
 
-  // send email to admin new order
-  addNewNotification(order: Order) {
-    const notificationObj: Notification = {
-      id: '',
-      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
-      text: this.orderObj.orderItem[0].user.name + ' created a new order!',
-      time: new Date().toLocaleString('en-US', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      }),
-      status: 'new',
-      order: order,
-    };
+  // // send email to admin new order
+  // addNewNotification(order: Order) {
+  //   const notificationObj: Notification = {
+  //     id: '',
+  //     //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+  //     text: this.orderObj.orderItem[0].user.name + ' created a new order!',
+  //     time: new Date().toLocaleString('en-US', {
+  //       dateStyle: 'short',
+  //       timeStyle: 'short',
+  //     }),
+  //     status: 'new',
+  //     order: order,
+  //   };
 
-    this.sendEmail();
+  //   this.sendEmail();
 
-    this.notificationService
-      .addNotificationItem(notificationObj)
-      .then(() => {
-        console.log('Notification added successfully');
-      })
-      .catch((error) => {
-        console.error('Error adding notification:', error);
-      });
-  }
+  //   this.notificationService
+  //     .addNotificationItem(notificationObj)
+  //     .then(() => {
+  //       console.log('Notification added successfully');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error adding notification:', error);
+  //     });
+  // }
 
-  sendEmail() {
-    const toName = 'Sweet and Salty Bakery';
-    const toEmail = 'sweetandsaltymz@gmail.com';
-    const fromName = this.orderObj.orderItem[0].user.name;
-    const themessage =
-      this.orderObj.orderItem[0].user.name + ' created a new order!';
+  // sendEmail() {
+  //   const toName = 'Sweet and Salty Bakery';
+  //   const toEmail = 'sweetandsaltymz@gmail.com';
+  //   const fromName = this.orderObj.orderItem[0].user.name;
+  //   const themessage =
+  //     this.orderObj.orderItem[0].user.name + ' created a new order!';
 
-    this.notificationService
-      .sendEmail(toEmail, toName, fromName, themessage)
-      .then(() => {
-        // Email sent successfully
-        alert('Email sent successfully!');
-      })
-      .catch((error) => {
-        // Error sending email
-        alert('Error sending email. Please try again later.');
-        console.error('Error sending email:', error);
-      });
-  }
+  //   this.notificationService
+  //     .sendEmail(toEmail, toName, fromName, themessage)
+  //     .then(() => {
+  //       // Email sent successfully
+  //       alert('Email sent successfully!');
+  //     })
+  //     .catch((error) => {
+  //       // Error sending email
+  //       alert('Error sending email. Please try again later.');
+  //       console.error('Error sending email:', error);
+  //     });
+  // }
 
-  // send email to user new order
-  addNewNotificationUser(order: Order) {
-    const notificationObj: Notification = {
-      id: '',
-      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
-      text: 'Your order: ' + this.orderObj.id + ' has been received!',
-      time: new Date().toLocaleString('en-US', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      }),
-      status: 'new',
-      order: order,
-    };
+  // // send email to user new order
+  // addNewNotificationUser(order: Order) {
+  //   const notificationObj: Notification = {
+  //     id: '',
+  //     //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+  //     text: 'Your order: ' + this.orderObj.id + ' has been received!',
+  //     time: new Date().toLocaleString('en-US', {
+  //       dateStyle: 'short',
+  //       timeStyle: 'short',
+  //     }),
+  //     status: 'new',
+  //     order: order,
+  //   };
 
-    this.sendEmailUser();
+  //   this.sendEmailUser();
 
-    this.notificationService
-      .addNotificationItem(notificationObj)
-      .then(() => {
-        console.log('Notification added successfully');
-      })
-      .catch((error) => {
-        console.error('Error adding notification:', error);
-      });
-  }
+  //   this.notificationService
+  //     .addNotificationItem(notificationObj)
+  //     .then(() => {
+  //       console.log('Notification added successfully');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error adding notification:', error);
+  //     });
+  // }
 
-  sendEmailUser() {
-    const toName = this.orderObj.orderItem[0].user.name;
-    const toEmail = this.orderObj.orderItem[0].user.email;
-    const fromName = 'Sweet and Salty Bakery';
-    const themessage =
-      'Your order: ' +
-      this.orderObj.id +
-      ' has been received! Check your inbox for updates as we get your order ready.';
+  // sendEmailUser() {
+  //   const toName = this.orderObj.orderItem[0].user.name;
+  //   const toEmail = this.orderObj.orderItem[0].user.email;
+  //   const fromName = 'Sweet and Salty Bakery';
+  //   const themessage =
+  //     'Your order: ' +
+  //     this.orderObj.id +
+  //     ' has been received! Check your inbox for updates as we get your order ready.';
 
-    this.notificationService
-      .sendEmail(toEmail, toName, fromName, themessage)
-      .then(() => {
-        // Email sent successfully
-        alert('Email sent successfully!');
-      })
-      .catch((error) => {
-        // Error sending email
-        alert('Error sending email. Please try again later.');
-        console.error('Error sending email:', error);
-      });
-  }
+  //   this.notificationService
+  //     .sendEmail(toEmail, toName, fromName, themessage)
+  //     .then(() => {
+  //       // Email sent successfully
+  //       alert('Email sent successfully!');
+  //     })
+  //     .catch((error) => {
+  //       // Error sending email
+  //       alert('Error sending email. Please try again later.');
+  //       console.error('Error sending email:', error);
+  //     });
+  // }
 }

@@ -53,7 +53,10 @@ export class ProductDetailComponent implements OnInit {
       name: '',
       email: '',
       phoneNumber: '',
-      address: '',
+      address: {
+        street: '',
+        city: { id: '', delivery_city: '', delivery_price: 0 },
+      },
       image: '',
     },
     product: {
@@ -70,6 +73,7 @@ export class ProductDetailComponent implements OnInit {
     quantity: 1,
     picture: '',
     subtotal: 0,
+    selected: false,
   };
 
   id: string = '';

@@ -7,7 +7,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import {
   NgbAlertModule,
   NgbDatepickerModule,
-  NgbDateStruct,
   NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CheckboxModule, MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ToastrModule } from 'ngx-toastr';
 import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { SidenavComponent } from '../components/admin/dashboard/sidenav/sidenav.component';
 import { CategoryComponent } from '../components/admin/dashboard/category/category.component';
@@ -92,6 +92,7 @@ const routes: Routes = [
     NgbModule,
     MatTableModule,
     MatDialogModule,
+    MatFormFieldModule,
     MDBBootstrapModule,
   ],
 })

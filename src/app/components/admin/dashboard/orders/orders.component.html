@@ -3,6 +3,29 @@
     <h3><strong>ORDERS</strong></h3>
   </div>
   <br />
+
+  <div class="form-group">
+    <label for="searchInput">Search:</label>
+    <div class="input-group">
+      <input
+        class="form-control"
+        type="text"
+        id="searchInput"
+        [(ngModel)]="searchQuery"
+        (input)="searchProducts()"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary srch-btn"
+          type="button"
+          (click)="searchProducts()"
+        >
+          <i class="bx bx-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!-- Order Number Column -->
     <ng-container matColumnDef="orderNumber">

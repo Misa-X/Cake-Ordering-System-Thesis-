@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/data.service';
 import { Products } from 'src/app/models/products';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Custom } from 'src/app/models/custom';
 import { OrderItemService } from 'src/app/shared/order-item.service';
 import { OrderItem } from 'src/app/models/order-item';
@@ -19,7 +19,7 @@ import { CheckoutService } from 'src/app/shared/checkout.service';
 export class CartComponent implements OnInit {
   cartItems: OrderItem[] = [];
   dt: OrderItem[] = [];
-  selectedItems: OrderItem[] = [];
+  // selectedItems: OrderItem[] = [];
   showDataNotFound = true;
   message = '';
 
@@ -38,7 +38,10 @@ export class CartComponent implements OnInit {
       name: '',
       email: '',
       phoneNumber: '',
-      address: '',
+      address: {
+        street: '',
+        city: { id: '', delivery_city: '', delivery_price: 0 },
+      },
       image: '',
     },
     product: {
@@ -55,7 +58,8 @@ export class CartComponent implements OnInit {
     quantity: 1,
     picture: '',
     subtotal: 0,
-    // selected: false,
+    selected: false,
+  
   };
 
   id: string = '';
@@ -75,7 +79,8 @@ export class CartComponent implements OnInit {
     private route: ActivatedRoute,
     private itemData: OrderItemService,
     private firestore: AngularFirestore,
-    private checkoutData: CheckoutService
+    private checkoutData: CheckoutService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -86,13 +91,10 @@ export class CartComponent implements OnInit {
       this.getOrderItemCount();
     }, 5000);
 
-    setTimeout(() => {
-      this.calculateSubtotal();
-    }, 5000); // Delay of 10000 milliseconds (10 seconds)
-
-    setTimeout(() => {
+     setTimeout(() => {
       this.calculateTotalPriceCart();
-    }, 7000);
+    }, 5000);
+    
   }
 
   removeCartProduct(item: OrderItem) {
@@ -107,24 +109,25 @@ export class CartComponent implements OnInit {
       this.cartItems = prof.map((e: any) => {
         const data = e.payload.doc.data();
         const id = e.payload.doc.id;
-        console.log(this.cartItems);
+        // console.log(this.cartItems);
 
-        return { id, ...data } as OrderItem;
+        return { id, ...data, selected: false } as OrderItem;
       });
-      console.log('The userID: ', localStorage.getItem('userId'));
-      const userId = localStorage.getItem('userId');
-      console.log('Data & ', this.cartItems, 'Profile list');
-      // this.Profile = this.cartItems.find(
-      //   (userProfile) => userProfile.user.id === userId
 
-      // );
+      const userId = localStorage.getItem('userId');
       this.Profile = this.cartItems.filter(
         (userProfile) => userProfile.user.id === userId
       );
+      this.calculateTotalPriceCart();
+
+      // Update selectedItems array with items that are also in Profile array
+      // this.selectedItems = this.selectedItems.filter((selectedItem) =>
+      //   this.Profile.some((item: OrderItem) => item.id === selectedItem.id)
+      // );
 
       if (this.Profile.length > 0) {
         // Cart items with matching user ID are found
-        console.log('Found profile:', this.Profile);
+        // console.log('Found profile:', this.Profile);
       } else {
         // No matching cart items are found
         console.log('No cart items found for the user.');
@@ -132,7 +135,7 @@ export class CartComponent implements OnInit {
 
       if (this.Profile) {
         // The userProfile with matching user ID is found
-        console.log('Found profile:', this.Profile);
+        // console.log('Found profile:', this.Profile);
       } else {
         // No matching userProfile is found
         console.log('Profile not found.');
@@ -145,7 +148,7 @@ export class CartComponent implements OnInit {
     this.Profile = this.cartItems.filter(
       (userProfile) => userProfile.user.id === userId
     );
-    console.log('Profile cart items: ', this.Profile);
+    // console.log('Profile cart items: ', this.Profile);
     // this.cartItems.forEach((item) => {
     //   this.subtotal = item.product.product_price * item.quantity;
     // });
@@ -174,7 +177,7 @@ export class CartComponent implements OnInit {
         .updateOrderItem(item)
         .then(() => {
           console.log('Subtotal updatedd:', item.subtotal);
-          this.calculateTotalPriceCart();
+          // this.calculateTotalPriceCart();
           // this.subtotal = item.subtotal;
         })
         .catch((error) => {
@@ -183,11 +186,20 @@ export class CartComponent implements OnInit {
     });
   }
 
+  // In your component class
+  updateCartItem(item: any) {
+    // this.toggleSelection(item);
+    this.calculateTotalPriceCart();
+  }
+
   calculateTotalPriceCart() {
-    const userId = localStorage.getItem('userId');
-    this.Profile = this.cartItems.filter(
-      (userProfile) => userProfile.user.id === userId
-    );
+    console.log('Profile test 2: ', this.Profile);
+    // console.log('This Selected Product: ', this.selectedItems);
+
+    // const userId = localStorage.getItem('userId');
+    // this.Profile = this.cartItems.filter(
+    //   (userProfile) => userProfile.user.id === userId
+    // );
     this.totalPriceCart = 0; // Reset totalPriceCart to 0 before calculating
 
     this.Profile.forEach((item: { subtotal: number }) => {
@@ -207,26 +219,30 @@ export class CartComponent implements OnInit {
       item.subtotal = 0;
     }
 
-    const itemIndex = this.cartItems.findIndex(
-      (cartItem) => cartItem.id === item.id
-    );
-    if (itemIndex > -1) {
-      this.cartItems[itemIndex] = item; // Update the item in the cartItems array
 
-      const selectedItemsIndex = this.selectedItems.findIndex(
-        (selectedItem) => selectedItem.id === item.id
-      );
-      if (selectedItemsIndex > -1) {
-        this.selectedItems[selectedItemsIndex] = item; // Update the item in the selectedItems array
-      }
-    }
+    // const itemIndex = this.cartItems.findIndex(
+    //   (cartItem) => cartItem.id === item.id
+    // );
+    // if (itemIndex > -1) {
+    //   this.cartItems[itemIndex] = item; // Update the item in the cartItems array
+
+    //   const selectedItemsIndex = this.selectedItems.findIndex(
+    //     (selectedItem) => selectedItem.id === item.id
+    //   );
+    //   if (selectedItemsIndex > -1) {
+    //     this.selectedItems[selectedItemsIndex] = item; // Update the item in the selectedItems array
+    //   }
+    // }
+
 
     this.itemData
       .updateOrderItem(item)
       .then(() => {
         this.subtotal = item.subtotal; // Update the subtotal locally after successful update in the database
         this.calculateSubtotal();
-        this.calculateTotalPriceCart();
+        // this.calculateTotalPriceCart();
+
+        // this.selectedItems.splice(0, this.selectedItems.length); // delete items in selectedcart items
       })
       .catch((error) => {
         console.error('Error updating order item:', error);
@@ -246,21 +262,38 @@ export class CartComponent implements OnInit {
     this.orderItemCount = this.Profile.length;
   }
 
-  toggleSelection(product: OrderItem) {
-    const index = this.selectedItems.indexOf(product);
+  // toggleSelection(product: OrderItem) {
+  //   // this.totalPriceCart -= this.totalPriceCart;
+  //   // const index = this.selectedItems.indexOf(product);
+  //   const index = this.selectedItems.findIndex(
+  //     (item) => item.id === product.id
+  //   );
 
-    if (index > -1) {
-      this.selectedItems.splice(index, 1); // Item was previously selected, remove it from the list
-    } else {
-      this.selectedItems.push(product); // Item was not selected, add it to the list
-    }
+  //   if (index > -1) {
+  //     this.selectedItems.splice(index, 1); // Item was previously selected, remove it from the list
+  //     // this.totalPriceCart -= this.totalPriceCart;
+  //   } else {
+  //     this.selectedItems.push(product); // Item was not selected, add it to the list
+  //   }
 
-    console.log('Selected Cart Items:', this.selectedItems);
-  }
+  //   product.selected = !product.selected;
+  //   this.calculateTotalPriceCart(); // Recalculate the total price after changing selection
+
+  //   console.log('Selected Cart Items:', this.selectedItems);
+  // }
+
 
   addCheckout() {
-    for (const item of this.selectedItems) {
+    for (const item of this.Profile) {
       this.checkoutData.addCheckoutItem(item);
     }
+
+   this.deleteOrderItem(this.Profile)
+
+const addedItemId = this.checkoutItemObj.id;
+   
+    // Navigate to the checkout page with the order item ID as a parameter
+    const checkoutUrl = `/user/checkout/${addedItemId}`;
+    this.router.navigateByUrl(checkoutUrl);
   }
 }

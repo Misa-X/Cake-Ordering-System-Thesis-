@@ -12,12 +12,10 @@ import { OrderService } from 'src/app/shared/order.service';
 export class UserOrdersComponent implements OnInit {
   displayedColumns: string[] = [
     'orderNumber',
-    'customer',
-    'delivery date',
     'status',
     'paymentStatus',
     'delivery',
-    'category',
+    'delivery date',
   ];
 
   ordersList: Order[] = [];
@@ -29,6 +27,14 @@ export class UserOrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllOrders();
+  }
+
+  sortOrdersByDateDesc(orders: Order[]): Order[] {
+    return orders.sort((a, b) => {
+      const dateA = new Date(a.order_time);
+      const dateB = new Date(b.order_time);
+      return dateB.getTime() - dateA.getTime();
+    });
   }
 
   getAllOrders() {
@@ -48,7 +54,8 @@ export class UserOrdersComponent implements OnInit {
           (order: any) => order.orderItem[0].user.id === userId
         );
 
-        console.log(this.userOrderList);
+        this.userOrderList = this.sortOrdersByDateDesc(this.userOrderList);
+
         this.dataSource = new MatTableDataSource(this.userOrderList);
       },
       (err: any) => {
@@ -58,8 +65,6 @@ export class UserOrdersComponent implements OnInit {
   }
 
   onRowClick(row: any): void {
-    // Perform actions when a row is clicked
     console.log('Row clicked:', row.i);
-    // You can navigate to a detailed view or perform any other action here
   }
 }
