@@ -13,6 +13,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class UserProfileComponent implements OnInit {
   Profile: any = {};
+  showForm: boolean = false;
 
   profileList: UserProfile[] = [];
   id: string | null = '';
@@ -48,5 +49,26 @@ export class UserProfileComponent implements OnInit {
         console.log('Profile not found.');
       }
     });
+  }
+
+  showEditForm() {
+    this.showForm = true;
+  }
+
+  cancelEdit() {
+    this.showForm = false;
+  }
+
+  // update the user profile
+  saveChanges() {
+    this.auth
+      .updateProfile(this.Profile)
+      .then(() => {
+        console.log('Profile updated successfully');
+        this.showForm = false;
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
   }
 }

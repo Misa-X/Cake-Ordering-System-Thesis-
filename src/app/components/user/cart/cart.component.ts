@@ -59,7 +59,6 @@ export class CartComponent implements OnInit {
     picture: '',
     subtotal: 0,
     selected: false,
-  
   };
 
   id: string = '';
@@ -80,7 +79,7 @@ export class CartComponent implements OnInit {
     private itemData: OrderItemService,
     private firestore: AngularFirestore,
     private checkoutData: CheckoutService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -91,10 +90,9 @@ export class CartComponent implements OnInit {
       this.getOrderItemCount();
     }, 5000);
 
-     setTimeout(() => {
+    setTimeout(() => {
       this.calculateTotalPriceCart();
     }, 5000);
-    
   }
 
   removeCartProduct(item: OrderItem) {
@@ -219,30 +217,12 @@ export class CartComponent implements OnInit {
       item.subtotal = 0;
     }
 
-
-    // const itemIndex = this.cartItems.findIndex(
-    //   (cartItem) => cartItem.id === item.id
-    // );
-    // if (itemIndex > -1) {
-    //   this.cartItems[itemIndex] = item; // Update the item in the cartItems array
-
-    //   const selectedItemsIndex = this.selectedItems.findIndex(
-    //     (selectedItem) => selectedItem.id === item.id
-    //   );
-    //   if (selectedItemsIndex > -1) {
-    //     this.selectedItems[selectedItemsIndex] = item; // Update the item in the selectedItems array
-    //   }
-    // }
-
-
     this.itemData
       .updateOrderItem(item)
       .then(() => {
         this.subtotal = item.subtotal; // Update the subtotal locally after successful update in the database
         this.calculateSubtotal();
         // this.calculateTotalPriceCart();
-
-        // this.selectedItems.splice(0, this.selectedItems.length); // delete items in selectedcart items
       })
       .catch((error) => {
         console.error('Error updating order item:', error);
@@ -262,36 +242,15 @@ export class CartComponent implements OnInit {
     this.orderItemCount = this.Profile.length;
   }
 
-  // toggleSelection(product: OrderItem) {
-  //   // this.totalPriceCart -= this.totalPriceCart;
-  //   // const index = this.selectedItems.indexOf(product);
-  //   const index = this.selectedItems.findIndex(
-  //     (item) => item.id === product.id
-  //   );
-
-  //   if (index > -1) {
-  //     this.selectedItems.splice(index, 1); // Item was previously selected, remove it from the list
-  //     // this.totalPriceCart -= this.totalPriceCart;
-  //   } else {
-  //     this.selectedItems.push(product); // Item was not selected, add it to the list
-  //   }
-
-  //   product.selected = !product.selected;
-  //   this.calculateTotalPriceCart(); // Recalculate the total price after changing selection
-
-  //   console.log('Selected Cart Items:', this.selectedItems);
-  // }
-
-
   addCheckout() {
     for (const item of this.Profile) {
       this.checkoutData.addCheckoutItem(item);
     }
 
-   this.deleteOrderItem(this.Profile)
+    this.deleteOrderItem(this.Profile);
 
-const addedItemId = this.checkoutItemObj.id;
-   
+    const addedItemId = this.checkoutItemObj.id;
+
     // Navigate to the checkout page with the order item ID as a parameter
     const checkoutUrl = `/user/checkout/${addedItemId}`;
     this.router.navigateByUrl(checkoutUrl);

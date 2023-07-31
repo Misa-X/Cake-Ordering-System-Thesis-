@@ -30,6 +30,14 @@ export class OrdersComponent implements OnInit {
     this.getAllOrders();
   }
 
+  sortOrdersByDateDesc(orders: Order[]): Order[] {
+    return orders.sort((a, b) => {
+      const dateA = new Date(a.order_time);
+      const dateB = new Date(b.order_time);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
+
   getAllOrders() {
     this.orderData.getAllOrders().subscribe(
       (res) => {
@@ -39,6 +47,9 @@ export class OrdersComponent implements OnInit {
           return data;
         });
         console.log(this.ordersList);
+
+        this.ordersList = this.sortOrdersByDateDesc(this.ordersList);
+
         this.dataSource = new MatTableDataSource(this.ordersList);
       },
       (err: any) => {
@@ -53,7 +64,7 @@ export class OrdersComponent implements OnInit {
     // You can navigate to a detailed view or perform any other action here
   }
 
-  searchProducts(): void {
+  searchOrder(): void {
     this.dataSource.filter = this.searchQuery.trim().toLowerCase();
   }
 }

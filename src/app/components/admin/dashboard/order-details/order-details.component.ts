@@ -10,6 +10,7 @@ import { CheckPaymentsComponent } from '../check-payments/check-payments.compone
 import { Payment } from 'src/app/models/payment';
 import { NotificationsService } from 'src/app/shared/notifications.service';
 import { Notification } from 'src/app/models/notifications';
+import { CheckDesignsComponent } from '../check-designs/check-designs.component';
 
 @Component({
   selector: 'app-order-details',
@@ -21,6 +22,7 @@ export class OrderDetailsComponent implements OnInit {
   order: any = {};
   payment: any = {};
   receipt_url: string = '';
+  design_url: string = '';
   orderID: string | null = '';
 
   constructor(
@@ -38,7 +40,6 @@ export class OrderDetailsComponent implements OnInit {
           const orderId = params.get('id');
           this.orderID = orderId;
           console.log('orderId', orderId);
-          // this.orders = orderId !== null ? orderId : '';
 
           return orderId ? this.orderData.getOrderById(orderId) : of(null);
         })
@@ -46,6 +47,7 @@ export class OrderDetailsComponent implements OnInit {
       .subscribe((order: unknown) => {
         if (order) {
           this.order = order as Order;
+          this.design_url = this.order.orderItem.picture;
 
           console.log('Order found: ', this.orders);
         } else {
@@ -77,7 +79,7 @@ export class OrderDetailsComponent implements OnInit {
           console.log('Payment found: ', this.payment.order.id);
           this.receipt_url = this.payment.payment_receipt;
         } else {
-          console.log('Order not found.');
+          console.log('Payment not found.');
         }
       });
   }
@@ -88,8 +90,8 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   openDesignDialog() {
-    const dialogRef = this.dialog.open(CheckPaymentsComponent, {
-      data: { receiptUrl: this.receipt_url }, // Pass the receipt URL to the dialog component
+    const dialogRef = this.dialog.open(CheckDesignsComponent, {
+      data: { receiptUrl: this.design_url }, // Pass the receipt URL to the dialog component
     });
   }
 
@@ -115,7 +117,6 @@ export class OrderDetailsComponent implements OnInit {
             this.paymentData.updatePaymentStatus(this.payment);
             this.addNewNotification(this.order);
             console.log('Payment status successfully updated');
-            // Optionally, you can navigate to a success page or perform any other actions.
           } else {
             console.log('Payment is already approved');
           }
@@ -134,10 +135,22 @@ export class OrderDetailsComponent implements OnInit {
     }
   }
 
+  // update order status
+  updateOrderStatus(order: Order) {
+    order.order_status = 'Canceled';
+
+    this.orderData.updateOrderStatus(order);
+  }
+
+  completeOrder(order: Order) {
+    order.order_status = 'Completed';
+
+    this.orderData.updateOrderStatus(order);
+  }
+
   addNewNotification(payment: Order) {
     const notificationObj: Notification = {
       id: '',
-      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
       text:
         this.order.orderItem[0].user.name +
         ' Your payment for order: ' +
@@ -165,7 +178,7 @@ export class OrderDetailsComponent implements OnInit {
 
   sendEmail() {
     const toName = this.order.orderItem[0].user.name;
-    const toEmail = 'misaxirinda@gmail.com';
+    const toEmail = this.order.orderItem[0].user.email;
     const fromName = 'Sweet and Salty Bakery';
     const themessage =
       ' Your payment for order: ' + this.order.id + ' has been approved';

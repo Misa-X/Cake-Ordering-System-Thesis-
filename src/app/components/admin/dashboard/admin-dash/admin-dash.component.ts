@@ -41,7 +41,7 @@ export class AdminDashComponent implements OnInit {
             this.approvedOrders.push(order);
           }
 
-          if (order.order_status === 'pending') {
+          if (order.order_status === 'Pending') {
             // Append the order to the ApprovedList
             this.pendingOrders.push(order);
           }

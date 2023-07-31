@@ -34,10 +34,9 @@ export class OrderService {
   updateOrderStatus(order: Order) {
     const orderRef = this.afs.collection('/Order').doc(order.id);
     orderRef
-      .update({ order_status: 'Canceled' })
+      .update(order)
       .then(() => {
         console.log('Order status updated successfully');
-        // Optionally, you can perform any other actions after updating the payment status
       })
       .catch((error) => {
         console.error('Error updating order status:', error);
@@ -50,7 +49,6 @@ export class OrderService {
       .update({ payment_status: 'Approved' })
       .then(() => {
         console.log('Payment status updated successfully');
-        // Optionally, you can perform any other actions after updating the payment status
       })
       .catch((error) => {
         console.error('Error updating payment status:', error);

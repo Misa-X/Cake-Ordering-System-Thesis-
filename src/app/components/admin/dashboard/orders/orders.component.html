@@ -12,13 +12,13 @@
         type="text"
         id="searchInput"
         [(ngModel)]="searchQuery"
-        (input)="searchProducts()"
+        (input)="searchOrder()"
       />
       <div class="input-group-append">
         <button
           class="btn btn-outline-secondary srch-btn"
           type="button"
-          (click)="searchProducts()"
+          (click)="searchOrder()"
         >
           <i class="bx bx-search"></i>
         </button>
@@ -82,7 +82,7 @@
       *matRowDef="let row; columns: displayedColumns"
       (click)="onRowClick(row)"
       [routerLink]="'/dash/order-details/' + row.id"
-      class="clickable-row"
+      class="clickable-row hover-row"
     ></mat-row>
   </mat-table>
 </div>

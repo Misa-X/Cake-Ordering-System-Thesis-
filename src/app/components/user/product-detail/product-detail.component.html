@@ -12,7 +12,11 @@
         {{ product.product_category?.category_name }}
       </p>
       <h2>{{ product.product_name }}</h2>
-      <p>{{ product.product_description }}</p>
+
+      <p class="text-muted fw-bold price" style="font-size: 22px">
+        {{ product.product_price }} Mt
+      </p>
+      <p class="description">{{ product.product_description }}</p>
       <h4>Customize Your Order</h4>
       <div
         class="mb-3"
@@ -71,25 +75,6 @@
           </option>
         </select>
       </div>
-
-      <!-- <div
-        class="mb-3"
-        *ngIf="isCakeCategory(product.product_category?.category_name)"
-      >
-        <label for="flavor">Flavor:</label>
-        <select
-          class="form-select"
-          id="flavor"
-          name="flavor"
-          [(ngModel)]="selectedFlavor"
-          (ngModelChange)="updateCustomization(selectedFlavor)"
-        >
-          <option value="">Select flavor</option>
-          <option *ngFor="let cust of flavorArray" [value]="cust.id">
-            {{ cust.name }}
-          </option>
-        </select>
-      </div> -->
 
       <div class="mb-3">
         <label for="quantity">Quantity:</label>

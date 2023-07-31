@@ -2,6 +2,10 @@
   padding-top: 20px;
 }
 
+.cont {
+  padding-bottom: 40px;
+}
+
 .card {
   margin-bottom: 10px;
 }
@@ -14,6 +18,18 @@
   padding-top: 5px;
 }
 
-.status {
-  margin-top: 15px;
+.orderNo {
+  padding-bottom: 15px;
+}
+
+.cancelbtn {
+  padding-top: 15px;
+}
+
+.completebtn {
+  margin-left: 15px;
+}
+
+.date {
+  color: #9e4244 !important;
 }

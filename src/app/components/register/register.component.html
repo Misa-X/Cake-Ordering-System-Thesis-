@@ -1,58 +1,47 @@
-<div class="container">
-  <div class="login-form">
-    <form>
-      <h1>Register</h1>
+<div class="full-screen-bg">
+  <div class="container">
+    <div class="login-form">
+      <form>
+        <h1>Register</h1>
 
-      <div class="form-group">
-        <label for="email">Email</label>
+        <div class="form-group">
+          <label for="email">Email</label>
 
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          [(ngModel)]="email"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          [(ngModel)]="password"
-        />
-      </div>
-
-      <!-- <div class="row">
-        <div class="row-item left">
-          <input type="checkbox" id="remember-me" name="remember-me" />
-          <label for="remember-me"> Remember Me</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            [(ngModel)]="email"
+          />
         </div>
-      </div> -->
 
-      <div class="button">
-        <button type="submit" class="btn" (click)="register()">Register</button>
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            [(ngModel)]="password"
+          />
+        </div>
+
+        <div class="button">
+          <button type="submit" class="btn" (click)="register()">
+            Register
+          </button>
+        </div>
+      </form>
+
+      <hr />
+
+      <div class="create">
+        <a href="/login"
+          >Already have an account? <span style="color: blue">Login</span></a
+        >
       </div>
-    </form>
-
-    <hr />
-
-    <div class="create">
-      <a href="/login"
-        >Already have an account? <span style="color: blue">Login</span></a
-      >
     </div>
-
-    <!-- <div class="social-signin">
-      <h3>Sign in with:</h3>
-
-      <a href="#"><i class="bx bxl-facebook"></i></a>
-
-      <a href="#"><i class="bx bxl-google"></i></a>
-    </div> -->
   </div>
 </div>

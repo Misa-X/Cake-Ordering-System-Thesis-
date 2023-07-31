@@ -70,12 +70,21 @@ export class PaymentComponent implements OnInit {
     }, 5000);
   }
   run_timer() {
-    const orderTime = new Date(this.order.order_time);
-    // this.countdownDate = new Date(); // Set the countdown start date/time
-    this.countdownDate = new Date(orderTime.getTime() + 24 * 60 * 60 * 1000);
+    const orderTime = this.order.order_time.toDate(); // Convert Firestore timestamp to JavaScript Date object
+    console.log('order time', orderTime);
+    this.countdownDate = new Date(orderTime.getTime() + 24 * 60 * 60 * 1000); // Add 24 hours to the order time
 
     this.startCountdown();
   }
+
+  // run_timer() {
+  //   const orderTime = new Date(this.order.order_time);
+  //   console.log('order time', orderTime);
+  //   // this.countdownDate = new Date(); // Set the countdown start date/time
+  //   this.countdownDate = new Date(orderTime.getTime() + 24 * 60 * 60 * 1000);
+
+  //   this.startCountdown();
+  // }
 
   startCountdown() {
     this.countdownTimer = setInterval(() => {
@@ -168,9 +177,9 @@ export class PaymentComponent implements OnInit {
 
   updateOrderStatus() {
     if (this.order.order_status !== 'Canceled') {
+      this.order.order_status = 'Canceled';
+
       this.orderData.updateOrderStatus(this.order);
-      console.log('Order status successfully updated');
-      // Optionally, you can navigate to a success page or perform any other actions.
     } else {
       console.log('Order is already Canceled');
     }
@@ -183,7 +192,7 @@ export class PaymentComponent implements OnInit {
         this.order.orderItem[0].user.name +
         ' paid for their order!' +
         this.order.id,
-      time: new Date().toLocaleString('en-US', {
+      time: new Date().toLocaleString('en-ID', {
         dateStyle: 'short',
         timeStyle: 'short',
       }),

@@ -17,6 +17,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { uuidv4 } from '@firebase/util';
 
 import { environment } from 'src/environments/environment';
+import { UserProfile } from '../models/user-profiles';
 
 @Injectable({
   providedIn: 'root',
@@ -78,7 +79,7 @@ export class AuthService {
 
         if (res.user?.emailVerified) {
           if (res.user.displayName === 'admin') {
-            this.router.navigate(['/dash']);
+            this.router.navigate(['/dash/admin-dash']);
           } else {
             const userId = res.user.uid;
             localStorage.setItem('userId', userId);
@@ -218,9 +219,9 @@ export class AuthService {
     );
   }
 
-  //get product by id
+  //get profile by id
   getProfileById(id: string | null) {
-    console.log('UserID: ', id);
+    // console.log('UserID: ', id);
     return this.afs
       .collection('/userProfiles', (ref) => ref.where('id', '==', id))
       .valueChanges()
@@ -229,9 +230,27 @@ export class AuthService {
       );
   }
 
-  // get all products
+  // get all profile
   getAllProfiles() {
     return this.afs.collection('/userProfiles').snapshotChanges();
+  }
+
+  //  update profile
+  updateProfile(profile: UserProfile): Promise<void> {
+    const profileRef = this.afs.collection('/userProfiles').doc(profile.id);
+
+    // console.log('profile ref: ', profile.id);
+
+    // profileRef
+    //   .update(profile)
+    //   .then(() => {
+    //     console.log('Profile updated successfully');
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error updating profile:', error);
+    //   });
+
+    return profileRef.update(profile);
   }
 
   //sign in with google

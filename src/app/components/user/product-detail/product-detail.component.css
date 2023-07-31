@@ -10,8 +10,7 @@
 }
 
 h2 {
-  /* margin-top: 0; */
-  padding-bottom: 15px;
+  padding-bottom: 5px;
 }
 
 .category {
@@ -25,4 +24,12 @@ h2 {
 .btn {
   margin-top: 10px;
   margin-right: 10px;
+}
+
+.price {
+  color: #e89c9c !important;
+}
+
+.description {
+  padding-bottom: 15px;
 }

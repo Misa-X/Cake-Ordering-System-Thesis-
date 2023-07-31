@@ -48,6 +48,7 @@
             class="custom-control-input"
             [(ngModel)]="selectedDeliveryMethod"
             value="PickUp"
+            (change)="onDeliveryMethodChange()"
             required=""
           />
           <label class="custom-control-label selection" for="PickUp"
@@ -62,6 +63,7 @@
             class="custom-control-input"
             [(ngModel)]="selectedDeliveryMethod"
             value="Delivery"
+            (change)="onDeliveryMethodChange()"
             required=""
           />
           <label class="custom-control-label selection" for="Delivery"
@@ -89,7 +91,7 @@
                 name="fullName"
                 placeholder=""
                 value=""
-                required=""
+                [required]="selectedDeliveryMethod === 'Delivery'"
                 [(ngModel)]="fullName"
               />
               <div class="invalid-feedback">Valid first name is required.</div>
@@ -103,7 +105,7 @@
               class="form-control"
               id="phone"
               name="phone"
-              required=""
+              [required]="selectedDeliveryMethod === 'Delivery'"
               [(ngModel)]="phone"
             />
             <div class="invalid-feedback">Please enter your phone number.</div>
@@ -116,7 +118,7 @@
               id="address"
               name="address"
               placeholder="1234 Main St"
-              required=""
+              [required]="selectedDeliveryMethod === 'Delivery'"
               [(ngModel)]="address"
             />
             <div class="invalid-feedback">
@@ -131,6 +133,7 @@
                 class="form-select d-block w-100"
                 id="state"
                 name="state"
+                [required]="selectedDeliveryMethod === 'Delivery'"
                 [(ngModel)]="DCity"
                 (ngModelChange)="calculateDelivery(DCity)"
               >
@@ -154,16 +157,7 @@
               Shipping address is the same as my address</label
             >
           </div>
-          <!-- <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="save-info"
-            />
-            <label class="custom-control-label" for="save-info">
-              Save this information for next time</label
-            >
-          </div> -->
+
           <hr class="mb-4" />
         </div>
 

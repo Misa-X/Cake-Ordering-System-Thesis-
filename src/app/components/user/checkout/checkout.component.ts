@@ -26,7 +26,7 @@ import { Notification } from 'src/app/models/notifications';
 export class CheckoutComponent implements OnInit {
   checkoutItems: OrderItem[] = [];
   model!: NgbDateStruct;
-  selectedDeliveryMethod: string = 'PickUp';
+  selectedDeliveryMethod: string = '';
   selectedPaymentMethod: string = '';
   DCity: string = '';
   item: any = {};
@@ -57,25 +57,13 @@ export class CheckoutComponent implements OnInit {
   subtotalCheckout: number = 0;
   selectedCityDeliveryPrice: number = 0;
 
-  // checkoutItems: OrderItem[] = [];
   filteredItems: OrderItem[] = [];
-
-  // notificationObj: any;
-
-  // notificationObj: Notification = {
-  //   id: '', // ID will be generated automatically by the service
-  //   user: [], // Provide the UserProfile object
-  //   text: '', // Notification message
-  //   time: '', // Current timestamp
-  //   status: 'new', // Set the initial status as 'new'
-  //   order: , // Provide the OrderItem object
-  // };
 
   orderObj: Order = {
     id: '',
     orderItem: [],
     order_date: '',
-    order_time: '',
+    order_time: new Date(),
     order_status: '',
     payment_status: '',
     delivery: {
@@ -89,6 +77,7 @@ export class CheckoutComponent implements OnInit {
         delivery_price: 0,
       },
     },
+    delivery_method: '',
     total: 0,
   };
 
@@ -278,16 +267,32 @@ export class CheckoutComponent implements OnInit {
     // this.addDeliveryAddress();
   }
 
+  calculateTotalPickup() {
+    this.Total = this.subtotalCheckout;
+  }
+
+  onDeliveryMethodChange() {
+    if (this.selectedDeliveryMethod === 'PickUp') {
+      this.calculateTotalPickup();
+    } else if (this.selectedDeliveryMethod === 'Delivery') {
+      this.calculateDelivery(this.DCity);
+    }
+  }
+
   // add delivery address
   addDeliveryAddress() {
-    this.addressObj.fullName = this.fullName;
-    this.addressObj.phone = this.phone;
-    this.addressObj.address = this.address;
-    this.addressObj.city = this.cityy;
+    if (this.selectedDeliveryMethod === 'Delivery') {
+      this.addressObj.fullName = this.fullName;
+      this.addressObj.phone = this.phone;
+      this.addressObj.address = this.address;
+      this.addressObj.city = this.cityy;
 
-    console.log('address object:', this.addressObj);
+      console.log('address object:', this.addressObj);
 
-    this.deliveryData.addDeliveryAddress(this.addressObj);
+      this.deliveryData.addDeliveryAddress(this.addressObj);
+    } else {
+      console.log('Nothing');
+    }
   }
 
   //add Order
@@ -302,24 +307,26 @@ export class CheckoutComponent implements OnInit {
 
     this.orderObj.order_date = this.orderDate;
     this.orderObj.delivery = this.addressObj;
+    this.orderObj.delivery_method = this.selectedDeliveryMethod;
     this.orderObj.total = this.Total;
-    this.orderObj.order_status = 'pending';
-    this.orderObj.payment_status = 'pending';
-    this.orderObj.order_time = new Date().toLocaleString('id-ID', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    });
+    this.orderObj.order_status = 'Pending';
+    this.orderObj.payment_status = 'Pending';
+    this.orderObj.order_time = new Date();
+    // this.orderObj.order_time = new Date().toLocaleString('en-ID', {
+    //   dateStyle: 'short',
+    //   timeStyle: 'short',
+    // });
 
     console.log('order id: ', this.orderObj.id);
 
     this.deleteCheckoutItems();
 
     this.orderData.addOrder(this.orderObj);
-    console.log('Object: ', this.orderObj);
-    console.log('This Profile >> ', this.orderObj.orderItem[0].user);
+    // console.log('Object: ', this.orderObj);
+    // console.log('This Profile >> ', this.orderObj.orderItem[0].user);
 
-    // this.addNewNotification(this.orderObj);          UNCOMMENT THIS
-    // this.addNewNotificationUser(this.orderObj);       UNCOMMENT THIS
+    this.addNewNotification(this.orderObj);
+    this.addNewNotificationUser(this.orderObj);
 
     if (this.selectedPaymentMethod === 'bankTransfer') {
       const checkoutUrl = `/user/payment/${this.orderObj.id}`;
@@ -341,97 +348,97 @@ export class CheckoutComponent implements OnInit {
     return minDate;
   }
 
-  // // send email to admin new order
-  // addNewNotification(order: Order) {
-  //   const notificationObj: Notification = {
-  //     id: '',
-  //     //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
-  //     text: this.orderObj.orderItem[0].user.name + ' created a new order!',
-  //     time: new Date().toLocaleString('en-US', {
-  //       dateStyle: 'short',
-  //       timeStyle: 'short',
-  //     }),
-  //     status: 'new',
-  //     order: order,
-  //   };
+  // send email to admin new order
+  addNewNotification(order: Order) {
+    const notificationObj: Notification = {
+      id: '',
+      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+      text: this.orderObj.orderItem[0].user.name + ' created a new order!',
+      time: new Date().toLocaleString('en-US', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+      status: 'new',
+      order: order,
+    };
 
-  //   this.sendEmail();
+    this.sendEmail();
 
-  //   this.notificationService
-  //     .addNotificationItem(notificationObj)
-  //     .then(() => {
-  //       console.log('Notification added successfully');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error adding notification:', error);
-  //     });
-  // }
+    this.notificationService
+      .addNotificationItem(notificationObj)
+      .then(() => {
+        console.log('Notification added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding notification:', error);
+      });
+  }
 
-  // sendEmail() {
-  //   const toName = 'Sweet and Salty Bakery';
-  //   const toEmail = 'sweetandsaltymz@gmail.com';
-  //   const fromName = this.orderObj.orderItem[0].user.name;
-  //   const themessage =
-  //     this.orderObj.orderItem[0].user.name + ' created a new order!';
+  sendEmail() {
+    const toName = 'Sweet and Salty Bakery';
+    const toEmail = 'sweetandsaltymz@gmail.com';
+    const fromName = this.orderObj.orderItem[0].user.name;
+    const themessage =
+      this.orderObj.orderItem[0].user.name + ' created a new order!';
 
-  //   this.notificationService
-  //     .sendEmail(toEmail, toName, fromName, themessage)
-  //     .then(() => {
-  //       // Email sent successfully
-  //       alert('Email sent successfully!');
-  //     })
-  //     .catch((error) => {
-  //       // Error sending email
-  //       alert('Error sending email. Please try again later.');
-  //       console.error('Error sending email:', error);
-  //     });
-  // }
+    this.notificationService
+      .sendEmail(toEmail, toName, fromName, themessage)
+      .then(() => {
+        // Email sent successfully
+        alert('Email sent successfully!');
+      })
+      .catch((error) => {
+        // Error sending email
+        alert('Error sending email. Please try again later.');
+        console.error('Error sending email:', error);
+      });
+  }
 
-  // // send email to user new order
-  // addNewNotificationUser(order: Order) {
-  //   const notificationObj: Notification = {
-  //     id: '',
-  //     //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
-  //     text: 'Your order: ' + this.orderObj.id + ' has been received!',
-  //     time: new Date().toLocaleString('en-US', {
-  //       dateStyle: 'short',
-  //       timeStyle: 'short',
-  //     }),
-  //     status: 'new',
-  //     order: order,
-  //   };
+  // send email to user new order
+  addNewNotificationUser(order: Order) {
+    const notificationObj: Notification = {
+      id: '',
+      //user: this.Profile, // Assuming this.Profile.user represents the UserProfile object
+      text: 'Your order: ' + this.orderObj.id + ' has been received!',
+      time: new Date().toLocaleString('en-US', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+      status: 'new',
+      order: order,
+    };
 
-  //   this.sendEmailUser();
+    this.sendEmailUser();
 
-  //   this.notificationService
-  //     .addNotificationItem(notificationObj)
-  //     .then(() => {
-  //       console.log('Notification added successfully');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error adding notification:', error);
-  //     });
-  // }
+    this.notificationService
+      .addNotificationItem(notificationObj)
+      .then(() => {
+        console.log('Notification added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding notification:', error);
+      });
+  }
 
-  // sendEmailUser() {
-  //   const toName = this.orderObj.orderItem[0].user.name;
-  //   const toEmail = this.orderObj.orderItem[0].user.email;
-  //   const fromName = 'Sweet and Salty Bakery';
-  //   const themessage =
-  //     'Your order: ' +
-  //     this.orderObj.id +
-  //     ' has been received! Check your inbox for updates as we get your order ready.';
+  sendEmailUser() {
+    const toName = this.orderObj.orderItem[0].user.name;
+    const toEmail = this.orderObj.orderItem[0].user.email;
+    const fromName = 'Sweet and Salty Bakery';
+    const themessage =
+      'Your order: ' +
+      this.orderObj.id +
+      ' has been received! Check your inbox for updates as we get your order ready.';
 
-  //   this.notificationService
-  //     .sendEmail(toEmail, toName, fromName, themessage)
-  //     .then(() => {
-  //       // Email sent successfully
-  //       alert('Email sent successfully!');
-  //     })
-  //     .catch((error) => {
-  //       // Error sending email
-  //       alert('Error sending email. Please try again later.');
-  //       console.error('Error sending email:', error);
-  //     });
-  // }
+    this.notificationService
+      .sendEmail(toEmail, toName, fromName, themessage)
+      .then(() => {
+        // Email sent successfully
+        alert('Email sent successfully!');
+      })
+      .catch((error) => {
+        // Error sending email
+        alert('Error sending email. Please try again later.');
+        console.error('Error sending email:', error);
+      });
+  }
 }
